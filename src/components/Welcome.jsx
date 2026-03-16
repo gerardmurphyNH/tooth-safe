@@ -11,7 +11,6 @@ export default function Welcome({ onRegister }) {
     name: '',
     email: '',
     role: '',
-    buddy: '',
   })
   const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
@@ -243,30 +242,18 @@ export default function Welcome({ onRegister }) {
                     style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}
                   >
                     <option value="" disabled className="bg-beyond-dark">Select your role</option>
-                    {ROLE_OPTIONS.map(role => (
-                      <option key={role} value={role} className="bg-beyond-dark">{role}</option>
-                    ))}
+                    <optgroup label="── Product Management ──" className="bg-beyond-dark text-gray-400">
+                      {ROLE_OPTIONS.pm.map(role => (
+                        <option key={role} value={role} className="bg-beyond-dark text-white">{role}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="── Product Design ──" className="bg-beyond-dark text-gray-400">
+                      {ROLE_OPTIONS.design.map(role => (
+                        <option key={role} value={role} className="bg-beyond-dark text-white">{role}</option>
+                      ))}
+                    </optgroup>
                   </select>
                   {errors.role && <p className="text-red-400 text-xs mt-1 font-body">{errors.role}</p>}
-                </div>
-
-                {/* Buddy */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-1.5 font-header">
-                    Tag a learning buddy{' '}
-                    <span className="text-gray-500 font-normal">(optional but recommended)</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="buddy"
-                    value={form.buddy}
-                    onChange={handleChange}
-                    placeholder="Buddy's first name"
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-beyond-teal focus:border-transparent font-body"
-                  />
-                  <p className="text-gray-500 text-xs mt-1.5 font-body">
-                    We'll post to #pde so your team knows you're leveling up together.
-                  </p>
                 </div>
 
                 <button

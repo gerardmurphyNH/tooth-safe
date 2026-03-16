@@ -30,25 +30,47 @@ async function postToSlack(blocks) {
 }
 
 // ─── Registration announcement ───────────────────────────────────────────────
+const REGISTRATION_HYPE = [
+  "The journey from Part-Time Hustle to Destination Definer begins NOW. 🚀",
+  "Six levels. Thirty-six exercises. One certified AI powerhouse in the making. Let's GO. 💪",
+  "The PDE team just got a little more dangerous. Welcome to the club. 🔥",
+  "From basic prompts to agentic workflows — this one's serious. Eyes on them. 👀",
+  "Another one joins the AI revolution. Beyond's future is looking bright. ✨",
+]
+
 export async function postRegistration(user) {
-  const buddyText = user.buddy
-    ? `They tagged *${user.buddy}* as their learning partner!`
-    : `They jumped in solo — respect the hustle.`
+  const hype = REGISTRATION_HYPE[Math.floor(Math.random() * REGISTRATION_HYPE.length)]
+  const roleEmoji = user.role?.toLowerCase().includes('design') ? '🎨' : '📋'
 
   const blocks = [
+    {
+      type: 'header',
+      text: {
+        type: 'plain_text',
+        text: '🏠 New NexusYou learner just dropped in!',
+        emoji: true,
+      },
+    },
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `🏠 *${user.name}* (${user.role}) just started *NexusYou* and is on the path to "Get Beyond Prompting"!\n\n${buddyText}\n\nWho's next? @product`,
+        text: `${roleEmoji} *${user.name}* — *${user.role}* — just kicked off *NexusYou*.\n\n${hype}`,
       },
+    },
+    {
+      type: 'section',
+      fields: [
+        { type: 'mrkdwn', text: '*Course:* NexusYou — Get Beyond Prompting' },
+        { type: 'mrkdwn', text: '*Starting:* Level 1 — The Part-Time Hustle 🏠' },
+      ],
     },
     {
       type: 'context',
       elements: [
         {
           type: 'mrkdwn',
-          text: `Posted by NexusYou • #${CHANNEL}`,
+          text: `Who's next? Drop a 🏠 if you're leveling up too! • Posted by NexusYou`,
         },
       ],
     },

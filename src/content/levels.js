@@ -1309,16 +1309,27 @@ export function getExerciseById(exerciseId) {
 export function getTaskPrompt(exercise, userRole) {
   if (!exercise.task?.prompts) return null
   const role = userRole?.toLowerCase() || ''
+  // Design track: any role containing 'design'
   if (role.includes('design')) return exercise.task.prompts.design || exercise.task.prompts.default
-  if (role.includes('pm') || role.includes('product manager')) return exercise.task.prompts.pm || exercise.task.prompts.default
-  return exercise.task.prompts.default || exercise.task.prompts.pm
+  // PM track: everything else (product managers, directors, etc.)
+  return exercise.task.prompts.pm || exercise.task.prompts.default
 }
 
-export const ROLE_OPTIONS = [
-  'Senior Product Manager',
-  'Product Manager',
-  'Associate Product Manager',
-  'Design Manager',
-  'Senior Product Designer',
-  'Product Designer',
-]
+// Grouped by track — used in Welcome.jsx <optgroup> select
+export const ROLE_OPTIONS = {
+  pm: [
+    'Product Manager',
+    'Senior Product Manager',
+    'Associate Director (Group PM)',
+    'Principal Product Manager',
+    'Director',
+    'Senior Director',
+  ],
+  design: [
+    'Associate Product Designer',
+    'Product Designer',
+    'Senior Product Designer',
+    'Lead Product Designer (IC track)',
+    'Design Director',
+  ],
+}
