@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base resets ───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', 'Outfit', system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cccccb;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #02556c;
+  }
+}
+
+/* ─── Component utilities ───────────────────────────────────────────────────── */
+@layer components {
+  .btn-primary {
+    @apply bg-beyond-teal hover:bg-beyond-deep text-white font-semibold py-2.5 px-5 rounded-lg transition-colors duration-200 font-header;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-beyond-deep border border-beyond-gray font-semibold py-2.5 px-5 rounded-lg transition-colors duration-200 font-header;
+  }
+
+  .btn-coral {
+    @apply bg-beyond-coral hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition-colors duration-200 font-header;
+  }
+
+  .btn-ghost {
+    @apply text-beyond-deep hover:text-beyond-teal hover:bg-teal-50 font-medium py-2 px-3 rounded-lg transition-colors duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-card p-6;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover transition-shadow duration-200 cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full border border-beyond-gray rounded-lg px-4 py-2.5 text-beyond-dark placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-beyond-teal focus:border-transparent
+           transition-all duration-150 font-body;
+  }
+
+  .textarea-field {
+    @apply input-field resize-none;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-teal {
+    @apply badge bg-teal-100 text-beyond-deep;
+  }
+
+  .badge-coral {
+    @apply badge bg-red-100 text-red-700;
+  }
+
+  .badge-gray {
+    @apply badge bg-gray-100 text-gray-600;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-beyond-dark mb-1.5 font-header;
+  }
+
+  /* Sidebar nav items */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150;
+  }
+
+  .nav-item-active {
+    @apply nav-item bg-teal-500/20 text-beyond-teal;
+  }
+
+  .nav-item-inactive {
+    @apply nav-item text-gray-300 hover:text-white hover:bg-white/10;
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  /* Prose for exercise content */
+  .exercise-prose {
+    @apply text-gray-700 leading-relaxed font-body;
+  }
+
+  .exercise-prose p + p {
+    @apply mt-3;
+  }
+}
+
+/* ─── Animation utilities ───────────────────────────────────────────────────── */
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #3bc1cc, #02556c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-teal-gradient {
+    background: linear-gradient(135deg, #3bc1cc, #02556c);
+  }
+
+  .sidebar-gradient {
+    background: linear-gradient(180deg, #252f38 0%, #1a2027 100%);
+  }
+
+  /* Confetti canvas positioning */
+  #confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+}
+
+/* ─── Print styles for certificate ─────────────────────────────────────────── */
+@media print {
+  body > *:not(#certificate-print) {
+    display: none !important;
+  }
+
+  #certificate-print {
+    display: block !important;
+  }
+}
