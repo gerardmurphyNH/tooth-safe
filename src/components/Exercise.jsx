@@ -815,26 +815,40 @@ function NewComparisonBlock({ bad, good }) {
 }
 
 function TrackComparison({ label, data }) {
+  // data.without / data.with can be a plain string or an object { label, prompt, response }
+  const renderSide = (side, colorClass, headerClass, borderClass, label, icon) => {
+    if (!side) return null
+    const isObj = typeof side === 'object'
+    return (
+      <div className={`${colorClass} rounded-xl p-4`}>
+        <div className={`text-xs font-header font-semibold ${headerClass} mb-2`}>
+          {isObj && side.label ? side.label : label} {icon}
+        </div>
+        {isObj && side.prompt && (
+          <div className={`bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 ${borderClass} leading-relaxed whitespace-pre-wrap mb-2 max-h-48 overflow-y-auto`}>
+            {side.prompt}
+          </div>
+        )}
+        {isObj && side.response && (
+          <div className="bg-white/70 rounded px-3 py-2 text-xs text-gray-500 font-body italic leading-relaxed max-h-32 overflow-y-auto">
+            → {side.response}
+          </div>
+        )}
+        {!isObj && (
+          <div className={`bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 ${borderClass} leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto`}>
+            "{side}"
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div>
       <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider mb-2">{label}</p>
       <div className="grid grid-cols-2 gap-4">
-        {data.without && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-            <div className="text-xs font-header font-semibold text-red-600 mb-2">Without ❌</div>
-            <div className="bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 border border-red-100 leading-relaxed">
-              "{data.without}"
-            </div>
-          </div>
-        )}
-        {data.with && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-            <div className="text-xs font-header font-semibold text-green-700 mb-2">With framework ✅</div>
-            <div className="bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 border border-green-100 leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
-              {data.with}
-            </div>
-          </div>
-        )}
+        {renderSide(data.without, 'bg-red-50 border border-red-200', 'text-red-600', 'border border-red-100', 'Without', '❌')}
+        {renderSide(data.with, 'bg-green-50 border border-green-200', 'text-green-700', 'border border-green-100', 'With framework', '✅')}
       </div>
     </div>
   )
