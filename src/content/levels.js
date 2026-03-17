@@ -35,618 +35,688 @@ export const LEVELS = [
     description:
       'Start here. Learn the mental models that separate AI power users from everyone else — how to talk to Claude as a thought partner, not a search engine.',
     exercises: [
-      // ── Exercise 1.1 ────────────────────────────────────────────────────
-      {
-        id: '1.1',
-        title: 'Search Query vs. Thought Partner',
-        duration: '20 min',
-        type: 'comparison',
-        skill: 'Transforming vague prompts into rich, contextual thought-partner prompts',
-        intro:
-          "Most people use AI the same way they use Google — type a quick question, get an answer, move on. This works for facts. It completely misses the point for complex thinking work.\n\nThe real power of Claude isn't information retrieval. It's having a knowledgeable colleague who can think alongside you, challenge your assumptions, and help you see problems from angles you missed. But that only happens when you give it enough to work with.",
-        learningObjective:
-          "You'll transform a search-query style prompt into a rich thought-partner prompt, and understand exactly why the second version produces dramatically better results.",
-        content: {
-          type: 'comparison',
-          badExample: {
-            label: 'Search Query Style ❌',
-            prompt: 'What is dynamic pricing?',
-            why:
-              "This is basically a Google search. You'll get a Wikipedia-style definition — accurate, but useless for your actual work. No context about your role, your problem, or what you actually need to do.",
-          },
-          goodExample: {
-            label: 'Thought Partner Style ✅',
-            prompt:
-              "I'm a product manager at a dynamic pricing company for short-term rentals. Our customers often don't trust our algorithm's recommendations and override prices manually — sometimes significantly lower, sometimes significantly higher. Help me think through why this might be happening and what product changes could increase trust in automated pricing recommendations without removing customer control.",
-            why:
-              "This prompt: (1) gives Claude your role and company context, (2) describes a real, specific problem — not just a topic, (3) names a concrete behavior (manual overrides) with nuance (both directions), (4) asks for analysis and ideas rather than just information, (5) includes a key constraint (don't remove control). Every additional piece of context makes the response exponentially more useful.",
-          },
-          breakdown: [
-            {
-              label: 'Role + Context',
-              icon: '🏠',
-              description:
-                "Tell Claude who you are and where you work. 'Product manager at a dynamic pricing company' changes everything about what's relevant.",
-            },
-            {
-              label: 'Specific Problem',
-              icon: '🔍',
-              description:
-                "Name the actual thing happening — not 'trust issues' but 'customers override prices manually.' Real behavior, not abstract concept.",
-            },
-            {
-              label: 'What You Need',
-              icon: '🎯',
-              description:
-                "Ask for analysis and ideas, not facts. 'Help me think through why this happens and what to do about it' invites dialogue.",
-            },
-            {
-              label: 'Constraints',
-              icon: '⚖️',
-              description:
-                "Tell Claude what's off the table: 'without removing customer control.' This steers the response toward actually usable solutions.",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Below is a search-query style prompt. Your job is to transform it into a thought-partner prompt using what you just learned.\n\nAdd your role at Beyond, describe a real challenge you're facing (or a realistic one), and invite analytical dialogue rather than just a factual answer. Try to hit all four elements from the breakdown above.",
-          prompts: {
-            pm: "How do I write a good product requirements document?",
-            design: "What makes a good user interface?",
-            default: "How do I write a good product requirements document?",
-          },
-          fields: [
-            {
-              id: 'rewrite',
-              label: 'Your thought-partner rewrite:',
-              placeholder:
-                "Write your upgraded prompt here. Remember: add your role/context at Beyond, describe a specific challenge you're facing, and invite analysis rather than just facts.",
-              rows: 7,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate whether the user successfully transformed a search query into a thought partner prompt. Look for four key elements: (1) role/context at Beyond explicitly stated, (2) a specific, real challenge or problem (not just a topic), (3) language that invites analysis/dialogue rather than requesting a static fact answer, (4) at least one constraint or nuance that would steer the response. The original prompt was about PRDs (for PM roles) or UI design (for design roles). Penalize if it's still vague or doesn't include their Beyond context. Give specific examples of what to add if anything is missing.",
-        evaluationCriteria: [
-          'States role and Beyond context explicitly',
-          'Describes a specific challenge, not just a topic',
-          'Invites analysis/dialogue rather than just information',
-          'Includes at least one constraint or nuance',
-        ],
-      },
 
-      // ── Exercise 1.2 ────────────────────────────────────────────────────
-      {
-        id: '1.2',
-        title: 'The COSTAR Framework',
-        duration: '25 min',
-        type: 'framework',
-        skill: 'Using the COSTAR framework to write structured, high-quality prompts',
-        intro:
-          "Good prompts aren't just detailed — they're structured. The COSTAR framework gives you six dimensions to fill in, and hitting all six transforms a good prompt into a great one.\n\nCOSTAR is especially useful when you need a specific kind of output: a document, an analysis, a presentation — anything where format and style matter as much as content.",
-        learningObjective:
-          "You'll learn and apply the COSTAR framework to write a prompt for a real task in your role.",
-        content: {
-          type: 'framework',
-          framework: {
-            name: 'COSTAR',
-            description:
-              "Six dimensions that, when all filled in, produce consistently excellent outputs. Think of it as a briefing document for your AI collaborator.",
-            elements: [
-              {
-                letter: 'C',
-                name: 'Context',
-                description: 'Background information Claude needs to understand your situation',
-                example: "I'm a PM at Beyond, a dynamic pricing platform for STR hosts. We're currently...",
-                color: '#3bc1cc',
-              },
-              {
-                letter: 'O',
-                name: 'Objective',
-                description: 'What you want to achieve — the goal, not just the task',
-                example: "I need to build internal alignment on why this feature is worth building now vs. later",
-                color: '#02556c',
-              },
-              {
-                letter: 'S',
-                name: 'Style',
-                description: 'The writing style or approach you want Claude to use',
-                example: 'Strategic and analytical, like a senior PM would write',
-                color: '#ee3968',
-              },
-              {
-                letter: 'T',
-                name: 'Tone',
-                description: 'The emotional quality — confident, cautious, enthusiastic, neutral...',
-                example: 'Confident but not overselling — this is a hypothesis, not a certainty',
-                color: '#3bc1cc',
-              },
-              {
-                letter: 'A',
-                name: 'Audience',
-                description: 'Who will read or use this output',
-                example: 'Engineering lead and design lead who are skeptical of adding scope',
-                color: '#02556c',
-              },
-              {
-                letter: 'R',
-                name: 'Response Format',
-                description: 'How you want the output structured',
-                example: '1-page document with: problem statement, proposed solution, success metrics, open questions',
-                color: '#ee3968',
-              },
-            ],
-          },
-          example: {
-            label: 'COSTAR prompt example:',
-            prompt:
-              "Context: I'm a PM at Beyond, a dynamic pricing platform for STR hosts. We have a 5% conversion rate on 6,000 monthly signups, and our data suggests that hosts who complete setup in the first 48 hours are 3x more likely to stay past 90 days.\n\nObjective: I need to write a concise problem statement for our onboarding improvement initiative that builds internal alignment on why this is the #1 priority.\n\nStyle: Strategic and evidence-driven, like a PM who's done the discovery work and is making a confident recommendation.\n\nTone: Confident but open — presenting a hypothesis we're ready to test, not a certainty.\n\nAudience: Our Head of Product and Head of Engineering, who need to agree to prioritize this over three other competing initiatives.\n\nResponse Format: A 3-paragraph problem statement: (1) what's happening, (2) why it matters, (3) what we believe the solution space is.",
-          },
-        },
-        task: {
-          instructions:
-            "Write a COSTAR prompt for a real task you're working on. Pick something from your actual work — a document you need to write, an analysis you need to do, or a decision you're wrestling with.\n\nFor PM roles: Write a problem statement for a feature idea your team is considering.\nFor Design roles: Write a design critique request for a flow you're currently working on.\n\nLabel each section (C: O: S: T: A: R:) so the AI Coach can evaluate each dimension.",
-          prompts: {
-            pm: "Write a COSTAR prompt for a problem statement about a feature idea your team is considering.",
-            design: "Write a COSTAR prompt asking for a design critique of a flow you're currently working on.",
-            default: "Write a COSTAR prompt for a task you're currently working on at Beyond.",
-          },
-          fields: [
-            {
-              id: 'costar_prompt',
-              label: 'Your COSTAR prompt (label each section C: O: S: T: A: R:):',
-              placeholder:
-                "C: [Context — your role, company, background]\nO: [Objective — what you're trying to achieve]\nS: [Style — how Claude should write]\nT: [Tone — emotional quality]\nA: [Audience — who will read this]\nR: [Response Format — how you want the output structured]",
-              rows: 10,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's COSTAR prompt. Check each of the six elements: C (Context — does it include role, company, relevant background?), O (Objective — does it state the goal, not just the task?), S (Style — specific writing style requested?), T (Tone — emotional quality specified?), A (Audience — specific audience named, with relevant characteristics?), R (Response Format — specific structure or format requested?). Note which elements are strong and which are weak or missing. Give a score like '4/6 COSTAR elements strong' and explain specifically what each weak element needs.",
-        evaluationCriteria: [
-          'Context includes role, company, and relevant background',
-          'Objective states the goal, not just the task',
-          'Style is specifically described',
-          'Tone is specified with meaningful detail',
-          'Audience is named with relevant characteristics',
-          'Response format is concrete and specific',
-        ],
-      },
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.1 - Search Query vs. Thought Partner
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.1',
+    title: 'Search Query vs. Thought Partner',
+    subtitle: "Stop Googling your AI",
+    duration: '20 min',
+    description: `Most people use Claude the same way they use Google - type a question, get an answer, move on. That's leaving 90% of the value on the table. The shift from "search query" to "thought partner" is the single biggest unlock in your AI journey.
 
-      // ── Exercise 1.3 ────────────────────────────────────────────────────
-      {
-        id: '1.3',
-        title: 'The CRIT Framework',
-        duration: '20 min',
-        type: 'framework',
-        skill: 'Using the CRIT framework to get high-quality, actionable criticism',
-        intro:
-          "Getting criticism from AI is usually disappointing. You ask 'What do you think of this?' and you get: 'This is well-structured! A few areas to consider improving...' — vague, safe, almost useless.\n\nThe CRIT framework gets you the sharp, specific feedback you actually want. It tells Claude exactly what role to play, what to look at, and how honest to be.",
-        learningObjective:
-          "You'll learn to use CRIT to get feedback that's actually useful — specific, role-aware, and calibrated to how much honesty you want.",
-        content: {
-          type: 'framework',
-          framework: {
-            name: 'CRIT',
-            description:
-              "Four elements that turn a vague 'what do you think?' into a focused critique that tells you something you didn't already know.",
-            elements: [
-              {
-                letter: 'C',
-                name: 'Context',
-                description: 'What you\'re working on and where it\'s at in the process',
-                example: "This is a first draft of a product brief I'm about to share with engineering. It's not polished.",
-                color: '#3bc1cc',
-              },
-              {
-                letter: 'R',
-                name: 'Role',
-                description: 'What perspective you want the feedback from',
-                example: "Act as a skeptical senior engineer who's been burned by vague requirements before",
-                color: '#02556c',
-              },
-              {
-                letter: 'I',
-                name: 'Instructions',
-                description: 'Specific aspects to focus the critique on',
-                example: "Focus on: (1) are the acceptance criteria actually testable?, (2) what's left ambiguous that will cause scope creep?",
-                color: '#ee3968',
-              },
-              {
-                letter: 'T',
-                name: 'Tone',
-                description: "How direct you want the feedback — don't let Claude be polite if you want truth",
-                example: "Be direct. Don't soften it. I want to know what's actually wrong, not just areas to consider.",
-                color: '#3bc1cc',
-              },
-            ],
-          },
-          comparison: {
-            label: 'Without vs. with CRIT:',
-            without: "What do you think of my product brief?",
-            withCRIT:
-              "Context: This is a first draft of a product brief for our onboarding improvement initiative. I'm about to share it with the engineering lead.\n\nRole: You are a skeptical senior engineer who's been burned by poorly-specified requirements before and takes pride in catching ambiguity before it becomes technical debt.\n\nInstructions: Review this for: (1) Are the acceptance criteria actually testable, or are they subjective? (2) What's left ambiguous that will cause questions or scope creep? (3) What assumptions am I making that engineering will push back on?\n\nTone: Be direct and specific. Name the specific lines or sections that have problems. Don't soften it — I'd rather be embarrassed now than in front of engineering.\n\n[paste brief here]",
-          },
-        },
-        task: {
-          instructions:
-            "Write a CRIT prompt for something you're actually working on — a document, a design, a spec, a strategy, a decision. Paste the thing you want critiqued at the end.\n\nIf you don't have something handy, use a recent email, a Slack message you wrote, or a quick paragraph describing a product decision you made recently. Label each CRIT section.",
-          prompts: {
-            pm: "Write a CRIT prompt asking for critique on a product document, spec, or decision you're working on.",
-            design: "Write a CRIT prompt asking for critique on a design decision, flow, or document you're working on.",
-            default: "Write a CRIT prompt for something you're currently working on at Beyond.",
-          },
-          fields: [
-            {
-              id: 'crit_prompt',
-              label: 'Your CRIT prompt (label each section C: R: I: T:) + the work you want critiqued:',
-              placeholder:
-                "C: [Context — what this is and where it's at in the process]\nR: [Role — what perspective you want the feedback from]\nI: [Instructions — specific things to focus the critique on]\nT: [Tone — how direct you want it]\n\n---\n[Paste what you want critiqued here]",
-              rows: 12,
-              required: true,
-            },
-            {
-              id: 'reflection',
-              label:
-                'After running this in Claude (or imagining the response): How is this different from just asking "what do you think?"',
-              placeholder: 'What did specifying Role and Instructions change about the type of feedback you got?',
-              rows: 3,
-              required: false,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's CRIT prompt. Check each of the four elements: C (Context — does it describe what the work is and where it's at in the process?), R (Role — is a specific, meaningful role specified that will meaningfully change the perspective of the critique?), I (Instructions — are specific aspects named, not just 'what do you think'?), T (Tone — does it specify the level of directness clearly?). Also check if they included actual work to critique (they should have pasted something). Give specific feedback on what each element should say if it's weak.",
-        evaluationCriteria: [
-          'Context describes the work and its current stage',
-          'Role specifies a meaningful perspective that will change the feedback',
-          'Instructions name specific aspects to critique (not just general feedback)',
-          'Tone specifies the level of directness desired',
-          'Actual work is included to critique',
-        ],
-      },
+A search query asks for information. A thought partner prompt invites analysis, challenges assumptions, and produces thinking you couldn't have done alone (or would have taken you 3x as long).
 
-      // ── Exercise 1.4 ────────────────────────────────────────────────────
-      {
-        id: '1.4',
-        title: 'Make It Argue With You',
-        duration: '25 min',
-        type: 'playground',
-        skill: 'Adversarial prompting — using AI to pressure-test your ideas and thinking',
-        intro:
-          "The most dangerous bias in product and design work is confirmation bias — we love our ideas, so we look for reasons they're right and unconsciously avoid reasons they're wrong.\n\nAdversarial prompting is the antidote. You're not asking Claude to agree with you. You're asking it to attack your ideas, find the holes, steelman the opposition, and help you discover what you're missing before you find out the hard way.",
-        learningObjective:
-          "You'll build a toolkit of adversarial prompt patterns and use at least one on a real idea you're working on.",
-        content: {
-          type: 'patterns',
-          patterns: [
-            {
-              name: 'The Pre-Mortem',
-              prompt: "What are the top 5 ways this feature could fail, even if we build it well?",
-              when: "Before committing to a direction — makes risks explicit early",
-            },
-            {
-              name: 'The Competitor Mind',
-              prompt: "If I were PriceLabs, how would I respond to this feature announcement? What would I say to our mutual customers?",
-              when: "When evaluating strategic decisions or new features",
-            },
-            {
-              name: 'The Logic Audit',
-              prompt: "Where is my logic weak in this argument? What am I assuming that I shouldn't be?",
-              when: "When you've made a recommendation and want to stress-test it",
-            },
-            {
-              name: 'The Sophistication Check',
-              prompt: "Rewrite this feature description as if I'm significantly overestimating the technical sophistication of our target user.",
-              when: "When designing features or writing copy",
-            },
-            {
-              name: 'The Steelman',
-              prompt: "Steelman the case against this approach. Give me the strongest possible argument for not doing this.",
-              when: "When you're pretty sure you're right and want to challenge that certainty",
-            },
-            {
-              name: 'The Devil\'s Advocate',
-              prompt: "You are a skeptic who thinks this is a bad idea. Make your best case against it.",
-              when: "Quick, strong pushback on any direction",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Think of a real product idea, feature, decision, or strategy you're currently working on or have worked on recently at Beyond.\n\nStep 1: Write 3 adversarial prompts for that idea using the patterns above (or your own variants).\n\nStep 2: Run at least one of them in the Prompt Playground on this page (or in Claude directly) and paste the response.\n\nStep 3: Write a brief reflection on what the adversarial response surfaced that you hadn't considered.",
-          fields: [
-            {
-              id: 'idea',
-              label: 'The idea, feature, or decision you\'re pressure-testing:',
-              placeholder: 'Briefly describe what you\'re working on. 2-4 sentences is enough.',
-              rows: 4,
-              required: true,
-            },
-            {
-              id: 'adversarial_prompts',
-              label: 'Your 3 adversarial prompts:',
-              placeholder:
-                "Prompt 1: [Type + the prompt]\nPrompt 2: [Type + the prompt]\nPrompt 3: [Type + the prompt]",
-              rows: 8,
-              required: true,
-            },
-            {
-              id: 'ai_response',
-              label: 'Paste the response from one of your adversarial prompts:',
-              placeholder: 'Copy/paste the Claude response here...',
-              rows: 6,
-              required: false,
-            },
-            {
-              id: 'reflection',
-              label: 'What did the adversarial response surface that you hadn\'t considered?',
-              placeholder:
-                "What was surprising? What did it catch that you'd glossed over? Did any of it change how you're thinking about the idea?",
-              rows: 4,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's adversarial prompting exercise. Check: (1) Did they write 3 distinct adversarial prompts that use genuinely different angles or patterns? (2) Are the prompts specific to their actual idea, or generic? Specific is better. (3) Did they paste an actual adversarial response? (4) Is their reflection thoughtful — do they actually engage with what the adversarial response surfaced? The best sign of success is if the reflection shows they learned something surprising or challenging about their own idea. Penalize if all 3 prompts are basically the same pattern with different words.",
-        evaluationCriteria: [
-          '3 distinct adversarial prompts using different angles',
-          'Prompts are specific to their actual idea (not generic)',
-          'At least one adversarial response is included',
-          'Reflection shows genuine engagement with what was surfaced',
-        ],
-      },
+The difference isn't about writing longer prompts. It's about framing your request so Claude has enough context to actually think with you, not just retrieve for you.`,
 
-      // ── Exercise 1.5 ────────────────────────────────────────────────────
-      {
-        id: '1.5',
-        title: 'The Retrospective Prompt',
-        duration: '20 min',
-        type: 'reflection',
-        skill: "Meta-prompting — using AI to analyze and improve your own prompting patterns",
-        intro:
-          "Most people never ask Claude to critique their prompts. They judge the output and move on. This is a massive missed opportunity.\n\nThe Retrospective Prompt turns every Claude interaction into a prompting lesson. After you get a response, you ask Claude to analyze how you could have gotten there faster, with less effort, or with a better result. Over time, this builds meta-awareness of your own prompting patterns — the strengths and the blind spots.",
-        learningObjective:
-          "You'll use meta-prompting to get Claude to critique one of your earlier prompts and document what you learned about your prompting style.",
-        content: {
-          type: 'patterns',
-          patterns: [
-            {
-              name: 'The Efficiency Check',
-              prompt: "Looking at my original prompt and your response: how could I have gotten to this answer faster or with a shorter prompt?",
-              when: "When you got what you wanted but feel like you over-explained",
-            },
-            {
-              name: 'The Prompt Rewrite',
-              prompt: "If you were to rewrite my original prompt from scratch, what would you write? What would you change and why?",
-              when: "When the response was okay but not quite right",
-            },
-            {
-              name: 'The Missing Context',
-              prompt: "What context was I missing in my original prompt that would have made your response more accurate or more useful?",
-              when: "When Claude's response went in a slightly wrong direction",
-            },
-            {
-              name: 'The Level-Up',
-              prompt: "Here's how I typically use AI: [describe your patterns]. What am I missing that would move me from good to elite? What habit would have the biggest impact?",
-              when: "Periodic self-assessment of your overall AI usage patterns",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Pick the best prompt you wrote in exercises 1.1-1.4. Run it in Claude (if you haven't already), then run one or more of the Retrospective Prompt patterns above to ask Claude to analyze your prompt.\n\nDocument what you learned. This is about building self-awareness about your own prompting patterns — the things you do well and the habits you haven't built yet.",
-          fields: [
-            {
-              id: 'original_prompt',
-              label: 'Your best prompt from Exercises 1.1-1.4 (paste it here):',
-              placeholder: 'Copy/paste your best prompt from this level...',
-              rows: 6,
-              required: true,
-            },
-            {
-              id: 'retrospective_prompt',
-              label: 'Your retrospective prompt (what you asked Claude about your prompt):',
-              placeholder: "Example: 'If you were to rewrite my original prompt from scratch, what would you write? What would you change and why?'",
-              rows: 3,
-              required: true,
-            },
-            {
-              id: 'claude_feedback',
-              label: "Claude's feedback on your prompt (paste the response):",
-              placeholder: 'Copy/paste what Claude said about your prompt...',
-              rows: 6,
-              required: false,
-            },
-            {
-              id: 'insights',
-              label: 'What did you learn about your own prompting patterns?',
-              placeholder:
-                "What do you tend to do well? What are you consistently missing? What's the single most impactful habit to build?",
-              rows: 4,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's retrospective prompting exercise. Check: (1) Did they use a genuine retrospective pattern that asks Claude to analyze their prompt (not just the response)? (2) Is the original prompt they picked actually one of their better ones — a fair test? (3) Most importantly, is their 'what I learned' section genuinely insightful? Look for specific, concrete patterns they've noticed (e.g., 'I always forget to specify the audience' or 'I over-explain context but under-specify format'). Vague insights like 'I need to be more specific' should get pushed back — ask them to be specific about HOW they'll be more specific.",
-        evaluationCriteria: [
-          'Used a genuine retrospective prompt (analyzing the prompt, not just the response)',
-          'Picked a quality prompt worth analyzing',
-          'Included Claude\'s feedback on the prompt',
-          'Insights are specific and actionable (not just "I need to be more specific")',
-        ],
+    comparison: {
+      bad: {
+        label: 'Search query',
+        prompt: `What is Beat the Market?`
       },
+      good: {
+        label: 'Thought partner',
+        prompt: `I'm a PM at Beyond, a dynamic pricing platform for short-term rentals. Our key performance metric is "Beat the Market" (BtM) - we measure whether a customer's RevPAN (revenue per available night) exceeds their competitive set by 20% or more.
 
-      // ── Exercise 1.6 ────────────────────────────────────────────────────
-      {
-        id: '1.6',
-        title: 'Set Up Your AI Environment',
-        duration: '30 min',
-        type: 'capstone',
-        skill: "Configuring a Claude Project folder and writing a personalized system prompt",
-        intro:
-          "Everything you've learned in Level 1 has been about how to think and write prompts. This capstone is about infrastructure — setting up your Claude environment so your best prompting patterns are baked in by default.\n\nA Claude Project folder with a well-written system prompt means you never have to re-explain your role, your context, or your preferences. Your AI starts every conversation already knowing who you are and what you need.",
-        learningObjective:
-          "You'll configure a Claude Project for your primary workstream and write a personalized system prompt that applies COSTAR principles to define your AI environment.",
-        content: {
-          type: 'walkthrough',
-          steps: [
-            {
-              number: 1,
-              title: 'Create a Claude Project folder',
-              description:
-                "In Claude.ai, click 'Projects' in the left sidebar → 'New Project'. Name it something like '[Your Name] - PM Work' or '[Your Name] - Design'. This is where all your work sessions will live.",
-              tip: "You can have multiple project folders for different workstreams. Start with one for your primary focus.",
-            },
-            {
-              number: 2,
-              title: 'Write your system prompt',
-              description:
-                "In your Project settings, you'll find a 'Project Instructions' section. This is your system prompt — it runs before every conversation in this project. Use COSTAR principles to write it (see the guide below).",
-              tip: "Think of this as onboarding your AI colleague. What does it need to know to be immediately useful?",
-            },
-            {
-              number: 3,
-              title: 'Add reference documents',
-              description:
-                "Upload any documents Claude should always have access to. For PMs: your team's product principles, the Beyond strategy doc, your current roadmap context. For Designers: design principles, component library context, current design brief.",
-              tip: "Only add docs that are consistently relevant. Too many docs dilutes Claude's attention.",
-            },
-            {
-              number: 4,
-              title: 'Test and iterate',
-              description:
-                "Start a conversation in your project with a real work question. See if the response feels right — like it knows who you are and what you need. Adjust the system prompt based on what's missing.",
-              tip: "Your first system prompt won't be perfect. That's fine. Expect to revise it 2-3 times over your first week.",
-            },
-          ],
-          systemPromptGuide: {
-            label: "Writing your system prompt (COSTAR for system prompts):",
-            elements: [
-              {
-                label: "Who I am",
-                example: "I'm [Name], a [Role] at Beyond — a dynamic pricing and revenue management platform for short-term rental hosts.",
-              },
-              {
-                label: "My primary work context",
-                example:
-                  "I work on [area]. My most common tasks are: [task 1], [task 2], [task 3]. The teams I collaborate with most are [team].",
-              },
-              {
-                label: "How I like to work with AI",
-                example:
-                  "I prefer responses that: are direct and opinionated, use bullet points for lists but prose for analysis, challenge my assumptions when they seem weak, ask clarifying questions if my prompt is underspecified.",
-              },
-              {
-                label: "My product/design philosophy",
-                example:
-                  "I value: outcomes over output, simplicity as a feature, connecting work to user problems before solutions. I'm skeptical of feature additions that don't clearly solve a specific user problem.",
-              },
-              {
-                label: "Key context about Beyond",
-                example:
-                  "Beyond's key challenge: a 5% conversion rate on 6,000 monthly signups. Key metric: Beat the Market (BtM) — +20% RevPAN vs competitive set. Main competitor: PriceLabs. Our advantage: we work without requiring user expertise.",
-              },
-            ],
-          },
-        },
-        task: {
-          instructions:
-            "Write your personalized system prompt using the guide above. It should be detailed enough that any Claude conversation in your project immediately feels like talking to a well-briefed colleague who knows your work.\n\nTarget length: 200-400 words. Not so short it's generic, not so long it dilutes focus.\n\nPaste your complete system prompt below for AI Coach review.",
-          fields: [
-            {
-              id: 'system_prompt',
-              label: 'Your system prompt (paste the full text):',
-              placeholder:
-                "Paste your complete system prompt here. Should be 200-400 words covering: who you are, your work context, how you like to work with AI, your philosophy, and key Beyond context.",
-              rows: 14,
-              required: true,
-            },
-            {
-              id: 'what_you_added',
-              label: 'What documents did you add to your Project (or plan to add)?',
-              placeholder:
-                "List any documents you uploaded or plan to upload to your Claude Project folder.",
-              rows: 3,
-              required: false,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's system prompt for their Claude Project. This is the Level 1 capstone — the most important submission. Check: (1) Does it include their actual role and relevant Beyond context? (2) Does it describe their specific work focus (not just 'PM at Beyond' but what area they work in and what their common tasks are)? (3) Does it specify how they want Claude to behave/respond? (4) Is it personalized — does it feel like it was written for this specific person, or could it be anyone's system prompt? (5) Is it the right length (200-400 words — not too short to be generic, not too long to be diluted)? Give a score out of 5 and be specific about what would make it stronger.",
-        evaluationCriteria: [
-          'Includes specific role and Beyond context (not generic)',
-          'Describes their primary work focus and common tasks',
-          'Specifies how they want Claude to behave and respond',
-          'Feels personal and specific to this individual',
-          'Appropriate length (200-400 words)',
-        ],
+Right now about 50% of listings hit that threshold. Our target is 75%.
+
+I need to think through why the other 50% aren't hitting BtM. Some possible factors: hosts overriding our recommended prices, poor comp set matching, listings in low-demand markets, or hosts who enabled pricing but aren't actually following through on operational basics (photos, response time, etc).
+
+Help me build a structured framework for diagnosing why a listing doesn't beat the market, organized by factors Beyond can influence vs. factors we can't.`
       },
+      explanation: `The search query gets you a definition - something you could find on the company wiki. The thought partner prompt gives Claude your role, the specific metric, the current gap, your initial hypotheses, and a clear analytical task. The output will be a diagnostic framework you can actually use in your next product review. Notice how the good prompt doesn't just ask "why" - it shares initial thinking and asks Claude to build on it.`
+    },
+
+    task: {
+      instruction: `Take the search-query style prompt below and rewrite it as a thought-partner prompt. Add your role context, the specific problem you're solving, any initial thinking you have, and what kind of output would actually be useful to you.
+
+Don't just make it longer - make it invite real analysis.`,
+      prompts: {
+        pm_ic: `Your search query to transform: "How does host onboarding work at Beyond?"
+
+Think about what you'd actually need to know - maybe you're investigating why only 5% of the 6,000 monthly signups convert to active customers, or you're trying to identify where in the first-48-hours experience hosts drop off. What specific angle would make Claude's response useful for your actual work this week?`,
+
+        pm_director: `Your search query to transform: "What's our competitive positioning vs PriceLabs?"
+
+Think about what you'd actually need - maybe you're preparing for a board discussion about the 3-5x price premium, or you're evaluating whether your Q2 product roadmap sufficiently differentiates from PriceLabs' recent feature releases. What strategic question would make Claude's response worth sharing with your leadership team?`,
+
+        design_ic: `Your search query to transform: "What are best practices for pricing dashboards?"
+
+Think about what you'd actually need - maybe you're redesigning the main pricing view and struggling with how to show recommended vs. actual prices for hosts who override frequently, or you're trying to reduce cognitive load in a view that currently has 12 different data points. What specific design challenge would make Claude's response useful for your next Figma session?`,
+
+        design_lead: `Your search query to transform: "How should we approach design systems for B2B SaaS?"
+
+Think about what you'd actually need - maybe you're evaluating whether Beyond's current component library scales to support both the host self-serve experience and the enterprise portfolio manager view, or you're building a case for dedicated design system investment in next quarter's OKRs. What strategic design question would make Claude's response worth presenting at your next design review?`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they add specific role and company context (not just "I am a PM")?',
+        'Did they include a concrete problem or decision they are facing?',
+        'Did they share initial hypotheses or thinking (not just ask for answers)?',
+        'Did they specify what kind of output would be useful (framework, analysis, options, critique)?',
+        'Does the rewrite invite analysis rather than just information retrieval?'
+      ],
+      seniorityNote: `For Director-level roles, look for strategic framing (stakeholder context, cross-team implications, business impact). For IC roles, look for tactical specificity (specific feature area, specific user segment, specific metric).`,
+      exampleFeedback: {
+        strong: `This is a solid rewrite. You gave Claude your specific role context, the actual metric gap you're working on, and your initial hypotheses. The ask for a "diagnostic framework" is great because it gives Claude a clear output format. One thing that would make this even stronger: tell Claude what you plan to do with the output. "I'll use this framework in next Thursday's product review with engineering" helps Claude calibrate the right level of detail and technical depth.`,
+        needsWork: `You've made it longer, but it's still mostly a search query in disguise. You're asking "explain X to me" rather than "help me think through Y." Try this: instead of asking Claude what something is, tell Claude what you already know and what you're stuck on. The magic happens when you share your partial thinking and ask Claude to build on it, challenge it, or structure it.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.2 - The COSTAR Framework
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.2',
+    title: 'The COSTAR Framework',
+    subtitle: 'Structure that actually works',
+    duration: '25 min',
+    description: `COSTAR is a prompting framework that gives you a reliable structure for any complex prompt. It stands for Context, Objective, Style, Tone, Audience, and Response format. Think of it like a creative brief for your AI - the more clearly you define these six dimensions, the more precisely Claude can deliver.
+
+You don't need all six for every prompt (some quick questions just need Context and Objective), but for anything you'd spend more than 10 minutes writing yourself, COSTAR pays for itself immediately.`,
+
+    comparison: {
+      bad: {
+        label: 'Unstructured',
+        prompt: `Write a summary of our new listing groups feature for the team.`
+      },
+      good: {
+        label: 'COSTAR structured',
+        prompt: `**Context:** Beyond is launching "Listing Groups v2" - a feature that lets property managers group listings by property type, location, or custom criteria and apply pricing strategies at the group level instead of listing-by-listing. This replaces the current approach where PMs with 200+ listings have to configure pricing individually.
+
+**Objective:** Write an internal announcement summarizing what shipped, why it matters, and what we learned during the beta with 12 contracted customers.
+
+**Style:** Concise and evidence-based, similar to how Shreyas Doshi writes product updates - lead with the outcome, not the feature description.
+
+**Tone:** Confident but honest about what's still in progress. We're excited about early results but the beta sample is small.
+
+**Audience:** Beyond's PDE (Product, Design, Engineering) org plus Go-to-Market team. They understand our product but may not know the details of this specific feature.
+
+**Response format:** 3 paragraphs max. First paragraph: what shipped and the key metric from beta. Second: why this matters strategically (connect to our "revenue operating system" positioning). Third: what's next and open questions.`
+      },
+      explanation: `The unstructured prompt will get you something - but it'll be generic, probably too long, and you'll spend 15 minutes editing it. The COSTAR version takes 3 minutes to write and produces a near-final draft because Claude knows exactly who it's writing for, in what style, and how to structure it. Notice that the COSTAR prompt also embeds strategic context (the "revenue operating system" positioning) that shapes the entire framing.`
+    },
+
+    workedExamples: {
+      pm: {
+        label: 'PM Example',
+        prompt: `**Context:** Beyond's host activation rate is 5% (target: 8-11%). We sign up ~6,000 hosts/month but most never enable pricing on their listings. The data team found that hosts who complete setup within 48 hours are 3x more likely to still be active at 90 days. I own the activation workstream on the Core App team.
+
+**Objective:** Draft an experiment plan to test whether a guided "first 48 hours" experience (email + in-app nudges + a simplified setup wizard) improves activation rate.
+
+**Style:** Structured like a Teresa Torres assumption test - start with the riskiest assumption, define the test, set success criteria.
+
+**Tone:** Analytically honest - acknowledge what we know vs. what we're guessing.
+
+**Audience:** My product trio (PM, designer, tech lead) plus our group PM who needs to approve the experiment scope.
+
+**Response format:** One-page experiment brief with sections: Hypothesis, Riskiest Assumption, Test Design, Success Metric, Timeline, and "What we'll do with the results."`
+      },
+      design: {
+        label: 'Design Example',
+        prompt: `**Context:** Beyond's pricing calendar view is the most-visited screen in the app for hosts. It currently shows 30 days of nightly prices with color coding for high/low demand. Hosts with 3+ listings tell us they want to see all their listings at once, but the current view only shows one listing at a time. I'm the designer on the Core App team exploring a "multi-listing calendar" concept.
+
+**Objective:** Help me think through 3 different approaches to showing multiple listings on a single calendar view, with trade-offs for each.
+
+**Style:** Think like a design review at Airbnb or Figma - sketch-level concepts with clear rationale, not polished mockups.
+
+**Tone:** Exploratory and critical - poke holes in each approach.
+
+**Audience:** Me (I'll use this to frame concepts before going to Figma) and my PM partner who'll weigh in on feasibility.
+
+**Response format:** For each of the 3 approaches: a 2-sentence description, a rough layout description, 2 pros, 2 cons, and "best for [user type]" recommendation.`
+      }
+    },
+
+    task: {
+      instruction: `Pick a real task you need to do this week (or one you recently completed). Write a COSTAR prompt for it. Try to fill in all six dimensions, even if some are brief. The goal is to practice the structure, not to write the perfect prompt.
+
+After you write it, we'll have the AI Coach evaluate whether your COSTAR covers all six dimensions and whether each one is specific enough to actually change the output.`,
+      prompts: {
+        pm_ic: `Think about a real deliverable from your current sprint or workstream. Maybe it's a spec you need to write, a competitive analysis, an experiment you're designing, or a customer interview guide. Pick something where getting a strong first draft from Claude would save you meaningful time.
+
+Write a COSTAR prompt for that deliverable. Be specific about audience - "the team" is too vague. Who will actually read this, and what do they need to walk away understanding?`,
+
+        pm_director: `Think about a strategic artifact you need to produce - an OKR proposal, a roadmap narrative for stakeholders, a board memo section, or a prioritization framework for your teams. Pick something where the framing and audience calibration matter as much as the content.
+
+Write a COSTAR prompt for it. Pay special attention to the Audience and Tone dimensions - at your level, the same content often needs to land differently with engineers vs. executives vs. the board.`,
+
+        design_ic: `Think about a real design task on your plate - a UX critique you need to prepare, a flow you're mapping, a research synthesis, or component documentation. Pick something where you'd normally spend 30+ minutes before opening Figma or Miro.
+
+Write a COSTAR prompt for it. For the Style dimension, think about what kind of design thinking you want - Nielsen heuristics, Jobs-to-Be-Done framing, behavioral design lens, or something else?`,
+
+        design_lead: `Think about a design leadership deliverable - a design strategy document, a critique framework for your team, a design quality rubric, or a proposal for design system investment. Pick something where you're shaping how your team works, not just shipping a screen.
+
+Write a COSTAR prompt for it. The Audience dimension is especially important here - are you writing for your design team, for product leadership, or for engineering partners? Each audience changes the framing significantly.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Are all 6 COSTAR dimensions present (Context, Objective, Style, Tone, Audience, Response format)?',
+        'Is the Context specific to Beyond and their actual work, not generic?',
+        'Is the Objective clear enough that you could evaluate whether the output succeeded?',
+        'Is the Audience a specific group of people, not "the team" or "stakeholders"?',
+        'Is the Response format concrete (e.g., "3 paragraphs" or "a table with columns X, Y, Z"), not vague (e.g., "a summary")?',
+        'Would this COSTAR actually produce a meaningfully different output than just asking the question without structure?'
+      ],
+      seniorityNote: `For Director-level roles, the Context should include strategic positioning and stakeholder dynamics, not just task details. The Audience dimension should show awareness of how the same message needs different framing for different groups. For IC roles, look for tactical specificity - a named feature area, a specific user segment, a concrete deadline or sprint goal.`,
+      exampleFeedback: {
+        strong: `Clean COSTAR structure. Your Context grounds Claude in the specific Beyond problem, your Objective is measurable (I could evaluate whether the output achieves it), and your Response format gives clear guardrails. The Style reference to Teresa Torres is smart - it tells Claude which analytical framework to use. One refinement: your Tone says "professional" which is generic. Try something more specific like "confident but honest about uncertainty" or "direct, no hedging, flag where data is thin."`,
+        needsWork: `You've got the structure, but several dimensions are too vague to change the output. "Write something about our onboarding" could be Context for almost anything. Tell Claude the specific numbers (5% conversion rate), the specific hypothesis you're exploring, and the specific decisions this output needs to inform. Also, "the team" as your Audience is doing no work. Is this for your product trio? For the engineering team who'll build it? For your VP who needs to approve scope? Each of those audiences means a fundamentally different document.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.3 - The CRIT Framework
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.3',
+    title: 'The CRIT Framework',
+    subtitle: 'Getting critique that actually bites',
+    duration: '20 min',
+    description: `CRIT stands for Context, Role, Instructions, and Tone. While COSTAR is great for generating content, CRIT is designed specifically for getting useful feedback and critique. The secret ingredient is the Role dimension - by telling Claude to adopt a specific expert perspective, you get critique that's genuinely useful rather than generic "looks good, maybe consider..." fluff.
+
+The difference between "What do you think of this?" and a well-crafted CRIT prompt is the difference between a polite colleague nodding at your work and a sharp mentor who cares enough to tell you where it's weak.`,
+
+    comparison: {
+      pm: {
+        without: {
+          label: 'Without CRIT',
+          prompt: `Here's my PRD for the Owner Reporting feature. What do you think?
+
+[PRD content...]`,
+          response: `This looks like a solid PRD. You've covered the key user stories and the technical requirements are clear. A few suggestions: you might want to add more detail on edge cases, consider the mobile experience, and think about localization...`
+        },
+        with: {
+          label: 'With CRIT',
+          prompt: `**Context:** I'm a PM at Beyond. This PRD is for "Owner Reporting" - a feature that lets property managers generate branded performance reports to send to property owners. Nearly half of PM churn traces back to PMs losing owners, so this is a retention play. The PRD will be reviewed by my group PM and our engineering lead on Thursday.
+
+**Role:** Act as Marty Cagan reviewing this PRD. You believe teams should be given problems to solve, not features to build. You're skeptical of PRDs that describe solutions without validating the underlying problem. You push hard on "do we have evidence this matters?"
+
+**Instructions:** Critique this PRD on three specific dimensions: (1) Is the problem statement strong enough that engineering would be excited to solve it, or does it read like a feature spec? (2) Are the success metrics actually measurable and connected to business outcomes, or are they vanity metrics? (3) What's the riskiest assumption in this PRD that we haven't validated?
+
+**Tone:** Direct and challenging. Don't be polite about weak spots. I want to find the holes before my group PM does.
+
+[PRD content...]`,
+          response: `The problem statement needs work. You're describing a feature ("generate branded reports") rather than a problem worth solving. Start with the outcome: "Property managers lose owners because owners don't see the value their PM delivers." Then the question becomes: what's the cheapest way to prove that visible performance data reduces owner churn? A branded PDF report is one hypothesis, but have you validated that owners actually read reports? Your biggest unvalidated assumption is that...`
+        }
+      },
+      design: {
+        without: {
+          label: 'Without CRIT',
+          prompt: `I designed a new onboarding flow for Beyond hosts. Can you review it?
+
+[Flow description...]`,
+          response: `The flow looks clean and well-organized. The progress indicator is helpful, and the step-by-step approach should reduce cognitive load. You might want to consider adding tooltips for complex fields and ensuring the flow works on mobile...`
+        },
+        with: {
+          label: 'With CRIT',
+          prompt: `**Context:** I'm a designer at Beyond working on host onboarding. Our activation rate is 5% (target: 8-11%) - of 6,000 monthly signups, most never enable pricing. We believe hosts who don't complete setup in the first 48 hours are nearly impossible to recover. This redesigned flow cuts the current 14-step onboarding to 6 steps.
+
+**Role:** Act as a behavioral designer who specializes in activation and onboarding for fintech and marketplace products. You think about defaults, commitment devices, loss aversion, and the Zeigarnik effect (people are more likely to complete tasks they've already started). You're skeptical of flows that look clean but don't account for user motivation.
+
+**Instructions:** Critique this flow on: (1) Where does motivation drop? At which step would a busy host with one Airbnb listing decide "I'll finish this later" (and never come back)? (2) Are we using any behavioral nudges, or is this just a form wizard with fewer steps? (3) What's the first moment the host sees value (not a promise of value, actual value)?
+
+**Tone:** Constructively brutal. I want to ship something that moves our 5% activation rate, not something that just looks nicer than what we have.
+
+[Flow description...]`,
+          response: `Your flow has a classic fintech problem: you front-loaded all the work (connect PMS, import listings, set preferences) before the host sees any value. By step 3, a host with one Airbnb listing is thinking "this is a lot of setup for something I'm not sure about." The Zeigarnik effect won't save you here because...`
+        }
+      },
+      explanation: `The CRIT versions get feedback that's specific, actionable, and grounded in real expertise. The Role dimension is doing the heavy lifting - "act as Marty Cagan" produces fundamentally different critique than "act as a reviewer." And the Instructions keep the critique focused on the dimensions that actually matter for the decision you're making. Notice how both CRIT examples produce feedback that challenges the underlying approach, not just surface details.`
+    },
+
+    task: {
+      instruction: `Think of something you've recently written or created that you'd want sharp feedback on - a PRD, a design spec, a strategy doc, a research plan, an experiment design, even a Slack message you're drafting for a sensitive topic.
+
+Write a CRIT prompt for it. The key is the Role dimension: pick a specific expert whose perspective would be genuinely useful, not just "an experienced PM." Think about whose critique you'd most value and why.
+
+You don't need to include the actual document (though you can). Focus on crafting the CRIT structure.`,
+      prompts: {
+        pm_ic: `Pick a deliverable from your current work - maybe a PRD, an experiment plan, a one-pager, or a customer problem statement. For the Role, think about a specific thinker whose lens would be valuable: Teresa Torres for discovery quality, Shreyas Doshi for prioritization rigor, a skeptical engineer for feasibility, or a Beyond customer for "does this actually solve my problem?"
+
+The Instructions should focus on the 2-3 dimensions where you're least confident. Don't ask for general feedback - target the areas where finding a problem now saves you the most time later.`,
+
+        pm_director: `Pick a strategic artifact - an OKR proposal, a roadmap narrative, a prioritization framework, or a stakeholder communication. For the Role, think about who in your professional world gives the most uncomfortable but useful feedback: a board member asking about defensibility, your CEO pushing on focus, a senior PM from a competitor poking at your positioning.
+
+The Instructions should target strategic weaknesses - not "is this well-written" but "is this strategy actually sound? What would make it fail?"`,
+
+        design_ic: `Pick a recent design - a flow, a component, a prototype, or a research plan. For the Role, think about a specific design perspective that would challenge you: a11y expert (accessibility specialist), a behavioral designer, a design systems engineer, a first-time user who just signed up and has no context, or a Beyond host who manages 200+ listings and has zero patience for unnecessary clicks.
+
+The Instructions should go beyond aesthetics - focus on whether the design actually solves the user's problem, not just whether it looks right.`,
+
+        design_lead: `Pick a design leadership artifact - a design quality rubric, a critique framework, a design strategy doc, or a team process proposal. For the Role, think about who would give the most useful strategic critique: Julie Zhuo on design management, a VP of Engineering questioning design ROI, or a product leader asking how design connects to business outcomes.
+
+The Instructions should focus on whether your artifact actually changes team behavior, not just whether it's thorough.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Is the Context specific enough that the critique will be grounded in the real situation?',
+        'Is the Role a specific expert perspective (not just "an experienced person")?',
+        'Do the Instructions target 2-3 specific dimensions rather than asking for general feedback?',
+        'Is the Tone calibrated to get honest feedback (not just validation)?',
+        'Would this CRIT prompt produce critique that changes the user\'s work, or just commentary?'
+      ],
+      seniorityNote: `For Director-level roles, the Role should involve strategic or organizational perspectives (board members, CEO, competitor PMs, team leads they manage). For IC roles, the Role should involve craft perspectives (specific methodology experts, end users, engineering partners). Both should produce critique that's genuinely uncomfortable in a useful way.`,
+      exampleFeedback: {
+        strong: `This is excellent CRIT structure. The Role is specific and purposeful - you're not just asking for "expert feedback," you're getting a specific lens that will challenge your work in a targeted way. The Instructions are focused on the 2-3 things that matter most for your decision. And the Tone calibration ("don't be polite about weak spots") gives Claude permission to be genuinely critical. One thing to try next: after getting this critique, ask Claude "Now switch roles: you're [different expert]. What does this critique miss?"`,
+        needsWork: `The CRIT structure is there but the Role is doing no work. "Act as an experienced PM" is too generic - it produces the same polite, surface-level feedback you'd get without CRIT. Think about a specific person or perspective: "Act as a Teresa Torres-trained PM who believes no spec should be written until the riskiest assumption has been tested." That Role will produce fundamentally different critique. Also, your Instructions say "give me feedback on this" - that's too open-ended. Name the 2-3 specific dimensions you're worried about.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.4 - Adversarial Prompting
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.4',
+    title: 'Make It Argue With You',
+    subtitle: 'Your new favorite sparring partner',
+    duration: '25 min',
+    description: `The most underused Claude capability isn't writing or analysis - it's disagreement. Most people use AI to confirm what they already think. The real power is in asking Claude to systematically attack your ideas before someone else does.
+
+This is adversarial prompting: deliberately asking Claude to find weaknesses, argue the other side, or pressure-test your assumptions. It's the difference between showing up to a product review hoping nobody finds the holes and showing up having already found and addressed them.`,
+
+    patterns: [
+      {
+        name: 'The Pre-Mortem',
+        description: 'Ask Claude to imagine your project has failed and work backward to identify why.',
+        example: `We're building a "Portfolio Health Score" that gives property managers a single number (1-100) showing how well their portfolio is performing. It combines BtM performance, price override frequency, occupancy, and owner satisfaction signals.
+
+Imagine it's 6 months after launch and this feature has completely failed to move our NRR needle. What went wrong? Give me the 5 most likely failure modes, starting with the most probable.`,
+        beyondContext: `This is real - Beyond has considered health scoring approaches. The failure modes are instructive: PMs might ignore a score they don't trust, the score might not be actionable, it might surface problems PMs already know about, or it might create anxiety without providing solutions.`
+      },
+      {
+        name: 'The Competitor Response',
+        description: 'Ask Claude to argue from a competitor\'s perspective.',
+        example: `I'm building Beyond's case for why property managers should pay 3-5x more than PriceLabs ($19.99/listing/month vs our ~$5-7/listing equivalent).
+
+Now argue the opposite: you're PriceLabs' VP of Product. Beyond just launched Listing Groups v2 and an Owner Reporting suite. Draft your counter-positioning memo to your sales team explaining why customers should stay with PriceLabs despite these new Beyond features. Be genuinely persuasive - don't strawman.`,
+        beyondContext: `This is one of the most valuable prompts a Beyond PM can run. PriceLabs' actual counter-positioning focuses on configurability, lower cost, and transparency ("you control every lever"). Understanding their strongest arguments helps you build products that can't be easily counter-positioned.`
+      },
+      {
+        name: 'The Sophistication Check',
+        description: 'Ask Claude to rewrite your thinking at a different user sophistication level.',
+        example: `Here's my PRD for a "Smart Minimum Stay" feature that automatically adjusts minimum night requirements based on demand patterns and booking lead time.
+
+Rewrite the user-facing explanation of this feature as if our target user is a first-time Airbnb host with one property who has never used a pricing tool before. They don't know what "booking lead time" means and they're nervous about automation changing things they don't understand.
+
+Then tell me: does this feature as designed actually work for this user, or have I designed it for a power user and assumed everyone thinks like me?`,
+        beyondContext: `This is critical for Beyond given the activation crisis. Features designed for sophisticated property managers often overwhelm the hosts who make up the highest-volume acquisition segment. This prompt forces you to confront whether you're building for your power users at the expense of your growth engine.`
+      },
+      {
+        name: 'The Assumption Excavator',
+        description: 'Ask Claude to find the hidden assumptions in your plan.',
+        example: `Here's our Q2 OKR: "Improve host activation rate from 5% to 8% by reducing onboarding steps from 14 to 6 and adding an in-app setup wizard."
+
+List every assumption embedded in this OKR. For each one, rate it: (a) validated with evidence, (b) reasonable but unvalidated, or (c) actually risky. Be thorough - I want the assumptions I'm not seeing, not just the obvious ones.`,
+        beyondContext: `Hidden assumptions kill OKRs. The big one here: does reducing onboarding steps actually cause higher activation, or do hosts who complete 14 steps self-select as more committed? Fewer steps might just mean more people finish onboarding but still don't enable pricing.`
+      }
     ],
+
+    task: {
+      instruction: `Pick a real product idea, strategy, or decision you're working on (or recently worked on). Write 3 different adversarial prompts using the patterns above. Then run at least one of them in the Prompt Playground and paste the result.
+
+The goal isn't to destroy your idea. It's to find the weaknesses before someone else does. The best product thinking survives adversarial pressure - it gets sharper, not weaker.`,
+      prompts: {
+        pm_ic: `Think about a feature, experiment, or spec you're currently working on. Write adversarial prompts using at least 2 of these patterns:
+- Pre-Mortem: "It's 6 months after launch and this has failed. Why?"
+- Competitor Response: "You're PriceLabs' PM. How do you counter-position this?"
+- Sophistication Check: "Rewrite this for a first-time host who has never used a pricing tool"
+- Assumption Excavator: "List every assumption in this plan I might be missing"
+
+The best prompt to start with is the Pre-Mortem - it's the fastest way to surface blind spots in your current work.`,
+
+        pm_director: `Think about a strategic bet, OKR, or roadmap decision your teams are pursuing. Write adversarial prompts that test the strategy, not just the execution:
+- Pre-Mortem: "It's end of year and this initiative failed to move the metric. What happened?"
+- Competitor Response: "You're a PriceLabs executive. Draft your board's response to Beyond's Q2 roadmap."
+- Assumption Excavator: "What assumptions about our market, our users, and our team need to be true for this strategy to work?"
+
+Try to write at least one prompt that would make you uncomfortable to read the answer. That's where the value is.`,
+
+        design_ic: `Think about a design you're working on or recently shipped. Write adversarial prompts that challenge the design decisions:
+- Pre-Mortem: "We shipped this design and users still aren't completing the flow. Where did we go wrong?"
+- Sophistication Check: "Walk through this flow as a host who is skeptical of automation and doesn't trust algorithms to set their prices"
+- Assumption Excavator: "What am I assuming about user behavior that I haven't validated with research?"
+
+The Sophistication Check is especially powerful for designers - it forces you to experience your design through a different user's mental model.`,
+
+        design_lead: `Think about a design strategy or team process decision you're making. Write adversarial prompts that test the organizational impact:
+- Pre-Mortem: "We adopted this design approach/process and 6 months later the team's output quality hasn't improved. Why?"
+- Competitor Response: "You're the VP of Design at a competitor. How does your design org outperform Beyond's based on what you see?"
+- Assumption Excavator: "What assumptions about my team's capabilities, motivation, and bandwidth need to be true for this design strategy to work?"
+
+Push yourself to test the uncomfortable assumptions - the ones about team dynamics and organizational readiness, not just design quality.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they write prompts that would produce genuinely uncomfortable feedback?',
+        'Are the prompts grounded in real Beyond work (not hypothetical scenarios)?',
+        'Do the adversarial prompts target different angles (strategy, execution, user sophistication, assumptions)?',
+        'If they ran a prompt, did their reflection show they actually found something they hadn\'t considered?',
+        'Are the prompts specific enough to produce actionable critique (not just "what could go wrong?")?'
+      ],
+      seniorityNote: `For Director-level roles, look for strategic-level adversarial thinking (market positioning, organizational assumptions, portfolio risk). For IC roles, look for execution-level adversarial thinking (user behavior, feature design, experiment validity). Both should produce prompts that are genuinely uncomfortable.`,
+      exampleFeedback: {
+        strong: `These adversarial prompts have real teeth. The Pre-Mortem is specific enough to produce concrete failure modes, not generic risk lists. And I like that your Competitor Response prompt asks for a "genuinely persuasive" counter - that instruction prevents Claude from strawmanning the opposition. The reflection shows you actually found a blind spot. Now here's the meta-move: take the biggest failure mode from the Pre-Mortem and write a follow-up prompt: "Given this risk, what's the cheapest test we could run in the next 2 weeks to validate whether it's real?"`,
+        needsWork: `The adversarial prompts are too gentle. "What could go wrong with this feature?" will get you a generic risk list. You need to be more specific: name the feature, name the metric it's supposed to move, and ask Claude to explain specifically why it won't move that metric. Also, the Competitor Response prompt asks "what would PriceLabs say?" but doesn't give Claude enough context about PriceLabs' actual positioning (configurability, low cost, transparency) to generate a genuinely persuasive counter-argument.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.5 - The Retrospective Prompt
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.5',
+    title: 'The Retrospective Prompt',
+    subtitle: 'Getting better at getting better',
+    duration: '20 min',
+    description: `The fastest way to improve at prompting is to ask the AI to help you improve at prompting. This sounds circular, but it's the single most effective habit you can build. After any significant Claude interaction, ask: "How could I have gotten here faster?" or "What should I have done differently?"
+
+Claude can see exactly where your prompt was vague, where it had to guess your intent, and what additional context would have saved three rounds of back-and-forth. It just needs permission to tell you.
+
+This is the meta-skill that makes every other skill in this course compound over time.`,
+
+    patterns: [
+      {
+        name: 'The Prompt Rewrite',
+        description: 'Ask Claude to improve your own prompt after seeing the results.',
+        before: `Help me write a competitive analysis of PriceLabs.`,
+        after: `I just asked you to "help me write a competitive analysis of PriceLabs" and the result was too generic. Rewrite my original prompt so that it would have produced a sharp, specific analysis on the first try. Show me the improved prompt and explain what was missing from my original.`,
+        insight: `Claude will typically identify that you didn't specify: the audience (board? product team? sales?), the dimensions of comparison (pricing? feature depth? market positioning?), the format (table? narrative? SWOT?), or the strategic question you're actually trying to answer. The rewritten prompt will include all of this.`
+      },
+      {
+        name: 'The Efficiency Audit',
+        description: 'Ask Claude to identify where you wasted time in a conversation.',
+        example: `Look at our conversation above. We went back and forth 6 times before you gave me what I needed. Where could I have given you better context or clearer instructions upfront to get to this result in 1-2 exchanges instead of 6? Be specific about what information I made you guess at.`,
+        insight: `This is humbling but incredibly useful. Claude will point out the exact moments where it had to make assumptions because you didn't specify something. Over time, you internalize these patterns and your first prompts get dramatically better.`
+      },
+      {
+        name: 'The Level-Up',
+        description: 'Ask Claude to assess your overall prompting patterns and suggest improvements.',
+        example: `Here's how I typically use Claude in my PM work at Beyond:
+- I paste in customer support tickets and ask for themes
+- I write rough PRD sections and ask Claude to clean them up
+- I ask for competitive analysis when prepping for meetings
+- I use it to draft emails and Slack messages
+
+Based on these patterns, what am I missing? What are the highest-leverage uses of AI for a product manager at a dynamic pricing company that I'm probably not doing? I want to go from "good" to "genuinely hard to compete with."`,
+        insight: `This prompt often surfaces blind spots like: using Claude for discovery (generating interview questions, structuring assumption maps), using it for adversarial thinking (as you learned in 1.4), and using it for synthesis (connecting insights across multiple customer conversations). Most people use AI for drafting and editing but miss the strategic thinking applications.`
+      }
+    ],
+
+    task: {
+      instruction: `Go back to your best prompt from Exercises 1.1-1.4. Run it in the Prompt Playground, then immediately follow up with a Retrospective Prompt asking Claude to help you improve it. Document what you learned.
+
+Then try the Level-Up pattern: describe how you currently use AI in your daily work and ask Claude what you're missing.`,
+      prompts: {
+        pm_ic: `Take your strongest prompt from the previous exercises and run it. Then ask Claude:
+1. "Rewrite my prompt so it would have produced a better result on the first try. Show me both versions and explain what changed."
+2. "Here's how I currently use AI in my PM work: [describe your actual patterns]. What am I missing that would make me significantly more effective at shipping features that move metrics?"
+
+Focus on identifying one concrete habit you can start this week.`,
+
+        pm_director: `Take your strongest prompt from the previous exercises and run it. Then ask Claude:
+1. "Where in our conversation did you have to make assumptions because I wasn't specific enough? What strategic context was missing?"
+2. "Here's how I currently use AI in my product leadership work: [describe your actual patterns]. Given that I'm responsible for team strategy, OKR quality, and stakeholder alignment, what are the highest-leverage AI use cases I'm probably not doing?"
+
+The Level-Up prompt is especially powerful at the director level because the highest-leverage uses of AI shift from execution (drafting, analysis) to strategic thinking (pressure-testing strategy, modeling scenarios, preparing for difficult conversations).`,
+
+        design_ic: `Take your strongest prompt from the previous exercises and run it. Then ask Claude:
+1. "Rewrite my prompt so it would have given me better design critique on the first try. What context about the user, the constraints, or the design rationale was I missing?"
+2. "Here's how I currently use AI in my design work: [describe your actual patterns]. What am I missing that would make my design thinking sharper and my workflow faster?"
+
+Pay attention to whether Claude suggests uses you hadn't considered - like using AI for research synthesis, accessibility auditing, or generating design variation concepts.`,
+
+        design_lead: `Take your strongest prompt from the previous exercises and run it. Then ask Claude:
+1. "What assumptions did you make about my design organization and strategic context because I didn't specify them? What would have made your response more useful for someone leading a design team?"
+2. "Here's how I currently use AI in my design leadership work: [describe your actual patterns]. I manage a design team and am responsible for design quality, design strategy, and cross-functional influence. What are the highest-leverage AI patterns for design leaders that I'm probably not using?"
+
+This is where you might discover uses like: using AI to synthesize research across multiple studies, generating design critique rubrics, preparing design strategy presentations, or modeling the organizational impact of design system investments.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they actually run a previous prompt and then do a retrospective (not just write about it)?',
+        'Did their retrospective surface a specific, actionable improvement?',
+        'Does their Level-Up prompt honestly describe their current AI usage patterns?',
+        'Did they identify at least one new AI use case they hadn\'t considered?',
+        'Is their "one concrete habit" specific enough to actually practice this week?'
+      ],
+      seniorityNote: `For Director-level roles, the Level-Up should surface strategic AI uses (scenario modeling, stakeholder prep, organizational design). For IC roles, it should surface craft-level AI uses (faster research synthesis, better design exploration, sharper specs). Both should identify patterns that go beyond drafting and editing.`,
+      exampleFeedback: {
+        strong: `Really solid retrospective work. The prompt rewrite shows a meaningful improvement - you went from a generic ask to one with clear context and evaluation criteria. And your Level-Up response surfaced a genuine blind spot (using Claude for assumption testing before writing specs, not after). That's the kind of habit that compounds. The meta-lesson here: you just used Claude to learn how to use Claude better. Make this a regular practice - even 30 seconds at the end of a session asking "how could I have gotten here faster?" will dramatically improve your prompting over the next few weeks.`,
+        needsWork: `The retrospective is too surface-level. "I should have been more specific" is true but not actionable. Ask Claude to show you the exact rewritten prompt - seeing the concrete difference between your version and the improved version is where the learning happens. Also, your Level-Up prompt describes your current usage but doesn't give Claude enough context about your specific role, your biggest time sinks, or where you feel least confident. The more honest you are about where you struggle, the more useful the suggestions will be.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 1.6 - Capstone: Set Up Your AI Environment
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '1.6',
+    title: 'Set Up Your AI Environment',
+    subtitle: 'Your home base for everything that follows',
+    duration: '30 min',
+    isCapstone: true,
+    description: `Everything you've learned in Level 1 culminates here: you're going to set up a Claude environment that's genuinely configured for YOUR work. This isn't a toy exercise - the system prompt and project folder you create here will be your daily driver for the rest of the course and beyond.
+
+A well-configured Claude environment is like having a colleague who already knows your company, your role, your current priorities, and how you like to work. Every conversation starts from a higher baseline.`,
+
+    guide: {
+      sections: [
+        {
+          title: 'Step 1: Create a Claude Project folder',
+          instructions: `Go to Claude Desktop and create a new Project. Name it something you'll actually use (e.g., "Core App PM Work" or "Host Experience Design" - not "NexusYou Exercise").
+
+This folder will hold your system prompt and any reference documents you want Claude to always have access to when working on this area.`,
+        },
+        {
+          title: 'Step 2: Write your system prompt',
+          instructions: `This is where everything from Level 1 comes together. Your system prompt should cover these areas (use the examples below as starting points, not templates to copy):`,
+          subsections: [
+            {
+              name: 'Who I am',
+              workedExamples: {
+                pm: `I'm a Senior PM at Beyond, a revenue management platform for short-term rental hosts and property managers. I own the activation workstream on the Core App team. My team's mission is to improve the rate at which new host signups become active, paying customers (currently 5%, target 8-11%). I work with a product trio (myself, a senior designer, and an engineering lead) plus data science support.`,
+                design: `I'm a Senior Product Designer at Beyond, working on the Core App team. I own the host-facing pricing experience - the calendar view, pricing recommendations, and the flows where hosts interact with (or override) our dynamic pricing. My design work directly impacts whether hosts trust the algorithm enough to let it work, which is our biggest product challenge.`
+              }
+            },
+            {
+              name: 'How I work',
+              workedExamples: {
+                pm: `I think in outcomes, not features. When I bring an idea, push me to articulate the problem first and identify the riskiest assumption. I value Teresa Torres-style discovery and Marty Cagan's emphasis on empowered teams. I prefer structured frameworks (RICE, OSTs, Four Risks) over gut-feel prioritization. When I ask for a draft, give me a strong starting point, not a perfect final version - I want to apply my own judgment to refine it.`,
+                design: `I design for behavior change, not just aesthetics. When I describe a design problem, push me on the underlying user motivation and the behavioral triggers, not just the UI layout. I value progressive disclosure, smart defaults, and reducing decisions. I want design feedback to be direct and specific - "the hierarchy is unclear because..." not "looks good." When reviewing my work, apply Nielsen's heuristics and Beyond's "feel in control without needing to control" principle.`
+              }
+            },
+            {
+              name: 'Key Beyond context',
+              content: `Include context that's relevant to YOUR specific work area. Don't dump everything - pick the 5-10 facts that shape most of your conversations:
+
+- Beyond's pricing algorithm adjusts nightly rates using demand signals, market data, seasonality, and events
+- Our core metric is Beat the Market (BtM): whether customers achieve +20% RevPAN vs their competitive set
+- We serve two segments: self-serve hosts (~25K, PLG motion) and enterprise property managers (contracted, ~75% of revenue)
+- Our biggest product challenge: 5% activation rate on ~6,000 monthly host signups
+- Main competitor: PriceLabs (3-5x cheaper, more manual/configurable, ~40-45% market share)
+- Philosophy: "Make users feel in control without needing to control" - smarter defaults over more settings
+- Key product areas: pricing engine, Compass (analytics), host onboarding, Owner Suite, Neyoba (AI assistant), Nexus (internal AI tools)
+- Relevant to your role: [add your team's specific OKRs, metrics, and current priorities]`
+            },
+            {
+              name: 'Response preferences',
+              content: `Specify how you want Claude to communicate:
+
+- Format preferences (bullets vs. prose, headers vs. no headers, length)
+- How direct you want feedback to be
+- Whether to ask clarifying questions before answering or take a best-guess first pass
+- Any terms or jargon to use or avoid
+- Whether you want Claude to challenge your thinking or focus on executing your request`
+            }
+          ]
+        },
+        {
+          title: 'Step 3: Add reference documents',
+          instructions: `Add 1-3 documents that are relevant to your daily work. Good candidates:
+- Your team's current OKRs
+- The Beyond Product & Design LLM Guide (ask your team lead for access to the shared PDE folder)
+- A recent PRD or design spec that represents the kind of work you do
+- A customer research summary or competitive analysis you reference often
+
+Don't add everything - add the documents that would save you the most "let me paste this context" time across your conversations.`
+        },
+        {
+          title: 'Step 4: Test and refine',
+          instructions: `Open a conversation in your new Project folder and try 3 different types of prompts:
+1. A quick question about your product area (does it give a contextually aware answer?)
+2. A COSTAR prompt from Exercise 1.2 (does the output reflect your role and context?)
+3. An adversarial prompt from Exercise 1.4 (does the critique reference Beyond-specific challenges?)
+
+If the responses feel generic, your system prompt needs more specific context. If Claude seems confused about what you do, clarify your role and scope.`
+        }
+      ]
+    },
+
+    task: {
+      instruction: `Complete all 4 steps above, then paste your system prompt into the text field below. The AI Coach will evaluate it against best practices and your specific role.
+
+This is the deliverable for Level 1 - a working Claude environment you'll actually use going forward. Don't just write a system prompt for this exercise; write one you'd genuinely keep.`,
+      prompts: {
+        pm_ic: `Your system prompt should reflect your specific PM responsibilities - the product area you own, the metrics you're trying to move, and how you make decisions. Include your team context (who do you collaborate with daily?) and your current top priority.
+
+Strong PM IC system prompts usually include: the specific user segment they're focused on, their team's current OKR or north star metric, their preferred frameworks, and instructions for Claude to push back on feature-first thinking.`,
+
+        pm_director: `Your system prompt should reflect your scope - the teams and product areas you're responsible for, the strategic bets you're guiding, and the stakeholder landscape you navigate. It should give Claude enough context to help you think at the portfolio level, not just the feature level.
+
+Strong Director-level system prompts include: the business context that shapes your decisions (revenue mix, market positioning, competitive dynamics), your expectations for strategic rigor, and instructions for Claude to distinguish between team-level execution questions and director-level strategy questions.`,
+
+        design_ic: `Your system prompt should reflect your specific design domain - the product area you design for, the users you serve, and the design principles that guide your work. Include your preferred tools and methods (Figma, user research approaches, design system usage).
+
+Strong Design IC system prompts include: the specific UX challenges in their area (e.g., "hosts don't trust algorithmic pricing"), their design philosophy, and instructions for Claude to give feedback using specific design heuristics rather than generic suggestions.`,
+
+        design_lead: `Your system prompt should reflect your leadership scope - the design team you manage, the product areas your team covers, and the design culture you're building. It should help Claude operate as a strategic design thinking partner, not just a UI feedback tool.
+
+Strong Design Leader system prompts include: the team composition and current design challenges, the cross-functional dynamics with PM and engineering, design quality standards, and instructions for Claude to help with both craft-level reviews and organizational design decisions.`
+      }
+    },
+
     assessment: {
-      title: 'Level 1 Assessment',
       questions: [
         {
-          id: 'q1_1',
-          text: "What primarily distinguishes a 'thought partner' prompt from a search query?",
+          question: 'What\'s the single biggest difference between a "search query" prompt and a "thought partner" prompt?',
           options: [
-            'A) It is longer and more detailed',
-            'B) It includes your role/context, describes a real problem, and invites analysis rather than just information',
-            'C) It uses more technical vocabulary',
-            'D) It asks multiple questions at once',
+            'Thought partner prompts are longer',
+            'Thought partner prompts include your context, initial thinking, and ask for analysis rather than information',
+            'Thought partner prompts use more formal language',
+            'Thought partner prompts always use a framework like COSTAR'
           ],
-          correct: 'B',
-          explanation:
-            "Length alone doesn't make a prompt better. The key is context + specific problem + invitation to analyze — not just retrieve information.",
+          correct: 1,
+          explanation: 'Length, formality, and frameworks are tools, not the core difference. The real shift is sharing your context and partial thinking so Claude can analyze with you rather than just retrieve for you.'
         },
         {
-          id: 'q1_2',
-          text: "When should you use the CRIT framework vs. the COSTAR framework?",
+          question: 'When would you use CRIT instead of COSTAR?',
           options: [
-            'A) COSTAR for getting feedback on your work; CRIT for requesting structured outputs',
-            'B) They are interchangeable — both serve the same purpose',
-            'C) COSTAR for creating structured outputs (documents, analysis); CRIT for getting useful critique of existing work',
-            'D) COSTAR for short prompts; CRIT for long ones',
+            'When you want longer output',
+            'When you want Claude to generate content from scratch',
+            'When you want Claude to critique or evaluate something you\'ve already created',
+            'When you\'re working on a design task'
           ],
-          correct: 'C',
-          explanation:
-            "COSTAR structures a request for new output (Style, Tone, Response Format all matter). CRIT structures a request for critique (Role and Instructions define how to evaluate, not what to create).",
+          correct: 2,
+          explanation: 'COSTAR is for generating content (tell Claude what to create). CRIT is for getting critique (tell Claude what perspective to evaluate from). The Role dimension in CRIT is what makes critique specific and useful rather than generic.'
         },
         {
-          id: 'q1_3',
-          text: "What is 'adversarial prompting' and when is it most valuable?",
+          question: 'What\'s the most valuable habit to build for long-term prompting improvement?',
           options: [
-            "A) Writing prompts that confuse the AI — useful for testing model robustness",
-            "B) Asking Claude to argue against your ideas or surface failure modes — most valuable for pressure-testing decisions before committing",
-            "C) Using AI to write critical reviews of competitors' products",
-            "D) Getting Claude to disagree with its previous responses",
+            'Memorizing prompting frameworks',
+            'Writing longer prompts with more detail',
+            'Regularly asking Claude how you could have gotten to the answer faster',
+            'Using the same prompt template for every task'
           ],
-          correct: 'B',
-          explanation:
-            "Adversarial prompting is a tool for overcoming confirmation bias. You ask Claude to attack your ideas, not to be difficult — the goal is finding weaknesses before they become expensive.",
-        },
+          correct: 2,
+          explanation: 'The retrospective prompt habit compounds over time. Frameworks are useful starting points, but the meta-skill of evaluating and improving your own prompting is what makes you genuinely excellent rather than just competent.'
+        }
       ],
-      selfReflection: {
-        id: 'sr1',
-        question:
-          "On a scale of 1-5, how confident do you feel using Claude as a thought partner vs. a search engine? What's the biggest shift in how you're thinking about AI after Level 1?",
-        placeholder:
-          "1 = I still mostly use it like Google | 5 = I'm naturally writing rich, contextual prompts. What changed most in how you're thinking about this?",
-      },
+      selfReflection: `On a scale of 1-5, how confident do you now feel using Claude as a thought partner rather than a search engine? And more importantly: what's the one prompting habit from Level 1 that you'll start using this week?`
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Does the system prompt include specific role and team context (not just "I am a PM at Beyond")?',
+        'Does it include Beyond-specific knowledge that would save context-setting in future conversations?',
+        'Does it include "how I work" preferences that shape Claude\'s behavior?',
+        'Does it include response format preferences?',
+        'Does it reference relevant frameworks or principles (SVPG, Teresa Torres, etc)?',
+        'Is it practical - would this person actually use this system prompt daily?',
+        'Is it the right length - enough context to be useful, not so much that it dilutes focus?'
+      ],
+      seniorityNote: `For Director-level roles, the system prompt should reflect strategic scope - multiple teams, business-level metrics, stakeholder management. It should instruct Claude to think at the portfolio/strategy level by default. For IC roles, the system prompt should reflect tactical depth - specific product area, specific user segment, specific methodologies. It should instruct Claude to be a hands-on craft partner.`,
+      exampleFeedback: {
+        strong: `This is a system prompt you'll actually use - and that's the whole point. Your role context is specific enough that Claude starts every conversation knowing your team, your metrics, and your current priorities. The "how I work" section is excellent - telling Claude to push back on feature-first thinking and ask for the problem statement first will genuinely improve every conversation. One suggestion: add a line about response format preferences (do you want bullets or prose? Short answers or detailed analysis?) since that'll save you asking for format adjustments in every conversation. Nice work - you've just leveled up every future Claude interaction.`,
+        needsWork: `This system prompt is a good start but it's too generic to meaningfully change Claude's behavior. "I'm a PM at Beyond who works on the product" could describe anyone on the team. Make it specific: which product area? Which user segment? What's the metric you're trying to move this quarter? Also, the "how I work" section is missing - this is where the real leverage is. Tell Claude whether you want it to challenge your thinking or execute your requests, whether to ask clarifying questions or take a best guess, and what frameworks you prefer. These instructions compound across every conversation.`
+      }
+    },
+
+    milestone: {
+      message: `You just checked into your first property! From zero to a fully configured AI environment in one level. That system prompt is going to make every Claude conversation better from here on out.`,
+      dadJoke: `Why did the AI go to real estate school? Because it wanted to learn about property management... of prompts. Yeah, that one's from Gerard. He's not sorry.`,
+      nextLevel: `Level 2: The Host - where you'll learn context management, conversation hygiene, and why word choice can completely change what Claude gives you.`
+    }
+  }
+],
+    assessment: {
+      questions: [
+        {
+          question: 'What\'s the single biggest difference between a "search query" prompt and a "thought partner" prompt?',
+          options: [
+            'Thought partner prompts are longer',
+            'Thought partner prompts include your context, initial thinking, and ask for analysis rather than information',
+            'Thought partner prompts use more formal language',
+            'Thought partner prompts always use a framework like COSTAR'
+          ],
+          correct: 1,
+          explanation: 'Length, formality, and frameworks are tools, not the core difference. The real shift is sharing your context and partial thinking so Claude can analyze with you rather than just retrieve for you.'
+        },
+        {
+          question: 'When would you use CRIT instead of COSTAR?',
+          options: [
+            'When you want longer output',
+            'When you want Claude to generate content from scratch',
+            'When you want Claude to critique or evaluate something you\'ve already created',
+            'When you\'re working on a design task'
+          ],
+          correct: 2,
+          explanation: 'COSTAR is for generating content (tell Claude what to create). CRIT is for getting critique (tell Claude what perspective to evaluate from). The Role dimension in CRIT is what makes critique specific and useful rather than generic.'
+        },
+        {
+          question: 'What\'s the most valuable habit to build for long-term prompting improvement?',
+          options: [
+            'Memorizing prompting frameworks',
+            'Writing longer prompts with more detail',
+            'Regularly asking Claude how you could have gotten to the answer faster',
+            'Using the same prompt template for every task'
+          ],
+          correct: 2,
+          explanation: 'The retrospective prompt habit compounds over time. Frameworks are useful starting points, but the meta-skill of evaluating and improving your own prompting is what makes you genuinely excellent rather than just competent.'
+        }
+      ],
+      selfReflection: `On a scale of 1-5, how confident do you now feel using Claude as a thought partner rather than a search engine? And more importantly: what's the one prompting habit from Level 1 that you'll start using this week?`
     },
     milestone: {
-      title: "Part-Time Hustler!",
-      emoji: "🏠",
-      message:
-        "You just checked into your first property! From Part-Time Hustle to... well, still Part-Time Hustle, but now with a killer AI setup. Your prompts have context. You know the frameworks. Claude is starting to feel like a colleague instead of a search engine.",
-      gerardJokeId: 'ai_3',
-      nextLevelTeaser:
-        "Level 2 is about running a real AI operation — conversation hygiene, context calibration, and making sure Claude is always giving you its best work.",
+      message: `You just checked into your first property! From zero to a fully configured AI environment in one level. That system prompt is going to make every Claude conversation better from here on out.`,
+      dadJoke: `Why did the AI go to real estate school? Because it wanted to learn about property management... of prompts. Yeah, that one's from Gerard. He's not sorry.`,
+      nextLevel: `Level 2: The Host - where you'll learn context management, conversation hygiene, and why word choice can completely change what Claude gives you.`
     },
   },
 
@@ -666,609 +736,669 @@ export const LEVELS = [
     description:
       "You've got the fundamentals. Now it's time to optimize. Learn how to manage AI conversations like a pro — when to continue, when to start fresh, and how to stop getting mediocre outputs.",
     exercises: [
-      // ── Exercise 2.1 ────────────────────────────────────────────────────
-      {
-        id: '2.1',
-        title: 'The Goldilocks Zone: Context That\'s Just Right',
-        duration: '25 min',
-        type: 'comparison',
-        skill: 'Calibrating context — not too little, not too much, but just right',
-        intro:
-          "More context is always better, right? Not quite. There's a sweet spot — the Goldilocks Zone — where you've given Claude exactly enough to be genuinely helpful without burying it in information that dilutes its focus.\n\nToo little context: generic responses. Too much context: Claude loses the thread, over-hedges, and gives you a scattered response. Just right: specific, actionable, directly applicable to your actual situation.",
-        learningObjective:
-          "You'll learn to calibrate context by comparing three versions of the same prompt and identifying which produces the best result.",
-        content: {
-          type: 'comparison_three',
-          example_topic: "Prioritizing three competing features for a roadmap",
-          examples: [
-            {
-              label: '❌ Too Little Context',
-              prompt: "How should I prioritize these three features?",
-              why: "Claude doesn't know your company, your users, your constraints, or even what the three features are. The response will be a generic prioritization framework — useful for anyone, not useful for you.",
-            },
-            {
-              label: '✅ Goldilocks Zone',
-              prompt:
-                "I'm a PM at Beyond, a dynamic pricing platform for STR hosts. I need to prioritize three features for Q2: (1) bulk pricing rules for multi-property hosts, (2) a new onboarding checklist for first-time hosts, and (3) a competitive benchmarking dashboard. Our biggest current problem is that only 5% of signups convert, and our research suggests setup complexity is the main barrier. Budget and engineering capacity are fixed at 6 engineer-weeks for the quarter. Help me think through which to prioritize and what trade-offs I'm making.",
-              why: "This gives Claude: your role + company, the specific options with enough description to evaluate them, the current problem that should drive the decision, and a concrete constraint (6 engineer-weeks). Everything relevant, nothing irrelevant.",
-            },
-            {
-              label: '❌ Too Much Context',
-              prompt:
-                "I'm a PM at Beyond, a dynamic pricing platform for STR hosts. We were founded in 2014 by David Lerch in San Francisco. We currently have 400+ employees. Our platform integrates with Airbnb, VRBO, Booking.com, and 15+ other channels. We have enterprise clients, mid-market clients, and SMB clients across 70+ countries. Our engineering team uses a squad model with 3 squads currently... [continues for 5 more paragraphs of company history, technical stack, team org chart, and quarterly business review data]... Given all that, how should I prioritize these three features?",
-              why: "95% of this context is irrelevant to the prioritization question. Claude now has to figure out what matters and what doesn't — and it'll often average everything rather than focus on what's actually relevant. Longer ≠ better.",
-            },
-          ],
-          rule: "Only include context that would change Claude's answer. If removing a sentence wouldn't affect the response, cut it.",
-        },
-        task: {
-          instructions:
-            "Pick a real question or task you're working on right now. Write three versions of the prompt:\n\n1. Too little context (the search-query version)\n2. Your best guess at the Goldilocks Zone\n3. Too much context (throw everything in)\n\nIf you can, run all three in the Prompt Playground and note which produces the best result. If not, just write the three versions.",
-          fields: [
-            {
-              id: 'too_little',
-              label: 'Version 1: Too little context (the search-query version):',
-              placeholder: 'The bare minimum version...',
-              rows: 3,
-              required: true,
-            },
-            {
-              id: 'goldilocks',
-              label: 'Version 2: The Goldilocks Zone (your best calibrated version):',
-              placeholder: 'Just the right amount of context — everything relevant, nothing irrelevant...',
-              rows: 6,
-              required: true,
-            },
-            {
-              id: 'too_much',
-              label: 'Version 3: Too much context (the kitchen sink version):',
-              placeholder: 'Everything and the kitchen sink...',
-              rows: 8,
-              required: true,
-            },
-            {
-              id: 'reflection',
-              label: 'What did you cut to get from "too much" to the Goldilocks Zone? What was the deciding factor?',
-              placeholder: 'What made certain context "relevant" vs. "interesting but not relevant"?',
-              rows: 3,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's three prompt versions. Check: (1) Is the 'too little' version actually too vague to get a good response? (2) Is the Goldilocks version genuinely well-calibrated — does it include everything that would change Claude's answer, and nothing that wouldn't? This is the key test: would removing any sentence affect the response? (3) Is the 'too much' version actually overwrought — does it include things that are interesting but irrelevant? (4) Most importantly: is their reflection insightful? Did they identify a clear principle for what makes context 'relevant'? The best answer is something like 'context is relevant if it changes what Claude would recommend' rather than 'I cut things that seemed less important.'",
-        evaluationCriteria: [
-          '"Too little" version is genuinely vague/under-specified',
-          'Goldilocks version includes only context that affects the answer',
-          '"Too much" version includes genuinely irrelevant material',
-          'Reflection identifies a clear principle for relevance, not just "I cut stuff"',
-        ],
-      },
 
-      // ── Exercise 2.2 ────────────────────────────────────────────────────
-      {
-        id: '2.2',
-        title: 'Ask Me First: Teaching Claude to Clarify',
-        duration: '20 min',
-        type: 'framework',
-        skill: 'Using the "Ask Me First" technique to get better answers on complex questions',
-        intro:
-          "Here's a counterintuitive technique: instead of trying to write the perfect prompt upfront, ask Claude to interview you.\n\nThis works especially well for complex, multi-faceted problems where you're not sure you've even framed the question right. Claude asks you the 3-4 questions that will actually determine the quality of its answer — and you often discover that you hadn't thought about those dimensions yet.\n\nIt's also a good shortcut when you're in a hurry and don't want to spend 10 minutes crafting a perfect COSTAR prompt.",
-        learningObjective:
-          "You'll practice the 'Ask Me First' technique on a complex problem and document how the clarifying questions changed your thinking.",
-        content: {
-          type: 'patterns',
-          patterns: [
-            {
-              name: 'The Standard Ask',
-              prompt: "Before answering, ask me 3 clarifying questions that would help you give a significantly better response.",
-              when: "When your question is complex and you're not sure you've framed it right",
-            },
-            {
-              name: 'The Deep Interview',
-              prompt: "Don't answer yet. First, interview me about this problem. Ask me everything you'd need to know to give your best possible answer.",
-              when: "When you want Claude to drive the conversation toward the right answer",
-            },
-            {
-              name: 'The Context Gap Check',
-              prompt: "Tell me what additional context would make your answer significantly better. Then I'll provide it before you answer.",
-              when: "When you suspect you're missing something important but don't know what",
-            },
-            {
-              name: 'The Assumption Surface',
-              prompt: "Before answering: (1) tell me what assumptions you're making about my situation, (2) ask whether they're correct. Then answer based on my corrections.",
-              when: "When you want to catch Claude making wrong assumptions before it builds an answer on them",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Pick a complex question or problem from your actual work — something where there are multiple valid answers depending on context, constraints, or goals.\n\nPM roles: a prioritization decision, a trade-off between two approaches, or a 'should we build this?' question.\nDesign roles: a UX problem with multiple valid approaches, a design decision with trade-offs, or a question about what to prioritize in a redesign.\n\nStep 1: Write your question and one 'Ask Me First' prompt.\nStep 2: Write what clarifying questions you'd expect Claude to ask.\nStep 3: Write what questions actually surprised you — the ones you hadn't considered.",
-          fields: [
-            {
-              id: 'question',
-              label: 'The complex question you\'re working on:',
-              placeholder: 'Describe the problem or decision you\'re wrestling with...',
-              rows: 4,
-              required: true,
-            },
-            {
-              id: 'ask_me_first',
-              label: 'Your "Ask Me First" prompt:',
-              placeholder: "Example: 'Before answering, ask me 3 clarifying questions that would help you give a significantly better response.'",
-              rows: 3,
-              required: true,
-            },
-            {
-              id: 'expected_questions',
-              label: 'What clarifying questions did you expect Claude to ask?',
-              placeholder: 'Before you ran it, what did you think the obvious questions would be?',
-              rows: 4,
-              required: true,
-            },
-            {
-              id: 'actual_questions',
-              label: 'What questions did Claude actually ask? Which ones surprised you?',
-              placeholder: 'Paste the clarifying questions Claude asked, and note which ones you hadn\'t anticipated...',
-              rows: 5,
-              required: false,
-            },
-            {
-              id: 'reflection',
-              label: 'How did the clarifying questions change the direction of your thinking?',
-              placeholder: 'Did they surface assumptions you hadn\'t examined? Add constraints you\'d overlooked? Reframe the question entirely?',
-              rows: 3,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's 'Ask Me First' exercise. Check: (1) Did they pick a genuinely complex question where clarifying questions would meaningfully change the answer? Simple questions don't qualify. (2) Is their 'Ask Me First' prompt asking Claude to clarify before answering — not just asking Claude to answer a complex question? (3) Is their reflection genuine — do they show self-awareness about what they hadn't considered? The best responses show that the clarifying questions surfaced something real: an assumption they'd made, a dimension they'd missed, or a way to reframe the question. Penalize if their reflection is 'the questions were what I expected' — that means they didn't push into genuinely complex territory.",
-        evaluationCriteria: [
-          'Question is genuinely complex (multiple valid answers depending on context)',
-          '"Ask Me First" prompt correctly instructs Claude to clarify before answering',
-          'Expected questions show their initial assumptions',
-          'Reflection shows genuine learning from the unexpected questions',
-        ],
-      },
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.1 - The Goldilocks Zone
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.1',
+    title: 'The Goldilocks Zone',
+    subtitle: "Context that's just right",
+    duration: '25 min',
+    description: `One of the most common mistakes people make with LLMs is getting context wrong - either starving Claude of information or drowning it. Too little context produces generic answers. Too much context dilutes focus and can actually confuse the output.
 
-      // ── Exercise 2.3 ────────────────────────────────────────────────────
-      {
-        id: '2.3',
-        title: 'Conversation Hygiene: When to Continue, Branch, or Start Fresh',
-        duration: '20 min',
-        type: 'reflection',
-        skill: 'Managing conversation state — knowing when to continue, branch, or start a new chat',
-        intro:
-          "AI conversations are stateful — everything in the thread affects everything that comes after. This is powerful when the context is relevant. It becomes a liability when you're dragging stale, irrelevant, or conflicting context into a new direction.\n\nMost people never think about this. They either have one mega-conversation that goes on for weeks (context decay is real) or they start fresh every time and lose the useful context they've built. The skill is knowing when each approach is right.",
-        learningObjective:
-          "You'll build a personal decision tree for when to continue vs. branch vs. start fresh, and apply it to your recent Claude conversations.",
-        content: {
-          type: 'decision_tree',
-          title: 'When to Continue, Branch, or Start Fresh',
-          options: [
-            {
-              choice: '▶ Continue the conversation',
-              color: '#3bc1cc',
-              when: [
-                "You're building on the same thread of thinking — iterating on a document, exploring branches of the same problem",
-                "The prior context is still actively relevant (not just vaguely related)",
-                'You\'re inside a 15-20 message window where quality is still high',
-                "The conversation has momentum you want to preserve",
-              ],
-              signal: "The AI's last response still feels 'in sync' with what you need",
-            },
-            {
-              choice: '↗ Branch (start a new chat from a reference point)',
-              color: '#ee3968',
-              when: [
-                'You want to take the same context in a different direction without corrupting the original thread',
-                "You're about to try something speculative and might want to 'undo' if it doesn't work",
-                'You want to have two parallel explorations from the same starting point',
-              ],
-              signal: "You're thinking 'what if I tried this instead?' while mid-conversation",
-            },
-            {
-              choice: '🔄 Start Fresh',
-              color: '#02556c',
-              when: [
-                "The topic has fundamentally changed — you're done with the original topic",
-                "The conversation has become circular or confused — quality is degrading",
-                "You're past ~20 exchanges and responses feel less sharp",
-                "You have context from a finished conversation that belongs in your Project folder now",
-              ],
-              signal: "You catch yourself saying 'ignore everything above and...' in your prompt",
-            },
-            {
-              choice: '📁 Use a Project Folder',
-              color: '#252f38',
-              when: [
-                "You'll return to this topic repeatedly across many sessions",
-                'You want consistent behavior and context across all conversations about this topic',
-                'You have reference documents that should always be available',
-                "You're building something incrementally (a strategy doc, an OKR, a design brief)",
-              ],
-              signal: "You've started fresh 3+ times and always had to re-explain the same background",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Look at your last 5 Claude conversations (or your most recent sessions). For each one, apply the decision framework above:\n\n- Was this handled correctly (continue / branch / start fresh / project) for what it was?\n- If not, which approach would have been better?\n- What would you do differently?\n\nThen write your personal 'Conversation Hygiene Rules' — 3-5 personal guidelines you'll follow going forward.",
-          fields: [
-            {
-              id: 'conversation_audit',
-              label: 'Your conversation audit (briefly describe each of your last 5 conversations and classify them):',
-              placeholder:
-                "Conversation 1: [What it was] → Should have: [continued / branched / started fresh / used Project] because...\nConversation 2: ...\n(etc.)",
-              rows: 10,
-              required: true,
-            },
-            {
-              id: 'personal_rules',
-              label: 'Your personal Conversation Hygiene Rules (3-5 rules you\'ll actually follow):',
-              placeholder:
-                "Rule 1: I'll start fresh whenever...\nRule 2: I'll use a Project folder for...\nRule 3: The signal for me that I need to branch is...",
-              rows: 6,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's conversation hygiene exercise. Check: (1) Did they actually audit 5 real conversations, or did they make something up? Look for specificity — real conversations have real topics. (2) Are their classifications thoughtful? Do they understand the distinction between 'continue' and 'use a project folder'? Many people confuse these. (3) Most importantly, are their personal rules specific and actionable — things they could actually follow? 'I'll start fresh when the conversation gets confused' is weak. 'I'll start fresh after 15+ exchanges on the same topic, or when I catch myself starting a prompt with ignore everything above' is strong. Push for specificity.",
-        evaluationCriteria: [
-          'Audited 5 real conversations with specific descriptions',
-          'Classifications show understanding of the distinctions (esp. continue vs. Project)',
-          'Personal rules are specific and actionable',
-          'Shows genuine self-awareness about their current conversation habits',
-        ],
-      },
+The sweet spot is what we call the Goldilocks Zone: enough context for Claude to understand your specific situation, but focused enough that every piece of context is doing work. The test is simple: if you removed a sentence from your prompt and the output wouldn't change, that sentence wasn't earning its keep.`,
 
-      // ── Exercise 2.4 ────────────────────────────────────────────────────
-      {
-        id: '2.4',
-        title: 'Hallucination Hunting: Demand Accuracy',
-        duration: '25 min',
-        type: 'playground',
-        skill: 'Strategies for minimizing hallucinations and demanding accurate, well-reasoned outputs',
-        intro:
-          "Claude is very confident and very occasionally wrong. The dangerous combination: it doesn't always flag its uncertainty. It will state a made-up statistic with the same confident tone as a solid fact.\n\nThe good news: you can significantly reduce hallucinations with the right prompting techniques. And you can teach yourself to catch the rest. This exercise builds both skills.",
-        learningObjective:
-          "You'll practice multiple hallucination-prevention techniques and test Claude's accuracy on a topic you know well.",
-        content: {
-          type: 'patterns',
-          patterns: [
-            {
-              name: 'The Uncertainty Declaration',
-              prompt: "Only include information you're confident about. If you're uncertain about something, say so explicitly rather than stating it as fact.",
-              when: "Add this to any factual prompt where accuracy matters",
-            },
-            {
-              name: 'The Confidence Rating',
-              prompt: "After your response, rate your confidence in each major claim from 1-10 and explain why.",
-              when: "When you need to identify which parts of a response to verify",
-            },
-            {
-              name: 'The Reasoning Chain',
-              prompt: "For each claim you make, briefly explain why you believe it's true and what you're basing it on.",
-              when: "When you need to audit the reasoning, not just the conclusions",
-            },
-            {
-              name: 'The Echo Test',
-              prompt: "Before answering: repeat back my constraints and key requirements to confirm you understood them correctly. Then answer.",
-              when: "When a misunderstood constraint would lead to a useless response",
-            },
-            {
-              name: 'The Push-Back Test (Advanced)',
-              prompt: "I believe [wrong fact]. Given that, please help me think through [question].",
-              when: "To test whether Claude will accept bad inputs or push back — it often won't push back, which is the lesson",
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Step 1: Ask Claude a question about Beyond's market, a competitor, or a product domain where you know the correct answer. Apply at least one hallucination-prevention technique.\n\nStep 2: Evaluate the response for accuracy. Where did Claude get it right? Where did it make claims you know are wrong or uncertain?\n\nStep 3 (Bonus, highly recommended): Give Claude a wrong fact and see if it pushes back or accepts it uncritically. This is the most powerful lesson — Claude is often a very agreeable yes-person about bad inputs.",
-          fields: [
-            {
-              id: 'factual_question',
-              label: 'Your factual question and the hallucination-prevention technique(s) you used:',
-              placeholder:
-                "Question: [Your question about something you know well]\nTechnique used: [Which technique and why you picked it]",
-              rows: 5,
-              required: true,
-            },
-            {
-              id: 'accuracy_evaluation',
-              label: "Your evaluation of Claude's accuracy (what it got right, what it got wrong/uncertain):",
-              placeholder:
-                "Got right: ...\nGot wrong or stated with false confidence: ...\nSaid it was uncertain about: ...",
-              rows: 6,
-              required: true,
-            },
-            {
-              id: 'wrong_input_test',
-              label: '(Bonus) What happened when you gave Claude wrong information — did it push back or accept it?',
-              placeholder:
-                "What wrong fact did you give it? Did it accept it, push back, or hedge? What does this tell you about how to use Claude for factual work?",
-              rows: 4,
-              required: false,
-            },
-            {
-              id: 'technique_going_forward',
-              label: 'Which hallucination-prevention technique will you use most going forward, and why?',
-              placeholder: 'Be specific about the types of work where you\'ll apply it...',
-              rows: 3,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the hallucination hunting exercise. Check: (1) Did they pick a topic where they actually know the correct answer — this is crucial, otherwise they can't evaluate accuracy. (2) Did they apply at least one technique genuinely (not just mention it)? (3) Is their accuracy evaluation specific — do they name actual claims Claude made and evaluate them? Vague 'it seemed mostly right' is insufficient. (4) If they did the bonus test, did they notice the key insight — that Claude often accepts wrong inputs without pushback, which means you can't rely on Claude to catch your mistakes. (5) Is their 'technique going forward' specific to their actual work, not generic?",
-        evaluationCriteria: [
-          'Chose a topic where they know the correct answer',
-          'Applied at least one technique explicitly',
-          'Accuracy evaluation is specific (names actual claims)',
-          'Identifies at least one thing Claude got wrong or stated with false confidence',
-          'Draws a practical conclusion about their future use of Claude',
-        ],
+    comparisonThree: {
+      tooLittle: {
+        label: 'Too little context',
+        prompt: `Why are hosts churning?`,
+        result: `You get a generic list of reasons why SaaS customers churn - pricing, competition, poor onboarding, lack of value perception. None of it is specific to Beyond, your customer segment, or the actual churn patterns in your data. You could have gotten this from a Google search.`,
       },
+      justRight: {
+        label: 'Just right',
+        prompt: `I'm a PM at Beyond (dynamic pricing for short-term rentals). I'm investigating host churn in our self-serve segment. We add ~6,000 new host signups monthly but only net ~110/month after churn.
 
-      // ── Exercise 2.5 ────────────────────────────────────────────────────
-      {
-        id: '2.5',
-        title: 'Word Choice is Everything',
-        duration: '20 min',
-        type: 'playground',
-        skill: 'Understanding how single word changes dramatically alter output quality and direction',
-        intro:
-          "The difference between a mediocre prompt and a great one is sometimes just one word. 'List' and 'Brainstorm' look similar — they both ask Claude to generate multiple items. But they produce fundamentally different outputs.\n\nThis exercise trains you to see prompts as precision instruments, not casual requests. Every word you choose signals something about what you want.",
-        learningObjective:
-          "You'll discover through experimentation how individual word choices change output quality, and build a personal vocabulary of high-signal words for your most common tasks.",
-        content: {
-          type: 'word_comparison',
-          categories: [
-            {
-              name: 'Generation words',
-              words: [
-                { word: 'List', effect: 'Structured, flat enumeration' },
-                { word: 'Brainstorm', effect: 'Exploratory, associative, more creative' },
-                { word: 'Generate', effect: 'Methodical, comprehensive' },
-                { word: 'Surface', effect: 'Implies finding hidden or non-obvious things' },
-                { word: 'Propose', effect: 'Implies recommendations with reasoning' },
-              ],
-            },
-            {
-              name: 'Analysis words',
-              words: [
-                { word: 'Explain', effect: 'Educational, definitions-forward' },
-                { word: 'Analyze', effect: 'Structured breakdown with logic' },
-                { word: 'Unpack', effect: 'Casual, exploratory, layer-by-layer' },
-                { word: 'Critique', effect: 'Critical eye, surfaces weaknesses' },
-                { word: 'Evaluate', effect: 'Balanced assessment against criteria' },
-              ],
-            },
-            {
-              name: 'Quality words',
-              words: [
-                { word: 'Good', effect: 'Sets a low bar — average results' },
-                { word: 'Excellent', effect: 'Raises the bar slightly' },
-                { word: 'Exceptional', effect: 'Sets a high bar — noticeably better outputs' },
-                { word: 'World-class', effect: 'Signals you want the absolute ceiling' },
-                { word: 'Concise', effect: 'Short AND high quality (vs. just short)' },
-              ],
-            },
-            {
-              name: 'Communication style',
-              words: [
-                { word: 'Convince', effect: 'Persuasive, one-sided argument' },
-                { word: 'Teach', effect: 'Pedagogical, built for understanding' },
-                { word: 'Debate', effect: 'Both sides, structured argument' },
-                { word: 'Distill', effect: 'Essence-extraction, removes noise' },
-                { word: 'Reframe', effect: 'New perspective on same content' },
-              ],
-            },
-          ],
-        },
-        task: {
-          instructions:
-            "Take one of your prompts from Level 1 or Level 2. Identify 3 key words in that prompt. For each word, test 2-3 alternatives in the Prompt Playground and observe how the output changes.\n\nDocument:\n1. The original word and its prompt context\n2. The alternatives you tested\n3. The most impactful word swap you found\n4. Why that swap mattered\n\nUse the Prompt Playground on this page to run your tests side-by-side if possible.",
-          fields: [
-            {
-              id: 'original_prompt',
-              label: 'The prompt you\'re using as your test base:',
-              placeholder: 'Paste the prompt you\'re testing word variations on...',
-              rows: 5,
-              required: true,
-            },
-            {
-              id: 'word_experiments',
-              label: 'Your word swap experiments (for each word: original → alternatives tested → what changed):',
-              placeholder:
-                "Word 1: 'list' → tried 'brainstorm', 'surface' → Brainstorm gave me 15 more creative options vs. list's structured 7\nWord 2: 'good' → tried 'exceptional', 'world-class' → World-class added specific examples and higher standards\nWord 3: ...",
-              rows: 8,
-              required: true,
-            },
-            {
-              id: 'most_impactful',
-              label: 'The single most impactful word swap you found and why:',
-              placeholder:
-                "Which one change produced the biggest improvement in output quality? Why do you think that word carries so much signal?",
-              rows: 4,
-              required: true,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the word choice exercise. Check: (1) Did they actually run experiments, or just theorize? Look for specific descriptions of what changed in the output — generic claims like 'it was better' don't count. (2) Did they test at least 3 different words? (3) Is their 'most impactful' word actually meaningful — do they articulate WHY that word carries more signal? The best answers show genuine curiosity about language: they found a swap that surprised them, or discovered that a word they'd been using is significantly lower-signal than an alternative. Push for specificity about what changed in the actual output.",
-        evaluationCriteria: [
-          'Used a real prompt from Level 1 or 2 (not a made-up one)',
-          'Tested at least 3 different word swaps',
-          'Describes specific changes in output quality (not just "it was better")',
-          'Most impactful swap is explained with real reasoning',
-        ],
-      },
+Our data shows that hosts who never enable pricing (never turn on the algorithm) make up about 60% of churn. The remaining 40% enabled pricing but left within 90 days.
 
-      // ── Exercise 2.6 ────────────────────────────────────────────────────
-      {
-        id: '2.6',
-        title: 'Your Conversation Playbook',
-        duration: '30 min',
-        type: 'capstone',
-        skill: 'Synthesizing Level 2 learnings into a personal, reusable Conversation Playbook',
-        intro:
-          "This is your Level 2 capstone. You're going to build something genuinely useful — a personal Conversation Playbook that captures everything you've learned and makes it easy to apply consistently.\n\nHere's the meta-exercise: build this document in Claude. Use everything you've learned — the right context, the right format, your Project folder. Let Claude help you synthesize your own learnings into a reusable asset.",
-        learningObjective:
-          "You'll create a personal Conversation Playbook capturing your go-to patterns, personal rules, and hard-won insights from Levels 1-2.",
-        content: {
-          type: 'walkthrough',
-          steps: [
-            {
-              number: 1,
-              title: 'Open your Claude Project from Level 1',
-              description:
-                "Start a new conversation in the Claude Project folder you set up in Exercise 1.6. Your system prompt will give Claude the context it needs.",
-              tip: "This is the first real test of your Project folder setup.",
-            },
-            {
-              number: 2,
-              title: 'Prompt Claude to help you build the Playbook',
-              description:
-                "Ask Claude to help you synthesize your learnings into a structured playbook. Give it the template below, describe what you learned, and let it help you write it.",
-              tip: "This is a COSTAR-worthy prompt. Take the time to write it well.",
-            },
-            {
-              number: 3,
-              title: 'Review and personalize',
-              description:
-                "Claude will give you a draft. Edit it until it sounds like you and reflects your actual experience from the exercises — not just generic advice.",
-              tip: "The Playbook should feel personal, not like it was copied from a template.",
-            },
-            {
-              number: 4,
-              title: 'Save and share',
-              description:
-                "Save your Playbook somewhere you'll actually use it — a Notion doc, your Project folder, a shared doc. Consider sharing it with your team.",
-              tip: "A Playbook you can't find is a Playbook that doesn't help you.",
-            },
-          ],
-          playbookTemplate: {
-            label: 'Your Conversation Playbook should include:',
-            sections: [
-              {
-                title: 'My Top 5 Go-To Prompt Patterns',
-                description: 'The patterns from Levels 1-2 you\'ll use most often, with example prompts for your actual work',
-              },
-              {
-                title: 'My Conversation Hygiene Rules',
-                description: 'When I continue / branch / start fresh / use a Project — with specific signals from Exercise 2.3',
-              },
-              {
-                title: '3 Hallucination Prevention Habits',
-                description: 'The specific techniques I\'ll use when accuracy matters, and when I\'ll use each',
-              },
-              {
-                title: 'My High-Signal Word Vocabulary',
-                description: 'The word swaps from Exercise 2.5 that made the biggest difference for my work',
-              },
-              {
-                title: 'What I\'ve Learned About My Prompting Patterns',
-                description: 'My strengths, my blind spots, and the one habit that\'ll have the biggest impact',
-              },
-            ],
-          },
-        },
-        task: {
-          instructions:
-            "Build your Conversation Playbook in Claude using your Project folder, then paste the final version here.\n\nTarget length: 400-700 words. Long enough to be genuinely useful, short enough to actually use it.\n\nThe AI Coach will evaluate it for completeness, specificity, and how well it reflects genuine learning from Levels 1-2.",
-          fields: [
-            {
-              id: 'playbook',
-              label: 'Your Conversation Playbook (paste the complete version):',
-              placeholder:
-                "Paste your full Conversation Playbook here. Should cover: go-to prompt patterns, conversation hygiene rules, hallucination prevention habits, high-signal word vocabulary, and your self-assessment of your prompting patterns.",
-              rows: 18,
-              required: true,
-            },
-            {
-              id: 'prompt_used',
-              label: 'The prompt you used to ask Claude to help build this:',
-              placeholder: 'Show your work — what prompt did you use to get Claude to help you create this playbook?',
-              rows: 5,
-              required: false,
-            },
-          ],
-        },
-        coachContext:
-          "Evaluate the user's Conversation Playbook — this is the Level 2 capstone and the most important submission for this level. Check all five sections: (1) Go-to prompt patterns — are they specific to their role and work at Beyond, or generic? (2) Conversation hygiene rules — do they have clear, specific signals (not just 'when it gets confusing')? (3) Hallucination prevention — do they name specific techniques, not just 'I'll check the facts'? (4) High-signal words — do they name actual words and explain why they're high-signal for their work? (5) Self-assessment — is it genuinely self-aware, naming specific strengths and specific blind spots? The whole playbook should feel like it was written by this specific person for their specific work — not a generic AI writing course summary. Give a score out of 5 and be specific about what would make each section stronger.",
-        evaluationCriteria: [
-          'Go-to patterns are specific to their role and Beyond context',
-          'Conversation hygiene rules have clear, specific signals',
-          'Hallucination prevention habits are technique-specific',
-          'High-signal vocabulary is drawn from actual experiments',
-          'Self-assessment names specific strengths and blind spots',
-          'Overall feels personal and specific, not generic',
-        ],
+I need to think through what's different about these two churn cohorts. What are the likely drivers for each, and what product interventions might be different for "never enabled" vs. "enabled but left"?`,
+        result: `You get a structured analysis distinguishing two meaningfully different churn populations. Claude can reason about the "never enabled" group (likely activation/trust/complexity issues) vs. the "enabled but left" group (likely value perception/performance/cost issues) and suggest different product responses for each. The output directly informs your next product decision.`,
       },
+      tooMuch: {
+        label: 'Too much context',
+        prompt: `I'm a PM at Beyond, a revenue intelligence platform for the short-term rental industry. Founded in 2013 as Beyond Pricing, the company pioneered dynamic pricing for vacation rentals. We serve both self-serve hosts (~25,000) and enterprise property managers. Our pricing model is a performance-based take rate of 1.0%-1.5% of booking value. We integrate with major PMS platforms including Guesty, Hostaway, Lodgify, and others. Our key metric is Beat the Market (BtM) which measures whether customers achieve +20% RevPAN versus their competitive set. Currently about 50% of listings hit this threshold and our target is 75%.
+
+Our main competitor is PriceLabs which charges $19.99/listing/month and has about 40-45% market share. They offer more manual configuration options. We also compete with Wheelhouse, DPGO, and native pricing tools from Airbnb and Vrbo. Our pricing philosophy is "make users feel in control without needing to control." We believe smarter defaults beat more settings.
+
+In terms of team structure, we have Product, Design, and Engineering organized into Outcome-Based Teams. I'm on the Core App team. We follow an OKR methodology influenced by Marty Cagan and SVPG. We do quarterly planning with mid-quarter check-ins.
+
+Now, about churn. We add about 6,000 new host signups monthly. Our activation rate is about 5%. We net about 110 hosts per month after churn. I want to understand why hosts are churning.`,
+        result: `The first 3 paragraphs of company background are noise. Claude dutifully processes all of it but the actual churn analysis is diluted - it spends tokens connecting churn to your competitive positioning, team structure, and OKR methodology rather than focusing sharply on the two distinct churn cohorts. The signal gets lost in the context.`,
+      },
+      explanation: `Notice that the "just right" version is actually shorter than the "too much" version but produces better output. It includes the specific numbers that matter (6,000 signups, ~110 net, 60/40 split between churn types) and a focused analytical question. Everything else - company founding date, competitor details, team structure, OKR methodology - isn't relevant to this specific question. Save that context for your system prompt where it helps across all conversations.
+
+The rule of thumb: include context that changes the answer, not context that describes your world.`
+    },
+
+    task: {
+      instruction: `Pick a real question you'd ask Claude this week. Write three versions of the prompt:
+
+1. **Too little** - A bare search query with no context
+2. **Just right** - Specific context + focused question (aim for 3-5 sentences of context)
+3. **Too much** - The "just right" version with 2-3 paragraphs of unnecessary background added
+
+Then run versions 2 and 3 in the Prompt Playground side by side. Compare the outputs. Where does the "too much" version actually produce worse results?`,
+      prompts: {
+        pm_ic: `Think about a product question you're actively trying to answer - maybe about a feature's performance, a customer behavior pattern, or an experiment result. Write the three versions.
+
+The "just right" version should include: which product area, which user segment, the specific data point or hypothesis, and what kind of analysis you want. The "too much" version should add irrelevant company background, team structure, and competitive context that doesn't change the answer.`,
+
+        pm_director: `Think about a strategic question - roadmap prioritization, resource allocation, or a cross-team trade-off. Write the three versions.
+
+At the director level, the Goldilocks challenge is different: you often NEED more context because strategic questions involve multiple teams and stakeholders. The trick is including the context that shapes the decision (budget constraints, competing priorities, stakeholder positions) while excluding the context that's just background.`,
+
+        design_ic: `Think about a design question - maybe a UX trade-off, a flow decision, or a research question. Write the three versions.
+
+For design work, the "just right" context usually includes: the user persona, the specific interaction, the constraint you're working within, and what you've already considered. The "too much" trap for designers is often describing the entire product rather than the specific screen or flow in question.`,
+
+        design_lead: `Think about a design strategy question - team process, quality standards, or a cross-functional design decision. Write the three versions.
+
+For design leaders, context often needs to include organizational dynamics (team composition, PM relationships, engineering constraints) that IC designers wouldn't include. The trick is distinguishing between organizational context that shapes the answer and organizational context that's just narrative.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they write three genuinely different versions (not just adding/removing a sentence)?',
+        'Does the "just right" version include only context that changes the answer?',
+        'Does the "too much" version clearly contain irrelevant background?',
+        'If they ran the comparison, did they identify where extra context actually degraded the output?',
+        'Is the "just right" version focused enough to produce a specific, actionable response?'
+      ],
+      seniorityNote: `For Director-level roles, "just right" context is often longer than for ICs because strategic decisions genuinely require more situational framing. The evaluation should focus on whether the additional context is decision-relevant (stakeholder dynamics, resource constraints) vs. decorative (company history, mission statements).`,
+      exampleFeedback: {
+        strong: `Sharp work. Your "just right" version nails the balance - every sentence is doing work. The 60/40 churn split you included completely changes the analysis Claude provides. And your observation from the side-by-side comparison is spot on: the "too much" version didn't give a wrong answer, it gave a diffuse one. That's the insidious thing about over-contexting - the answer looks fine but it's not as sharp as it should be. Pro tip: when in doubt, write the "too much" version first, then ruthlessly cut everything that doesn't change the answer.`,
+        needsWork: `Your three versions are more like three lengths of the same prompt rather than three different context strategies. The "too little" version has some context, and the "too much" version is only a sentence longer than "just right." Push harder on the extremes. Your "too little" should be something you'd type into Google. Your "too much" should include your company's founding story, your competitor's pricing, and your team's OKR methodology. The contrast will make the Goldilocks principle obvious.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.2 - Ask Me First
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.2',
+    title: 'Ask Me First',
+    subtitle: 'Teaching Claude to clarify before answering',
+    duration: '20 min',
+    description: `One of the most powerful yet underused techniques is telling Claude to ask you questions before giving you an answer. This flips the dynamic: instead of you trying to guess what context Claude needs, you let Claude tell you.
+
+This is especially valuable when you're working on a problem you haven't fully structured yet. Claude's clarifying questions often surface dimensions of the problem you hadn't considered, which is itself a form of useful thinking.`,
+
+    workedExamples: {
+      pm: {
+        label: 'PM Example',
+        prompt: `I need to decide whether to prioritize the Owner Reporting feature or the Listing Groups v2 enhancement for Q2. Before giving me a recommendation, ask me the questions you'd need answered to make a well-informed suggestion. Don't guess at my context - interview me.`,
+        sampleQuestions: `Claude would typically ask:
+- What business outcome does each feature target? (retention vs. activation vs. expansion?)
+- Do you have data on which one has stronger customer demand signal?
+- Are there dependencies - does one need to ship before the other makes sense?
+- What's the engineering effort difference? Is one significantly smaller?
+- Is there pressure from a specific customer segment or enterprise deal driving either one?
+- What happens to the metric you care about if you do neither for a quarter?
+
+Notice how these questions force you to articulate trade-offs you may not have explicitly compared. The interview process IS the value, even before Claude gives a recommendation.`
+      },
+      design: {
+        label: 'Design Example',
+        prompt: `I'm redesigning the host settings page - the screen where hosts configure their pricing preferences (min/max prices, seasonal adjustments, minimum stays, etc). Before suggesting an approach, interview me about the problem. Ask me the questions that would help you give design feedback that's actually useful, not generic.`,
+        sampleQuestions: `Claude would typically ask:
+- What's the primary user complaint about the current settings page?
+- How many settings are on the page currently, and how many do hosts actually change vs. leave at defaults?
+- Are you redesigning for the self-serve host (1-3 listings) or the property manager (50+ listings)?
+- What's the biggest risk - that hosts can't find what they need, or that they change things that make their pricing worse?
+- Does this need to work with or replace the current UI, or is this a ground-up redesign?
+- What does "success" look like - faster task completion, fewer support tickets, higher setting adoption?
+
+These questions surface the design problem's structure before you start solving it.`
+      }
+    },
+
+    techniques: [
+      {
+        name: 'The Interview Request',
+        prompt: `Before answering, ask me 5 clarifying questions that would help you give a significantly better response. Don't make assumptions about my situation.`,
+        when: 'When you have a complex problem and aren\'t sure what context matters most.'
+      },
+      {
+        name: 'The Assumption Check',
+        prompt: `Before you answer, tell me what assumptions you're about to make. Let me correct any wrong ones before you proceed.`,
+        when: 'When you suspect Claude might go in the wrong direction with default assumptions.'
+      },
+      {
+        name: 'The Scoping Interview',
+        prompt: `I have a broad problem I need to narrow down. Interview me with 3-4 questions to help scope this to something we can make progress on in this conversation.`,
+        when: 'When your problem is too big to tackle all at once.'
+      },
+      {
+        name: 'The Expertise Calibration',
+        prompt: `Before explaining this, ask me 2-3 questions to gauge my familiarity with the topic so you can calibrate the right level of detail.`,
+        when: 'When you want an explanation matched to your knowledge level.'
+      }
     ],
+
+    task: {
+      instruction: `Pick a real decision or problem you're working through (the messier the better - this technique shines on poorly structured problems). Write a prompt that asks Claude to interview you before giving an answer.
+
+Then actually run it in the Prompt Playground, answer Claude's questions, and see how the final response compares to what you would have gotten by just asking your question directly.`,
+      prompts: {
+        pm_ic: `Think about a product decision where you're genuinely unsure of the right path - maybe a prioritization trade-off between two features, an experiment design where you're not sure what to test first, or a customer problem where you're not confident in your hypothesis.
+
+Use the "Interview Request" or "Scoping Interview" technique. After Claude asks its questions, notice which questions surprised you - those are the dimensions of the problem you hadn't structured yet.`,
+
+        pm_director: `Think about a strategic decision that involves multiple stakeholders or cross-team trade-offs - maybe resource allocation across teams, a roadmap narrative that needs to satisfy different audiences, or a prioritization call where reasonable people disagree.
+
+Use the "Interview Request" technique. At the director level, Claude's questions often surface stakeholder perspectives you haven't fully mapped or second-order effects you haven't modeled. Pay attention to questions about "what happens if you're wrong?"`,
+
+        design_ic: `Think about a design problem where you're still in the exploration phase - maybe a flow that could go in multiple directions, a component that serves different user types, or a research question you're trying to scope.
+
+Use the "Scoping Interview" technique. Designers often jump to solutions too quickly (we've all done it). Claude's scoping questions can help you define the problem space before committing to an approach.`,
+
+        design_lead: `Think about an organizational design decision - how to structure a design review process, how to allocate your team's time between product work and design system work, or how to improve design quality across your team.
+
+Use the "Interview Request" technique, but frame it for organizational complexity: "I'm making a decision that affects my design team's workflow. Interview me about the problem so you understand the team dynamics, constraints, and trade-offs before suggesting an approach."`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they ask Claude to interview them (not just ask a question and hope for clarification)?',
+        'Did they pick a genuinely complex or uncertain problem (not something with an obvious answer)?',
+        'Did they actually answer Claude\'s questions and continue the conversation?',
+        'Did they reflect on which questions surprised them or surfaced new dimensions?',
+        'Was the final answer meaningfully better than what a direct question would have produced?'
+      ],
+      seniorityNote: `For Director-level roles, the interview should surface strategic and organizational dimensions. For IC roles, it should surface craft and execution dimensions. Both should produce clarifying questions the user hadn't considered.`,
+      exampleFeedback: {
+        strong: `Great use of the interview technique. I notice you picked a genuinely messy problem - one where you didn't have a clear answer. That's exactly when this technique is most valuable. Claude's third question (about what happens to the other initiative if you choose this one) is the kind of second-order thinking that often gets missed in prioritization discussions. The key habit: any time you catch yourself writing a prompt and thinking "I'm not sure how to frame this," that's your cue to ask Claude to interview you instead.`,
+        needsWork: `The technique is right but you picked a problem where you already knew the answer. "Ask me questions before telling me how to implement X" isn't really an interview - it's just adding a step before getting implementation help. Try this with a decision where you're genuinely uncertain. The magic of this technique is that Claude's questions help YOU think, not just help Claude respond.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.3 - Conversation Hygiene
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.3',
+    title: 'Conversation Hygiene',
+    subtitle: 'When to continue, branch, or start fresh',
+    duration: '20 min',
+    description: `Every Claude conversation accumulates context - and that's both a superpower and a trap. Early in a conversation, accumulated context makes Claude more helpful. But past a certain point, old context starts interfering with new questions, Claude gets confused about which instructions to prioritize, and quality degrades.
+
+Conversation hygiene is the skill of knowing when to continue, when to start fresh, and when something should live in a persistent Project folder. Getting this right is the difference between Claude feeling like a sharp collaborator and Claude feeling like it's slowly losing the plot.`,
+
+    decisionTree: {
+      description: 'Use this mental model to decide what to do with your conversation:',
+      rules: [
+        {
+          situation: 'Continue the conversation',
+          when: [
+            'You are iterating on the same document, analysis, or artifact',
+            'Claude made something good and you want to refine it',
+            'You are in a back-and-forth thinking session on one topic',
+            'You are within ~15-20 exchanges and quality still feels sharp'
+          ],
+          beyondExample: 'You are drafting a PRD section, getting Claude\'s critique, revising, and getting another round of feedback. All one thread.'
+        },
+        {
+          situation: 'Start a fresh conversation',
+          when: [
+            'You are switching to a completely different topic',
+            'The conversation is past ~20 exchanges and feels muddled',
+            'Claude starts repeating itself or contradicting earlier responses',
+            'You want a "clean take" on something without prior context biasing the output',
+            'You tried something and it went sideways - a fresh start is faster than fixing it'
+          ],
+          beyondExample: 'You spent 15 messages working on a competitive analysis and now want to draft an experiment plan. Start fresh - the competitive analysis context will bias the experiment framing.'
+        },
+        {
+          situation: 'Use a Project folder',
+          when: [
+            'You will return to this topic across multiple sessions (days/weeks)',
+            'You want consistent context every time (your role, your team, your product area)',
+            'You have reference documents Claude should always have access to',
+            'Multiple conversations need the same baseline context'
+          ],
+          beyondExample: 'Your ongoing work on the activation workstream - set up a Project with your system prompt, current OKRs, and the latest activation data. Every conversation in this Project starts from your baseline.'
+        },
+        {
+          situation: 'Summarize and bridge',
+          when: [
+            'A conversation produced great thinking but it is getting long',
+            'You want to carry forward conclusions without all the back-and-forth',
+            'You are starting a new conversation that builds on a previous one'
+          ],
+          beyondExample: 'After a 20-message brainstorm about churn interventions, ask Claude: "Summarize the 3 key conclusions we reached and the open questions. I will paste this into a fresh conversation to continue." Then start fresh with that summary as your opening context.',
+          technique: `Ask Claude: "Summarize our conversation so far. Focus on: (1) the conclusions we reached, (2) the open questions, and (3) any context from this conversation I'd need to include if I were continuing this work in a new thread." Then paste that summary into a fresh conversation.`
+        }
+      ]
+    },
+
+    task: {
+      instruction: `Go back and look at your last 5 Claude conversations (or as many as you've had recently). For each one, assess:
+
+1. Did you manage the conversation well, or did you stay in one thread too long?
+2. Should any of these have been in a Project folder?
+3. Was there a point where quality degraded and you should have started fresh?
+
+Then write a brief "conversation playbook" for your typical work week - what gets its own conversation, what lives in a Project, and what triggers a fresh start.`,
+      prompts: {
+        pm_ic: `Think about your typical week. You probably have several types of Claude conversations:
+- Quick questions ("how should I frame this Slack message?")
+- Working sessions (drafting a spec, analyzing data, designing an experiment)
+- Research (competitive analysis, market trends, customer behavior)
+
+For each type, write your personal rule: continue, fresh start, or Project folder? Think about the conversations where Claude's quality degraded - what was the pattern?`,
+
+        pm_director: `At the director level, your Claude conversations tend to span broader strategic territory. Think about:
+- Recurring strategy work (OKR planning, roadmap reviews, board prep)
+- Cross-team coordination (alignment docs, stakeholder communications)
+- Thinking sessions (market analysis, organizational design, prioritization frameworks)
+
+Which of these deserve their own Project folders? Which should always be fresh conversations? When do you find yourself providing the same context over and over - that is a signal for a Project folder.`,
+
+        design_ic: `Think about your typical design workflows with Claude:
+- Design critique sessions (reviewing a specific flow or component)
+- Research synthesis (making sense of user interview notes)
+- Content and copy work (writing UX copy, error messages, onboarding text)
+- Exploration (brainstorming approaches to a design problem)
+
+Exploration sessions especially need good hygiene - it is easy to go down a rabbit hole in one conversation that biases all your subsequent thinking. When do you need a clean slate?`,
+
+        design_lead: `Think about your leadership conversations with Claude:
+- Team planning (sprint planning, design review agendas, team goals)
+- Strategy documents (design principles, quality rubrics, process proposals)
+- Stakeholder communication (presenting design rationale to product/engineering leadership)
+- People management (feedback preparation, career development conversations)
+
+People management conversations especially benefit from fresh starts - you don't want context from a previous team member's feedback session bleeding into the next one.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they actually review their recent conversations (not just write theoretical rules)?',
+        'Did they identify at least one conversation that went too long or was in the wrong format?',
+        'Does their playbook have specific rules, not just "it depends"?',
+        'Do they distinguish between conversation types that need different management?',
+        'Did they identify anything that should be a Project folder but isn\'t yet?'
+      ],
+      seniorityNote: `Director-level roles often need more Project folders because their work is more persistent and cross-cutting. IC roles should focus on the "fresh start" trigger - knowing when a conversation has gone stale is the highest-leverage skill for daily productivity.`,
+      exampleFeedback: {
+        strong: `Solid playbook. I especially like your rule about exploration sessions always getting a fresh conversation - that's a pattern a lot of people miss. When you brainstorm in one thread and then evaluate in the same thread, the brainstorm context biases the evaluation. Your observation that you kept pasting the same 3 paragraphs of team context into every conversation is a clear signal for a Project folder. Set that up this week and you'll save yourself 5 minutes per conversation, which adds up fast.`,
+        needsWork: `Your playbook is mostly "I'll start fresh when things feel muddled." That's reactive, not proactive. Try setting concrete triggers: "After 15 exchanges, I'll ask Claude to summarize and then start fresh" or "Any working session on a spec gets its own conversation; quick questions go in a general thread." Also, you didn't mention Project folders at all - if you're doing recurring work on the same product area, a folder with your system prompt and OKRs will transform every conversation.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.4 - Hallucination Hunting
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.4',
+    title: 'Hallucination Hunting',
+    subtitle: 'Demand accuracy, verify claims',
+    duration: '25 min',
+    description: `LLMs hallucinate. Not sometimes - regularly. They state things with confidence that are completely wrong, they fabricate plausible-sounding statistics, and they fill knowledge gaps with convincing fiction. This isn't a bug that'll be fixed someday; it's a fundamental property of how language models work.
+
+The good news: there are reliable techniques to dramatically reduce hallucinations and catch them when they happen. The bad news: most people don't use them because the hallucinations sound so convincing.
+
+For product and design work at Beyond, this matters enormously. An AI that confidently tells you "60% of hosts who override prices churn within 90 days" when it made that number up could send your product strategy in the wrong direction.`,
+
+    techniques: [
+      {
+        name: 'The Confidence Demand',
+        prompt: `For each claim or recommendation, rate your confidence from 1-10 and explain why. If you're below a 7, explicitly flag it as uncertain.`,
+        why: 'Forces Claude to distinguish between things it knows well and things it\'s pattern-matching on. Claims rated 5-6 are where hallucinations hide.'
+      },
+      {
+        name: 'The Source Challenge',
+        prompt: `For each factual claim in your response, tell me whether this comes from well-established knowledge, reasonable inference, or whether you're uncertain. I'd rather have "I don't know" than a confident guess.`,
+        why: 'Gives Claude explicit permission to say "I don\'t know" which reduces the incentive to fill gaps with plausible fiction.'
+      },
+      {
+        name: 'The Echo Test',
+        prompt: `Before answering, repeat back to me: (1) what you think I'm asking, (2) the constraints I've given you, and (3) any assumptions you're making. Let me correct anything before you proceed.`,
+        why: 'Catches misunderstandings before they become hallucinated answers built on wrong premises.'
+      },
+      {
+        name: 'The Cross-Examination',
+        prompt: `Run the same question in a brand new conversation and compare the two answers. If they diverge on specific facts or numbers, the divergent claims are the ones most likely to be hallucinated.`,
+        why: 'Hallucinated facts are typically non-deterministic - they change between conversations. Real knowledge is consistent.'
+      },
+      {
+        name: 'The Adversarial Input Test',
+        description: 'Deliberately give Claude wrong information and see if it pushes back or accepts it.',
+        example: `Beyond's current activation rate is 35% (it's actually 5%). Given this strong activation, should we shift investment from onboarding to retention?`,
+        why: 'Tests whether Claude critically evaluates your inputs or just works with whatever you provide. Claude will often accept wrong premises uncritically, which means YOUR context errors become ITS hallucinations.'
+      }
+    ],
+
+    task: {
+      instruction: `Run two experiments:
+
+**Experiment 1:** Ask Claude a factual question about Beyond's market, product, or competitors where you KNOW the correct answer. Don't include the answer in your prompt. Evaluate Claude's response for accuracy. Then try adding the Confidence Demand technique and see if the accuracy or flagging improves.
+
+**Experiment 2:** Deliberately feed Claude an incorrect fact about Beyond (wrong metric, wrong competitor claim, wrong user number) and see if it pushes back or builds on the wrong premise.
+
+Document what you found. This exercise is designed to be a little unsettling - the goal is healthy skepticism.`,
+      prompts: {
+        pm_ic: `For Experiment 1, ask Claude about a metric, product feature, or market fact you know well. Good candidates: Beyond's pricing model, how BtM is calculated, what PriceLabs charges, or what our activation rate is.
+
+For Experiment 2, try something like: "Beyond's biggest competitor PriceLabs has a 70% market share and charges $49.99/listing. Given their dominant position, how should Beyond compete?" (Neither number is accurate.) See if Claude accepts or challenges.`,
+
+        pm_director: `For Experiment 1, ask Claude about a strategic or market-level claim - industry TAM, competitor positioning, or a market trend. Director-level hallucinations are more dangerous because they're harder to verify and shape bigger decisions.
+
+For Experiment 2, try feeding Claude a plausible but wrong strategic premise: "Beyond has 60% market share in dynamic pricing for STR. Given our dominant position, what defensive strategies should we prioritize?" See whether Claude challenges the dominance framing or builds on it.`,
+
+        design_ic: `For Experiment 1, ask Claude about a UX principle or design pattern you know well - progressive disclosure, Fitts's Law, Nielsen heuristics - and see if it explains them accurately. Then ask about a Beyond-specific design pattern and compare confidence levels.
+
+For Experiment 2, try: "Our user research shows that hosts prefer seeing 15+ configuration options on the pricing settings page because it gives them a sense of control. How should I design for this preference?" (This contradicts Beyond's actual philosophy and likely user behavior.) See if Claude pushes back.`,
+
+        design_lead: `For Experiment 1, ask Claude about design org structures, design leadership practices, or industry benchmarks. These are areas where Claude tends to sound confident but may be synthesizing from inconsistent sources.
+
+For Experiment 2, try: "My design team's NPS from our product partners is consistently 95+ and they report no friction in our collaboration process. Given this, should I focus my Q2 goals on scaling the team rather than improving our processes?" See if Claude accepts the premise or probes whether 95+ NPS might indicate insufficient challenge.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they actually run both experiments (factual test + adversarial input)?',
+        'Did they catch a real hallucination or inaccuracy in Experiment 1?',
+        'In Experiment 2, did they observe whether Claude accepted or challenged the wrong premise?',
+        'Did they reflect on what this means for how they should use Claude in their work?',
+        'Did they try at least one of the accuracy techniques (Confidence Demand, Source Challenge, Echo Test)?'
+      ],
+      seniorityNote: `For Director-level roles, emphasize that strategic-level hallucinations are more dangerous because they're harder to verify and inform bigger decisions. For IC roles, emphasize that execution-level hallucinations (wrong metrics, wrong feature behaviors) can waste sprint cycles.`,
+      exampleFeedback: {
+        strong: `This is exactly the kind of healthy skepticism that makes you an effective AI user. Your observation that Claude confidently stated a wrong market share number in Experiment 1 is a perfect example of why the Confidence Demand technique matters. And the Experiment 2 result - Claude building a strategy on your false premise without questioning it - is the most important lesson: Claude will work with bad inputs as confidently as good ones. Your job is to be the quality filter. The habit to build: any time Claude states a specific number or fact that matters to your decision, ask "confidence?" before acting on it.`,
+        needsWork: `You ran the experiments, but your takeaway of "I should be careful with Claude's answers" is too generic. Be specific: which types of claims are most likely to be hallucinated? (Specific numbers, competitor facts, and market statistics are high-risk. General frameworks and reasoning approaches are lower-risk.) And you didn't try any of the accuracy techniques. Run the Confidence Demand technique on your Experiment 1 question and see if Claude flags the same claim it confidently stated before. The difference is often dramatic.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.5 - Word Choice is Everything
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.5',
+    title: 'Word Choice is Everything',
+    subtitle: 'One word can change everything',
+    duration: '25 min',
+    description: `A single word in your prompt can completely change Claude's output. Not the meaning, not the structure - a single word. This is one of the most counterintuitive and powerful things about working with LLMs.
+
+The word you choose signals to Claude what kind of thinking you want. "List" produces a checklist. "Brainstorm" produces creative ideas. "Prioritize" produces a ranked framework. "Critique" produces adversarial analysis. Same topic, same context - totally different outputs.
+
+Once you develop a feel for this, you can dial in exactly the kind of thinking you need.`,
+
+    wordPairs: [
+      {
+        category: 'Action words',
+        pairs: [
+          { word: 'List', produces: 'A flat enumeration - comprehensive but undifferentiated', example: 'List reasons hosts override prices' },
+          { word: 'Prioritize', produces: 'A ranked analysis with reasoning for the ordering', example: 'Prioritize the reasons hosts override prices by business impact' },
+          { word: 'Brainstorm', produces: 'Creative, divergent ideas - quantity over quality', example: 'Brainstorm why hosts override prices' },
+          { word: 'Diagnose', produces: 'Root-cause analysis with causal reasoning', example: 'Diagnose why hosts override prices' }
+        ]
+      },
+      {
+        category: 'Thinking words',
+        pairs: [
+          { word: 'Explain', produces: 'An educational walkthrough - good for learning', example: 'Explain how BtM works' },
+          { word: 'Convince', produces: 'Persuasive argument with evidence - good for stakeholder prep', example: 'Convince me that BtM is the right metric' },
+          { word: 'Debate', produces: 'Both sides of an argument - good for understanding trade-offs', example: 'Debate whether BtM is the right metric' },
+          { word: 'Challenge', produces: 'Adversarial pushback on the premise itself', example: 'Challenge whether BtM is the right metric' }
+        ]
+      },
+      {
+        category: 'Quality words',
+        pairs: [
+          { word: 'Good', produces: 'Satisfactory, meets basic expectations' },
+          { word: 'Exceptional', produces: 'Raises the bar significantly, includes non-obvious insights' },
+          { word: 'World-class', produces: 'Best-in-industry quality, referencing top practitioners' },
+          { word: 'Adequate', produces: 'Meets minimum requirements, signals Claude can be brief' }
+        ]
+      },
+      {
+        category: 'Scope words',
+        pairs: [
+          { word: 'Summarize', produces: 'Compressed version preserving key points', example: 'Summarize the Owner Suite strategy' },
+          { word: 'Distill', produces: 'The essential insight stripped of everything else', example: 'Distill the Owner Suite strategy to its core bet' },
+          { word: 'Expand', produces: 'More detail and nuance on each point', example: 'Expand on the Owner Suite strategy' },
+          { word: 'Synthesize', produces: 'Connecting multiple inputs into a new insight', example: 'Synthesize what our activation data, churn data, and customer interviews tell us about the Owner Suite strategy' }
+        ]
+      }
+    ],
+
+    task: {
+      instruction: `Open the Prompt Playground in side-by-side mode. Take a prompt you'd normally write for your work, then change ONE key word and compare the outputs. Do this 3 times with different word swaps.
+
+For example, start with "Explain why our activation rate is low" then swap "Explain" for "Diagnose." Same context, same question, dramatically different output.
+
+Document the 3 word swaps and which version produced more useful output for your actual need.`,
+      prompts: {
+        pm_ic: `Try these word swaps on a real product question:
+1. Swap an action word: "List the risks of [your feature]" vs. "Diagnose the risks of [your feature]"
+2. Swap a thinking word: "Explain why [metric] is declining" vs. "Debate whether [metric] is actually declining or if we're measuring it wrong"
+3. Swap a quality word: "Write a good experiment plan" vs. "Write a world-class experiment plan"
+
+Notice which swap produces the biggest change in output quality and usefulness.`,
+
+        pm_director: `Try these word swaps on a strategic question:
+1. "Summarize our competitive position" vs. "Distill our competitive position to the one thing that matters most"
+2. "Explain the trade-off between investing in activation vs. retention" vs. "Debate the trade-off..."
+3. "List our Q2 priorities" vs. "Prioritize our Q2 bets by expected impact on NRR"
+
+At the director level, "distill" and "synthesize" are often more valuable than "explain" or "list" because they force Claude to do the analytical work, not just the organizational work.`,
+
+        design_ic: `Try these word swaps on a design question:
+1. "List the usability issues in [your flow]" vs. "Diagnose the usability issues..."
+2. "Explain this design pattern" vs. "Critique this design pattern for Beyond's use case"
+3. "Brainstorm alternatives to [your current design]" vs. "Prioritize alternatives to [your current design] by user impact"
+
+For design work, the shift from "brainstorm" (divergent) to "prioritize" (convergent) is especially powerful - it's the difference between ideation and decision-making.`,
+
+        design_lead: `Try these word swaps on a design leadership question:
+1. "Explain how to improve design quality on my team" vs. "Diagnose why design quality varies across my team"
+2. "List design system investment options" vs. "Synthesize the case for design system investment from team velocity, design consistency, and engineering partnership data"
+3. "Summarize our design strategy" vs. "Distill our design strategy to the single bet that matters most this quarter"
+
+For design leaders, "synthesize" is your power word - it's what you do that ICs can't, and it's what Claude does best when given multiple inputs to connect.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they run 3 actual side-by-side comparisons (not just theorize about word choice)?',
+        'Did they identify which word swap produced the most meaningful output change?',
+        'Are the word swaps relevant to their actual work (not just testing with toy examples)?',
+        'Did they document a specific insight about which words they should use more often?',
+        'Did they go beyond the suggested swaps and try their own word experiments?'
+      ],
+      seniorityNote: `For Director-level roles, emphasize "distill" and "synthesize" as high-leverage words for strategic thinking. For IC roles, emphasize the action word spectrum (list vs. brainstorm vs. prioritize vs. diagnose) as the most impactful for daily work.`,
+      exampleFeedback: {
+        strong: `This is the kind of precision that separates good prompters from great ones. Your observation that swapping "explain" for "diagnose" completely changed the output from an educational overview to a root-cause analysis is exactly right. And the quality word swap ("good" to "exceptional") is subtle but real - Claude literally raises its internal quality threshold. Build this into a habit: before hitting enter, scan your prompt for the key action word and ask "is this the right verb for what I actually need?"`,
+        needsWork: `You ran the comparisons, which is great, but your word swaps were too similar to produce a dramatic difference. "List" vs. "describe" won't show you much. Try more extreme swaps: "list" vs. "diagnose" or "explain" vs. "challenge." The goal is to see how a single word can produce a fundamentally different type of thinking, not just a different format.`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 2.6 - Capstone: Your Conversation Playbook
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '2.6',
+    title: 'Your Conversation Playbook',
+    subtitle: 'Documenting your AI operating rules',
+    duration: '25 min',
+    isCapstone: true,
+    description: `Everything you've learned in Level 2 comes together here. You're going to create a personal "Conversation Playbook" - a reference document that captures your best practices for working with Claude, customized to your role and workflows.
+
+This isn't an exercise document you'll throw away. It's a living reference you should keep in your Claude Project folder and update as you get better. Think of it as your personal AI operating manual.`,
+
+    template: {
+      sections: [
+        {
+          title: 'My Top Prompt Patterns',
+          instructions: 'Document your 5 best go-to prompt structures from Levels 1-2. For each: the pattern name, when to use it, and a template you can quickly adapt.',
+        },
+        {
+          title: 'My Context Rules',
+          instructions: 'Based on Exercise 2.1, write your personal rules for the Goldilocks Zone. What context always gets included? What gets left out? How do you decide?',
+        },
+        {
+          title: 'My Conversation Hygiene Rules',
+          instructions: 'Based on Exercise 2.3, document when you start fresh, when you continue, and when something gets a Project folder. Include specific triggers.',
+        },
+        {
+          title: 'My Accuracy Checklist',
+          instructions: 'Based on Exercise 2.4, list the techniques you\'ll use to prevent and catch hallucinations. Which types of claims do you always verify?',
+        },
+        {
+          title: 'My Power Words',
+          instructions: 'Based on Exercise 2.5, document the word swaps that made the biggest difference. Which verbs do you default to, and which should you use more?',
+        }
+      ]
+    },
+
+    task: {
+      instruction: `Build your Conversation Playbook using Claude (ideally in your newly created Project folder from Level 1). Include all 5 sections above with specific, practical content - not generic advice, but YOUR rules based on YOUR experience in the exercises.
+
+Paste the finished playbook below. The AI Coach will review it for completeness, specificity, and role-relevance.`,
+      prompts: {
+        pm_ic: `Your playbook should reflect PM craft - the prompt patterns that help you write better specs, design sharper experiments, and analyze customer data more effectively. Your "Power Words" section should focus on the action and thinking verbs most relevant to your daily work (diagnose, prioritize, synthesize, challenge).
+
+Build this in your Claude Project folder so it's always available as a reference.`,
+
+        pm_director: `Your playbook should reflect product leadership - the patterns that help you pressure-test strategy, align stakeholders, and make better prioritization decisions. Your "Context Rules" section is especially important since your prompts naturally involve more context (multiple teams, stakeholder dynamics, business metrics).
+
+Consider including a "Stakeholder Communication" section: how you use Claude to calibrate messages for different audiences (board, engineering, customers, team).`,
+
+        design_ic: `Your playbook should reflect design craft - the patterns that help you get sharper critique, explore design alternatives, and synthesize research. Your "Accuracy Checklist" should specifically address design-related hallucinations (Claude suggesting UI patterns that sound right but don't match your product's constraints or design system).
+
+Include a note on how you use Claude for design work specifically - where it helps most (critique, copy, research synthesis) vs. where you rely on other tools (visual design, prototyping).`,
+
+        design_lead: `Your playbook should reflect design leadership - the patterns that help you make team decisions, present design strategy, and coach your designers. Your "Conversation Hygiene Rules" are critical since you likely have many different conversation types (team coaching, strategy work, stakeholder prep, design review prep).
+
+Consider including a "Team Coaching" section: prompt patterns you could share with your designers to level up their own AI usage.`
+      }
+    },
+
     assessment: {
-      title: 'Level 2 Assessment',
       questions: [
         {
-          id: 'q2_1',
-          text: "You're writing a prompt about a prioritization decision. Which of the following context is LEAST likely to improve Claude's response?",
+          question: 'You\'re 18 messages into a Claude conversation about a PRD. Claude starts giving responses that contradict what it said earlier. What should you do?',
           options: [
-            "A) Your company's current biggest challenge (5% conversion rate)",
-            "B) The specific trade-offs between the three options you're weighing",
-            "C) The name of your company's founder and when it was founded",
-            "D) The engineering capacity constraint for this quarter",
+            'Keep going and correct Claude each time',
+            'Ask Claude to summarize the key conclusions, then start a fresh conversation with that summary as context',
+            'Delete the conversation and start over from scratch',
+            'Switch to a different AI model'
           ],
-          correct: 'C',
-          explanation:
-            "The founder's name and founding date are interesting but won't change Claude's prioritization recommendation. Context is only valuable if it would change the answer.",
+          correct: 1,
+          explanation: 'The "summarize and bridge" technique preserves your work while giving Claude a fresh context. Starting over from scratch loses all the thinking. Correcting Claude repeatedly in a degraded conversation just adds more context that makes it worse.'
         },
         {
-          id: 'q2_2',
-          text: "When is the BEST time to start a fresh conversation instead of continuing your current one?",
+          question: 'Claude gives you a market analysis stating "PriceLabs has 60% market share and growing." You\'re not sure if this is accurate. What\'s the best approach?',
           options: [
-            'A) Every time you ask a new question',
-            "B) When you've been talking for more than 5 minutes",
-            "C) When the topic has fundamentally changed, the conversation has become circular, or you catch yourself writing 'ignore everything above'",
-            "D) Only when Claude explicitly tells you its context window is full",
+            'Trust it - Claude is usually right about market data',
+            'Ask Claude to rate its confidence in that claim and explain its reasoning',
+            'Ignore the specific number and focus on the qualitative analysis',
+            'Stop using Claude for market analysis'
           ],
-          correct: 'C',
-          explanation:
-            "The signals that it's time to start fresh are: topic change, quality degradation, or finding yourself working around the existing context rather than with it.",
+          correct: 1,
+          explanation: 'The Confidence Demand technique forces Claude to distinguish between well-established facts and pattern-matched guesses. If Claude rates its confidence at 4/10, you know to verify. Ignoring numbers entirely wastes useful analysis; trusting blindly is dangerous.'
         },
         {
-          id: 'q2_3',
-          text: "You ask Claude about a competitor's market share and it gives you a confident, specific number. What should you do?",
+          question: 'You want Claude to help you evaluate whether a feature idea justifies Beyond\'s premium pricing. Which word produces the most useful output?',
           options: [
-            "A) Trust it — Claude has access to current data",
-            "B) Treat it as a starting point, verify it through a reliable source before using it in any important context",
-            "C) Ask Claude where it got the number and then trust whatever it says",
-            "D) Reject it — Claude always makes up statistics",
+            '"Explain whether this feature justifies our pricing"',
+            '"Debate whether this feature justifies our pricing"',
+            '"List reasons this feature justifies our pricing"',
+            '"Summarize whether this feature justifies our pricing"'
           ],
-          correct: 'B',
-          explanation:
-            "Claude is often confidently wrong about specific numbers, market share, and other data that changes frequently or varies by source. Always verify before using in important decisions.",
-        },
+          correct: 1,
+          explanation: '"Debate" produces both sides of the argument, which is exactly what you need for a pricing justification decision. "Explain" is educational but one-sided. "List" gives you reasons but not reasoning. "Summarize" assumes a conclusion already exists.'
+        }
       ],
-      selfReflection: {
-        id: 'sr2',
-        question:
-          "What's the single biggest change you've made to how you use Claude since starting NexusYou? Be specific — not 'I write better prompts' but exactly what you do differently and why it matters.",
-        placeholder:
-          "The more specific, the better. Name a habit, technique, or mindset shift that's actually changed your day-to-day use of AI.",
-      },
+      selfReflection: `What's the single biggest change you've made to how you prompt since starting NexusYou? And what's the one new word or technique from Level 2 that you'll use this week?`
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Does the playbook have all 5 sections with specific content (not placeholder text)?',
+        'Are the prompt patterns based on their actual experience in the exercises (not copied from the examples)?',
+        'Are the context rules specific and actionable (concrete triggers, not "it depends")?',
+        'Does the accuracy checklist include specific claim types they\'ll verify?',
+        'Is the playbook practical enough that they\'d actually reference it in daily work?',
+        'Is the content role-appropriate (PM vs. Design, IC vs. Director)?'
+      ],
+      seniorityNote: `For Director-level roles, the playbook should include patterns for stakeholder communication and strategic analysis. For IC roles, it should include patterns for craft work and execution. Both should feel like a personal reference guide, not a generic best-practices document.`,
+      exampleFeedback: {
+        strong: `This is a playbook you'll actually use - and that's the whole test. Your "Power Words" section is especially sharp: you've identified specific word swaps for your most common prompt types and written them as quick-reference rules. Your conversation hygiene triggers are concrete ("after 15 messages on any topic, summarize and bridge"). And I like that your accuracy checklist focuses on the specific claim types that matter most for your work. Save this in your Project folder and revisit it in 2 weeks - you'll be surprised how much you've already internalized.`,
+        needsWork: `The structure is there but most sections read like general advice rather than personal rules. "Use the COSTAR framework for complex prompts" is a Level 1 lesson recap, not a playbook entry. What I want to see: "When drafting a PRD, I use COSTAR with the Role set to [specific persona]. When getting design critique, I use CRIT with the Role set to [specific expert]." Make every entry specific to YOUR workflow. Also, your conversation hygiene section just says "start fresh when needed" - add the specific trigger (message count, quality degradation signal, topic change).`
+      }
+    },
+
+    milestone: {
+      message: `Welcome to Host status! You're no longer dabbling - you're running a real AI operation. Your context game is tight, you know when to start fresh, you can spot a hallucination at twenty paces, and you've got a playbook to prove it.`,
+      dadJoke: `I asked Claude for a joke about context windows, but it forgot the punchline halfway through. Gerard says that one works better if you've experienced it. Which, after Level 2, you probably have.`,
+      nextLevel: `Level 3: The Small Portfolio - where you'll discover Nexus-Product's toolkit and start building artifacts with real Beyond data. This is where it gets really fun.`
+    }
+  }
+],
+    assessment: {
+      questions: [
+        {
+          question: 'You\'re 18 messages into a Claude conversation about a PRD. Claude starts giving responses that contradict what it said earlier. What should you do?',
+          options: [
+            'Keep going and correct Claude each time',
+            'Ask Claude to summarize the key conclusions, then start a fresh conversation with that summary as context',
+            'Delete the conversation and start over from scratch',
+            'Switch to a different AI model'
+          ],
+          correct: 1,
+          explanation: 'The "summarize and bridge" technique preserves your work while giving Claude a fresh context. Starting over from scratch loses all the thinking. Correcting Claude repeatedly in a degraded conversation just adds more context that makes it worse.'
+        },
+        {
+          question: 'Claude gives you a market analysis stating "PriceLabs has 60% market share and growing." You\'re not sure if this is accurate. What\'s the best approach?',
+          options: [
+            'Trust it - Claude is usually right about market data',
+            'Ask Claude to rate its confidence in that claim and explain its reasoning',
+            'Ignore the specific number and focus on the qualitative analysis',
+            'Stop using Claude for market analysis'
+          ],
+          correct: 1,
+          explanation: 'The Confidence Demand technique forces Claude to distinguish between well-established facts and pattern-matched guesses. If Claude rates its confidence at 4/10, you know to verify. Ignoring numbers entirely wastes useful analysis; trusting blindly is dangerous.'
+        },
+        {
+          question: 'You want Claude to help you evaluate whether a feature idea justifies Beyond\'s premium pricing. Which word produces the most useful output?',
+          options: [
+            '"Explain whether this feature justifies our pricing"',
+            '"Debate whether this feature justifies our pricing"',
+            '"List reasons this feature justifies our pricing"',
+            '"Summarize whether this feature justifies our pricing"'
+          ],
+          correct: 1,
+          explanation: '"Debate" produces both sides of the argument, which is exactly what you need for a pricing justification decision. "Explain" is educational but one-sided. "List" gives you reasons but not reasoning. "Summarize" assumes a conclusion already exists.'
+        }
+      ],
+      selfReflection: `What's the single biggest change you've made to how you prompt since starting NexusYou? And what's the one new word or technique from Level 2 that you'll use this week?`
     },
     milestone: {
-      title: 'Welcome to Host Status!',
-      emoji: '🏡',
-      message:
-        "You're no longer just dabbling — you're running a real AI operation. Your conversation game is tight, your context is calibrated, you know when to start fresh, and you've built a Playbook you'll actually use. The fundamentals are locked in.",
-      gerardJokeId: 'ai_3',
-      nextLevelTeaser:
-        "Level 3 is where the tools come out. You're going to go deep on Nexus-Product, pull real data, and build artifacts that your team will actually use.",
+      message: `Welcome to Host status! You're no longer dabbling - you're running a real AI operation. Your context game is tight, you know when to start fresh, you can spot a hallucination at twenty paces, and you've got a playbook to prove it.`,
+      dadJoke: `I asked Claude for a joke about context windows, but it forgot the punchline halfway through. Gerard says that one works better if you've experienced it. Which, after Level 2, you probably have.`,
+      nextLevel: `Level 3: The Small Portfolio - where you'll discover Nexus-Product's toolkit and start building artifacts with real Beyond data. This is where it gets really fun.`
     },
   },
 
@@ -1305,14 +1435,28 @@ export function getExerciseById(exerciseId) {
   return null
 }
 
-// ─── Role-specific prompt getter ──────────────────────────────────────────────
+// ─── Role-specific prompt getter (4-track) ────────────────────────────────────
 export function getTaskPrompt(exercise, userRole) {
   if (!exercise.task?.prompts) return null
-  const role = userRole?.toLowerCase() || ''
-  // Design track: any role containing 'design'
-  if (role.includes('design')) return exercise.task.prompts.design || exercise.task.prompts.default
-  // PM track: everything else (product managers, directors, etc.)
-  return exercise.task.prompts.pm || exercise.task.prompts.default
+  const p = exercise.task.prompts
+  const role = (userRole || '').toLowerCase()
+
+  // Design lead track
+  if (role.includes('design director') || role.includes('lead product designer') || role.includes('design manager'))
+    return p.design_lead || p.design_ic || p.design || p.default
+
+  // Design IC track
+  if (role.includes('design'))
+    return p.design_ic || p.design || p.default
+
+  // PM Director track
+  if (role.includes('director') || role.includes('senior director') ||
+      role.includes('principal') || role.includes('associate director') ||
+      role.includes('head of') || role.includes('vp'))
+    return p.pm_director || p.pm_ic || p.pm || p.default
+
+  // PM IC track (default)
+  return p.pm_ic || p.pm || p.default
 }
 
 // Grouped by track — used in Welcome.jsx <optgroup> select

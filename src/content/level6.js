@@ -537,6 +537,7 @@ export const LEVEL6 = {
       title: 'Capstone: The Final Destination',
       duration: '30 min',
       type: 'capstone',
+      isCapstone: true,
       skill: "Integrating everything from the course into a complete, stakeholder-ready deliverable",
       intro:
         "You've come through six levels. You've gone from writing basic prompts to running agentic workflows, generating PRDs with BMAD, designing your AI Operating System, and analyzing risk across an entire product initiative.\n\nThe final capstone has two parts: (1) submit your BMAD-generated PRD from Exercise 6.3 as a polished, stakeholder-ready document, and (2) teach back the most important thing you learned in this course to a colleague who hasn't taken it.",
@@ -608,6 +609,62 @@ export const LEVEL6 = {
         'Teach-back tone is practical, not hype',
         'Final reflection identifies a specific Monday action',
       ],
+      assessment: {
+        title: 'Level 6 Assessment',
+        questions: [
+          {
+            id: 'q1',
+            text: "What is the primary advantage of Claude Code over claude.ai for a PM or designer?",
+            options: [
+              "A. It uses a more powerful AI model",
+              "B. It can read, write, and act on your filesystem directly",
+              "C. It has a better interface for long conversations",
+              "D. It supports more languages",
+            ],
+            correct: 'B',
+            explanation:
+              "Claude Code's superpower for non-engineers is filesystem access — it can read your existing files, create new documents, and take actions in your environment without you copy-pasting between windows.",
+          },
+          {
+            id: 'q2',
+            text: "In the BMAD PRD process, what is the purpose of the Adversarial Review phase?",
+            options: [
+              "A. To make the PRD longer and more comprehensive",
+              "B. To get engineering sign-off early",
+              "C. To surface hidden assumptions and gaps before engineering finds them",
+              "D. To generate user stories automatically",
+            ],
+            correct: 'C',
+            explanation:
+              "The adversarial review phase deliberately stress-tests the PRD by asking Claude to play the role of a skeptical engineer — finding the assumptions that could kill the project if they're wrong.",
+          },
+          {
+            id: 'q3',
+            text: "What distinguishes an 'agentic workflow' from a regular AI prompt?",
+            options: [
+              "A. It uses a more powerful model",
+              "B. It runs multiple sequential steps where each step builds on the previous one",
+              "C. It doesn't require any human input",
+              "D. It can access the internet",
+            ],
+            correct: 'B',
+            explanation:
+              "An agentic workflow is defined by its multi-step, sequential nature — each step transforms or builds on the output of the previous step, ultimately producing a reusable artifact. This is what separates it from a one-shot prompt.",
+          },
+        ],
+        selfReflection: {
+          question:
+            "You've completed all six levels of NexusYou. Describe the one thing that most changed your mental model of how to use AI at work. Be specific — not 'I learned to write better prompts' but what specific shift happened and how you'll know when you're doing it.",
+          placeholder:
+            "The specific mental model shift was...\nI'll know I'm doing it when...",
+        },
+      },
+      milestone: {
+        title: "🗺️ Destination Reached — You're an AI Architect",
+        message:
+          "Six levels. Twelve weeks of exercises. One complete AI Operating System.\n\nYou didn't just learn to use AI — you learned to architect your AI environment. BMAD, Claude Code, agentic workflows, four-risks evaluation, OSTs, design critiques, Nexus data queries... you've built a toolkit that compounds.\n\nThe hosts who thrive aren't the ones with the best properties. They're the ones who built systems. You just built yours.",
+        gerardJokeId: 'destination_1',
+      },
     },
   ],
 

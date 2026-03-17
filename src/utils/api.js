@@ -50,6 +50,18 @@ async function callClaude({ systemPrompt, userMessage, maxTokens = 1024, model }
 export async function getCoachFeedback({ user, exercise, submission }) {
   const roleContext = user?.role || 'product team member'
 
+  // Build evaluation criteria from new coachContext format or fall back to old format
+  const coachCtx = exercise.coachContext
+  const evaluationCriteria = coachCtx?.evaluationCriteria?.length
+    ? `\nEVALUATION CRITERIA FOR THIS EXERCISE:\n${coachCtx.evaluationCriteria.map((c, i) => `${i + 1}. ${c}`).join('\n')}`
+    : ''
+  const seniorityNote = coachCtx?.seniorityNote
+    ? `\nSENIORITY CONTEXT: ${coachCtx.seniorityNote}`
+    : ''
+  const feedbackExamples = coachCtx?.exampleFeedback
+    ? `\nFEEDBACK TONE REFERENCE:\n- Strong submission sounds like: "${coachCtx.exampleFeedback.strong?.substring(0, 200)}"\n- Needs work sounds like: "${coachCtx.exampleFeedback.needsWork?.substring(0, 200)}"`
+    : ''
+
   const systemPrompt = `You are the NexusYou AI Coach — a friendly, encouraging, and specific mentor helping Beyond's product and design team master AI for their actual work.
 
 The user is a ${roleContext} at Beyond.
@@ -62,6 +74,7 @@ ${BEYOND_PM_FRAMEWORKS}
 
 NEXUS-PRODUCT CONTEXT (for Level 3+ exercises):
 ${NEXUS_TOOLS_SUMMARY}
+${evaluationCriteria}${seniorityNote}${feedbackExamples}
 
 YOUR COACHING APPROACH:
 1. Evaluate their submission honestly but encouragingly — be SPECIFIC, not vague
@@ -79,7 +92,7 @@ Length: 150-300 words. Short paragraphs. No bullet lists unless listing specific
 
   const userMessage = `Exercise: ${exercise.title}
 
-Exercise instructions: ${exercise.coachContext || exercise.instructions || 'Help the user improve their prompting skills for this exercise.'}
+Exercise instructions: ${exercise.task?.instruction || exercise.task?.instructions || 'Help the user improve their prompting skills for this exercise.'}
 
 User's submission:
 ${typeof submission === 'object' ? JSON.stringify(submission, null, 2) : submission}

@@ -23,1170 +23,813 @@ export const LEVEL5 = {
     "PM Track: OKRs, Opportunity Solution Trees, competitive analysis, strategy. Design Track: design critiques, journey mapping, behavioral design, accessibility. Both supercharged by AI.",
 
   exercises: [
-    // ── Exercise 5.1 (PM Track) ───────────────────────────────────────────────
-    {
-      id: '5P.1',
-      title: 'The One-Pager',
-      track: 'pm',
-      duration: '25 min',
-      type: 'framework',
-      skill: "Using AI to draft and iteratively refine a Beyond OKR one-pager",
-      intro:
-        "The OKR one-pager is one of the most important documents a PM writes. It's also one of the hardest to get right — too vague and engineering doesn't know what to build, too prescriptive and you're writing specs before discovery.\n\nAI can dramatically accelerate the drafting process, but the real skill is using adversarial prompting to pressure-test every section before it goes to stakeholders.",
-      learningObjective:
-        "You'll draft a real OKR one-pager using Beyond's format, then iterate it through at least 3 rounds of AI-assisted critique until it meets the quality bar.",
-      content: {
-        type: 'framework',
-        framework: {
-          name: "Beyond One-Pager Template (9 Sections)",
-          description:
-            "The standard Beyond format for any product initiative — from small improvements to large strategic bets. AI can draft this in minutes; your job is to make every section specific and defensible.",
-          elements: [
-            {
-              letter: '1',
-              name: 'Project Overview',
-              description: 'Project Name, Business Sponsor(s), Project Owner, Date Created',
-              example: "Project: Streamlined Host Onboarding · Sponsor: VP Product · Owner: [You] · Date: Q2 2025",
-              color: '#3bc1cc',
-            },
-            {
-              letter: '2',
-              name: 'Quick Description',
-              description: '2-3 sentences: what this project is and why it matters now',
-              example: "Reduce the required onboarding steps from 6 to 3 to increase activation rate. Current 5% activation rate creates a 95% attrition problem — this initiative directly targets the conversion gap.",
-              color: '#ee3968',
-            },
-            {
-              letter: '3',
-              name: 'Business Hypothesis / Goals',
-              description: 'What problem does this solve? Expected impact? How long is payback?',
-              example: "Hypothesis: 71% of hosts drop off at step 4 (pricing rules setup). If we remove or defer this step, completion rate will increase >50%, improving activation to 8%+ within 2 quarters.",
-              color: '#02556c',
-            },
-            {
-              letter: '4-5',
-              name: 'Engineering Effort + MVP',
-              description: 'T-Shirt size (S/M/L) + what the minimum viable version looks like',
-              example: "Effort: Medium (3-6 weeks). MVP: Remove step 4 from required flow, make it optional post-activation with an in-app prompt at day 7.",
-              color: '#252f38',
-            },
-            {
-              letter: '6-7',
-              name: 'Not In Scope + Dependencies',
-              description: 'Explicit exclusions + other teams/systems required for success',
-              example: "Not in scope: redesigning the full onboarding flow, mobile app changes. Dependencies: Growth team (email triggers), Data team (activation metric definition).",
-              color: '#3bc1cc',
-            },
-            {
-              letter: '8-9',
-              name: 'Expected Impact + Risks',
-              description: 'Anticipated outcomes (quantified if possible) + the top risks',
-              example: "Impact: 5% → 8% activation = ~180 additional paying hosts/month at avg ARR of [X]. Risks: Removing step 4 may reduce algorithm data quality, hurting BtM performance.",
-              color: '#ee3968',
-            },
-          ],
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.1 - The One-Pager
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.1',
+    title: 'The One-Pager',
+    subtitle: 'AI-assisted business cases that survive scrutiny',
+    duration: '30 min',
+    track: 'pm',
+    description: `The one-pager is Beyond's format for proposing new initiatives. It forces clarity: if you can't explain the problem, hypothesis, MVP, and expected impact in one page, you haven't thought it through.
+
+Most one-pagers fail for the same reasons: vague problem statements, unmeasurable hypotheses, MVPs that aren't actually minimal, and impact estimates pulled from thin air. Claude can help you avoid all of these - but only if you use it as a thinking partner, not a ghostwriter.
+
+This exercise teaches you to use Claude to draft, then adversarially critique, then refine a one-pager until it would survive a tough product review.`,
+
+    template: {
+      sections: [
+        { name: 'Project Overview', fields: ['Project Name', 'Business Sponsor(s)', 'Project Owner', 'Date Created'] },
+        { name: 'Quick Description', guidance: 'A brief, 2-3 sentence summary of what this project is and why it matters.' },
+        { name: 'Business Hypothesis / Goals', guidance: 'What business problem does this solve? What is the expected impact? How long is expected payback?' },
+        { name: 'Engineering Effort', guidance: 'T-shirt size: Small (1-2 weeks) / Medium (3-6 weeks) / Large (6+ weeks)' },
+        { name: 'MVP Definition', guidance: 'What is the minimum viable product or first iteration we can release to test this hypothesis?' },
+        { name: 'Not In Scope', guidance: 'What is explicitly not included in this phase?' },
+        { name: 'Key Dependencies', guidance: 'What other teams, systems, or business requirements are required for success?' },
+        { name: 'Expected Impact', guidance: 'Anticipated business or customer outcomes (revenue, engagement, cost savings, efficiency, etc.)' },
+        { name: 'Risks & Open Questions', guidance: 'Biggest risks, concerns, or unanswered questions.' }
+      ]
+    },
+
+    workflow: {
+      steps: [
+        {
+          step: 1,
+          name: 'Draft with Claude',
+          prompt: `I need to write a one-pager for [PROJECT]. Here's what I know so far: [ROUGH NOTES].
+
+Draft a one-pager using Beyond's template. For sections where I haven't given you enough information, don't make things up - flag them as "[NEEDS INPUT: specific question]" so I know what to fill in.
+
+Be specific about the Business Hypothesis - it should be testable, not just "this will help users." Frame the MVP as the smallest thing we can build to learn whether the hypothesis is true.`,
         },
-        prompts: [
-          {
-            label: 'Draft the full one-pager:',
-            prompt: `I need to write a Beyond product initiative one-pager. Here's the standard template:
+        {
+          step: 2,
+          name: 'Adversarial Critique',
+          prompt: `Now critique this one-pager as if you're a skeptical group PM who's seen 100 one-pagers, most of them bad. Specifically:
 
-${BEYOND_OKR_TEMPLATE}
-
-My initiative context: [describe your project — what problem it solves, for who, and what you think the solution looks like]
-
-Beyond strategic context to keep in mind:
-- Activation crisis: 6,000 signups/month, only 5% convert (target 8-11%)
-- Premium problem: Beyond charges 3-5x vs PriceLabs — every feature must justify the premium
-- Core metric: BtM (Beat the Market) — customers achieving +20% RevPAN vs competitive set
-
-Please draft a complete one-pager following the template. After drafting, immediately critique it: which section is weakest and what specific improvement would make it stronger?`,
-          },
-          {
-            label: 'Engineering pressure-test:',
-            prompt: "You are a skeptical Head of Engineering who's been burned by vague one-pagers. Review this one and tell me: (1) What in the MVP definition is ambiguous enough to cause scope creep? (2) Which dependency am I underestimating? (3) What question would you ask in sprint planning that this one-pager doesn't answer?",
-          },
-          {
-            label: 'Strategic alignment check:',
-            prompt: "Review this one-pager against Beyond's four strategic priorities: (1) activation crisis (5% → 8%), (2) premium justification (vs. PriceLabs), (3) BtM improvement (50% → 75% of listings), (4) Owner Suite / PM retention. Which priority does this directly address? Is the Expected Impact section quantified enough to compare it against other initiatives competing for the same engineering capacity?",
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Write a Beyond one-pager for a real initiative you're working on or recently worked on. It must:\n✓ Use all 9 sections of the real Beyond template\n✓ Include specific numbers (ARR impact, activation rate change, % improvement)\n✓ Go through at least 3 rounds of AI critique (draft → feedback → revise → feedback → final)\n✓ Include the engineering pressure-test and strategic alignment check\n\nSubmit the final version plus a brief log of what changed in each revision round.",
-        fields: [
-          {
-            id: 'initiative_context',
-            label: 'The initiative you\'re writing about (brief context):',
-            placeholder: 'What is the initiative? What problem does it address? Who is it for? What\'s the current state?',
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'final_one_pager',
-            label: 'Your final one-pager (after 3+ rounds of critique):',
-            placeholder:
-              "1. PROJECT OVERVIEW\nProject Name: \nBusiness Sponsor: \nProject Owner: \n\n2. QUICK DESCRIPTION\n[2-3 sentences]\n\n3. BUSINESS HYPOTHESIS / GOALS\n[Problem, expected impact, payback period]\n\n4. ENGINEERING EFFORT\n[S/M/L + rationale]\n\n5. MVP DEFINITION\n[Minimum viable version]\n\n6. NOT IN SCOPE\n[Explicit exclusions]\n\n7. KEY DEPENDENCIES\n[Teams, systems, requirements]\n\n8. EXPECTED IMPACT\n[Quantified outcomes]\n\n9. RISKS & OPEN QUESTIONS\n[Top 3]",
-            rows: 20,
-            required: true,
-          },
-          {
-            id: 'revision_log',
-            label: "Brief revision log — what changed in each round of critique and why:",
-            placeholder:
-              "Round 1 feedback: [What the critique said]\nRound 1 changes: [What you changed]\n\nRound 2 feedback: ...\nRound 2 changes: ...\n\nRound 3 feedback: ...\nRound 3 changes: ...",
-            rows: 8,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the OKR one-pager as a senior PM would. Check each section: (1) Objective — is it in customer/business outcome terms, not feature terms? 'Build a better onboarding flow' fails; 'Activate 12% of signups within 30 days' passes. (2) Key Results — measurable and specific? 'Improve activation' fails; 'Increase activation from 5% to 12%' passes. (3) Problem Statement — is it evidence-backed (specific numbers, specific behaviors) or just assertions? (4) Hypotheses — are they testable? Do they explain the mechanism (not just 'we believe X will improve Y' but 'we believe X will improve Y because [evidence/logic]')? (5) Risks — are these real, specific risks or generic ones that could apply to any initiative? Evaluate the revision log: did each round of critique actually improve the document in a specific way?",
-      evaluationCriteria: [
-        'Objective is in customer/business outcome terms',
-        'Key Results are measurable with specific numbers',
-        'Problem Statement is evidence-backed (specific data)',
-        'Hypotheses are testable and include mechanism',
-        'Risks are specific to this initiative',
-        'Revision log shows substantive improvements in each round',
-      ],
-    },
-
-    // ── Exercise 5.2 (PM Track) ───────────────────────────────────────────────
-    {
-      id: '5P.2',
-      title: 'Opportunity Mapping',
-      track: 'pm',
-      duration: '25 min',
-      type: 'framework',
-      skill: 'Building Teresa Torres Opportunity Solution Trees with AI as a thinking partner',
-      intro:
-        "Teresa Torres' Opportunity Solution Tree is one of the most powerful discovery tools in product management. It forces you to separate problems (opportunities) from solutions, and to think about them in a structured hierarchy.\n\nThe challenge is that most PMs either skip the tree entirely or build it post-hoc to justify decisions they've already made. Using AI as a thinking partner forces you to genuinely explore the opportunity space before committing to solutions.",
-      learningObjective:
-        "You'll generate a genuine OST for a current product area, challenge your assumptions at each branch, and identify which opportunity branch deserves the most immediate discovery work.",
-      content: {
-        type: 'framework',
-        framework: {
-          name: 'Opportunity Solution Tree',
-          description:
-            "The OST separates problems from solutions. Start with the desired outcome → explore the opportunity space → map potential solutions → design experiments.",
-          elements: [
-            {
-              letter: 'O',
-              name: 'Desired Outcome',
-              description: 'The business/customer outcome that would make this a success (your OKR)',
-              example: 'Increase 30-day host activation rate from 5% to 12%',
-              color: '#ee3968',
-            },
-            {
-              letter: 'Op',
-              name: 'Opportunities',
-              description: 'Customer problems, needs, or pain points that, if addressed, would move the outcome',
-              example: "• Hosts don't understand what 'activated' means\n• Setup process is too complex for non-technical hosts\n• Hosts don't trust the algorithm's first recommendations",
-              color: '#3bc1cc',
-            },
-            {
-              letter: 'S',
-              name: 'Solutions',
-              description: 'Potential ways to address each opportunity (many solutions per opportunity)',
-              example: "For 'process too complex':\n• Reduce required steps from 6 to 3\n• Add a guided setup wizard\n• Create a 'quick start' mode that uses smart defaults",
-              color: '#02556c',
-            },
-            {
-              letter: 'E',
-              name: 'Experiments',
-              description: 'How to test whether a solution actually addresses the opportunity',
-              example: "Test 'quick start' mode with 50 new hosts — measure activation rate and time to first BtM vs. control",
-              color: '#252f38',
-            },
-          ],
+1. Is the problem statement strong enough that engineering would be excited to solve it?
+2. Is the hypothesis actually testable with the proposed MVP?
+3. Could we make the MVP even smaller and still learn what we need to learn?
+4. Are the impact estimates grounded in evidence, or are they aspirational?
+5. What's the biggest assumption that could invalidate this entire project?
+6. Using Beyond's evaluation framework: does this justify our premium? Does it address activation, retention, or expansion?`,
         },
-        prompts: [
-          {
-            label: 'Generate the opportunity space:',
-            prompt: "I'm building an Opportunity Solution Tree for this outcome: [your outcome]. Without suggesting solutions yet, help me map the full opportunity space. What customer problems, needs, and pain points, if addressed, would move this outcome? Give me at least 10, organized by type (behavioral, motivational, knowledge gaps, trust gaps, friction points).",
-          },
-          {
-            label: 'Challenge the assumptions at each branch:',
-            prompt: "For each of these opportunities: [list 3-5 from above], challenge the assumption that this is a real problem. What would a customer say if we assumed this about them? What evidence would validate or invalidate this opportunity before we invest in solutions?",
-          },
-          {
-            label: 'Identify the highest-leverage branch:',
-            prompt: "Given our current data ([specific data you have]) and our engineering constraints ([capacity]), which opportunity branch would give us the best ROI on discovery effort? Explain using impact × confidence × ease framework.",
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Build a real OST for a product area you're working on or recently worked on. Go at least 3 levels deep (Outcome → Opportunities → Solutions → Experiments for at least 2 branches).\n\nThe test: could you walk a skeptical stakeholder through this tree and defend why you're starting with the opportunity branch you chose?",
-        fields: [
-          {
-            id: 'desired_outcome',
-            label: 'The desired outcome (your OKR or goal statement):',
-            placeholder: 'Specific, measurable outcome you\'re working toward...',
-            rows: 2,
-            required: true,
-          },
-          {
-            id: 'opportunity_tree',
-            label: 'Your OST — at least 3 levels deep (Outcome → 3+ Opportunities → Solutions → Experiments):',
-            placeholder:
-              "OUTCOME: [Your outcome]\n\nOPPORTUNITY 1: [Customer problem/need]\n  Solutions: [List 2-3 potential solutions]\n  Top experiment: [How to test]\n\nOPPORTUNITY 2: ...\n\nOPPORTUNITY 3: ...\n\n[etc.]",
-            rows: 16,
-            required: true,
-          },
-          {
-            id: 'highest_leverage',
-            label: 'Which opportunity branch deserves immediate discovery work, and why?',
-            placeholder:
-              "Use the impact × confidence × ease lens. What makes this the highest-leverage starting point over the other branches?",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'assumption_challenged',
-            label: 'Which of your opportunities surprised you when you challenged its assumptions?',
-            placeholder:
-              "Which opportunity seemed obvious until you challenged it? What did the assumption challenge reveal?",
-            rows: 3,
-            required: false,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the OST exercise. Check: (1) Is the desired outcome measurable, not a feature? (2) Are the opportunities genuinely customer-centric problems/needs — not features or solutions in disguise? 'Build a wizard' is a solution; 'hosts don't complete setup because it feels overwhelming' is an opportunity. (3) Does it go 3+ levels deep (Outcome → Opportunity → Solutions → Experiments)? (4) Is the 'highest leverage' reasoning substantive — does it use impact × confidence × ease or similar, or is it just 'this seems important'? (5) Does the assumption challenge show genuine critical thinking — did it change anything, or was it superficial?",
-      evaluationCriteria: [
-        'Desired outcome is measurable (specific numbers)',
-        'Opportunities are customer problems, not solutions in disguise',
-        'Tree goes 3+ levels deep with real content',
-        'Highest-leverage reasoning is substantive (uses a framework)',
-        'Assumption challenge shows genuine critical thinking',
-      ],
-    },
-
-    // ── Exercise 5.3 (PM Track) ───────────────────────────────────────────────
-    {
-      id: '5P.3',
-      title: 'The Premium Test',
-      track: 'pm',
-      duration: '20 min',
-      type: 'playground',
-      skill: "Using adversarial AI to pressure-test whether a feature justifies Beyond's premium price",
-      intro:
-        "Beyond's pricing strategy depends on one thing: being worth 3-5x more than PriceLabs to sophisticated STR hosts. Every feature we ship either strengthens or weakens that argument.\n\nThe Premium Test is a forced perspective exercise: you argue both sides of whether a feature justifies the premium. The point isn't to reach a conclusion — it's to know what the strongest arguments are on both sides before you go into a stakeholder conversation.",
-      learningObjective:
-        "You'll run both sides of the premium argument for a real feature or initiative, surface the strongest objections, and write a one-paragraph positioning statement that survives those objections.",
-      content: {
-        type: 'patterns',
-        patterns: [
-          {
-            name: 'The Premium Case',
-            prompt: "Make the strongest possible case that [feature] justifies Beyond's 3-5x premium over PriceLabs. What can a sophisticated STR host do with this feature that they absolutely cannot do with PriceLabs? Be specific about the economic value — this needs to translate to RevPAN improvement.",
-            when: 'Run this first — understand the best version of the pro argument',
-          },
-          {
-            name: 'The PriceLabs Rebuttal',
-            prompt: "You are the PriceLabs Head of Product. Beyond just announced [feature]. Write the internal memo you'd send to your team explaining why this is NOT a competitive threat, and what you'd say to shared customers who ask about it.",
-            when: 'Forces you to steelman the competitive response',
-          },
-          {
-            name: 'The Customer Skeptic',
-            prompt: "You are a sophisticated STR host managing 12 properties who currently uses PriceLabs and is considering switching to Beyond. Beyond's sales team just pitched you [feature] as a reason to switch. Give me your honest internal reaction — and the specific question you'd ask before believing this justifies the price difference.",
-            when: 'Gets at the real customer adoption barrier',
-          },
-          {
-            name: 'The Positioning Synthesis',
-            prompt: "Given these three perspectives: [paste the three responses above]. Write a 1-paragraph competitive positioning statement for [feature] that honestly acknowledges the strongest objection and still makes a compelling case for the premium. Don't oversell.",
-            when: 'Synthesizes the tension into honest, durable positioning',
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Pick a feature currently on the roadmap or recently shipped. Run all 4 premium test prompts in Claude. Then write the positioning statement that survives the strongest objections.\n\nThis is valuable whether the feature passes or fails the test — knowing it fails is even more valuable.",
-        fields: [
-          {
-            id: 'feature',
-            label: 'The feature you\'re testing (brief description):',
-            placeholder: 'What the feature does, who it\'s for, and where it sits on the roadmap...',
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'premium_case',
-            label: "The strongest 'premium case' Claude made for this feature:",
-            placeholder: 'Key arguments that genuinely justify the price premium...',
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'pricelabs_rebuttal',
-            label: "The strongest 'PriceLabs rebuttal' Claude generated:",
-            placeholder: 'The most compelling competitive counter-argument...',
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'customer_objection',
-            label: "The customer skeptic's sharpest objection:",
-            placeholder: 'The specific question or objection the skeptical customer raised...',
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'positioning_statement',
-            label: 'Your final 1-paragraph positioning statement that survives the objections:',
-            placeholder:
-              "This should honestly acknowledge the strongest objection while still making a compelling case for premium value. No BS, no overselling.",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'verdict',
-            label: "Your honest verdict: does this feature justify the premium? (Yes/No/Partially — and your reasoning)",
-            placeholder: 'Be direct. If it doesn\'t justify the premium, that\'s valuable information.',
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the Premium Test exercise. The key test is honesty: is the user willing to reach a conclusion that challenges the feature, or did they just validate what they already believed? Check: (1) Is the premium case genuinely compelling — specific economic value (RevPAN, retention, ARR impact), not just feature descriptions? (2) Is the PriceLabs rebuttal actually strong — would it represent a legitimate competitive response, or is it strawman weak? (3) Does the positioning statement acknowledge the real objection while making a compelling case? The best ones feel honest, not salesy. (4) Is the verdict direct — do they take a position, or hedge indefinitely?",
-      evaluationCriteria: [
-        'Premium case is specific about economic value (not just feature benefits)',
-        'PriceLabs rebuttal is genuinely strong (not strawman)',
-        'Customer objection is specific and realistic',
-        'Positioning statement acknowledges the real objection honestly',
-        'Verdict is direct and takes a position',
-      ],
-    },
-
-    // ── Exercise 5.4 (PM Track) ───────────────────────────────────────────────
-    {
-      id: '5P.4',
-      title: 'Strategy Stress Test',
-      track: 'pm',
-      duration: '20 min',
-      type: 'reflection',
-      skill: 'Using AI to pressure-test strategy documents against Gibson Biddle\'s DHM and Perri\'s build trap lens',
-      intro:
-        "Strategy documents are where PM hand-waving goes to hide. Vague language ('improve user experience', 'drive growth'), outputs dressed as outcomes, and feature lists in strategic clothing.\n\nGibson Biddle's DHM model asks whether a strategy Delights customers in Hardly-copy-able ways that are Margin-enhancing. Melissa Perri's build trap lens asks whether you're building to ship output vs. achieve outcomes.\n\nUsed together with adversarial AI, they turn strategy documents into something that can actually survive a board meeting.",
-      learningObjective:
-        "You'll run a real strategy document through both frameworks and document what changed about how you'd defend it to leadership.",
-      content: {
-        type: 'patterns',
-        patterns: [
-          {
-            name: 'The DHM Lens',
-            prompt: "Apply Gibson Biddle's DHM model to this strategy: (1) Delight — does this strategy create customer delight in a specific, measurable way? (2) Hard to copy — what prevents PriceLabs or a well-funded startup from copying this in 18 months? (3) Margin-enhancing — does this strategy improve our margins or pricing power, or does it require ongoing cost investment? Be direct about where the strategy is weakest on DHM.",
-            when: 'For any strategy document that claims competitive differentiation',
-          },
-          {
-            name: 'The Build Trap Lens',
-            prompt: "Apply Melissa Perri's 'build trap' lens to this strategy. Is this strategy organized around: (a) outputs (features we plan to ship) or (b) outcomes (changes in customer behavior we want to drive)? Identify every place in the document where output thinking is masquerading as outcome thinking.",
-            when: 'When the strategy sounds like a roadmap in disguise',
-          },
-          {
-            name: 'The Leadership Challenge',
-            prompt: "You are a skeptical board member with a background in SaaS and competitive markets. This strategy document has 10 minutes of your attention. What are the 3 questions you'd ask that the document doesn't answer — and that the PM would be most uncomfortable answering?",
-            when: "The ultimate stress test — what's the hardest question this strategy can't answer?",
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Take a strategy document — your OKR one-pager from 5P.1, a team strategy doc, a recent planning artifact, or a product area strategy you've worked on. Run it through all three lenses.\n\nThen answer: what's the hardest leadership question this strategy currently can't answer, and what would you need to do to answer it?",
-        fields: [
-          {
-            id: 'strategy_doc',
-            label: 'The strategy document you\'re stress-testing (paste or summarize):',
-            placeholder: 'Your OKR one-pager, strategy memo, or planning document...',
-            rows: 8,
-            required: true,
-          },
-          {
-            id: 'dhm_analysis',
-            label: 'DHM analysis — where is the strategy strong vs. weak?',
-            placeholder:
-              "Delight: [Strong/Weak — specific reason]\nHard to copy: [Strong/Weak — specific reason]\nMargin-enhancing: [Strong/Weak — specific reason]",
-            rows: 6,
-            required: true,
-          },
-          {
-            id: 'build_trap_analysis',
-            label: 'Build trap analysis — where does output thinking hide in this strategy?',
-            placeholder:
-              "List the specific sections or sentences that are outputs disguised as outcomes. Quote them if helpful.",
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'hardest_question',
-            label: "The hardest leadership question this strategy can't currently answer:",
-            placeholder: "What would the board member ask that would make you uncomfortable? Be specific.",
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'what_changes',
-            label: "What would you need to do to answer that question?",
-            placeholder:
-              "Specific discovery work, data analysis, or strategic thinking needed to close this gap.",
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the strategy stress test. Check: (1) Is the DHM analysis specific — does it name specific reasons something is weak/strong, not just 'the delight section is okay'? (2) Does the build trap analysis name actual examples from the document — specific sentences that are outputs disguised as outcomes? (3) Is the 'hardest leadership question' genuinely hard — would it make a prepared PM uncomfortable, or is it a question they could easily answer? (4) Is the 'what changes' response substantive — does it name specific actions (discovery interviews, data analysis, competitive research) vs. 'I need to think about this more'?",
-      evaluationCriteria: [
-        'DHM analysis is specific (names reasons, not just strong/weak)',
-        'Build trap analysis quotes actual examples from the document',
-        'Hardest question is genuinely difficult (not a softball)',
-        'What changes is specific and actionable',
-      ],
-    },
-
-    // ── Exercise 5.5 (PM Track) ───────────────────────────────────────────────
-    {
-      id: '5P.5',
-      title: 'The Experiment Designer',
-      track: 'pm',
-      duration: '20 min',
-      type: 'framework',
-      skill: 'Designing fast, minimal experiments to validate risky assumptions',
-      intro:
-        "The best discovery is the fastest discovery that still gives you a real signal. Most PM experiments are either too slow (wait 8 weeks for statistical significance on something we could have learned in 5 days) or too small (n=5 user interviews that don't generalize).\n\nAI helps you design better experiments by forcing you to be precise about what you're actually testing, what a real signal looks like, and what the minimum viable test is.",
-      learningObjective:
-        "You'll design a real experiment for a risky assumption in your current work — specific enough to actually run in the next 2 weeks.",
-      content: {
-        type: 'framework',
-        framework: {
-          name: 'The Experiment Design Template',
-          description:
-            "Six elements that distinguish a real experiment from a research project.",
-          elements: [
-            {
-              letter: 'H',
-              name: 'Hypothesis',
-              description: 'We believe [assumption] because [evidence/reasoning]',
-              example: "We believe hosts abandon step 4 because pricing rules feel too technical, because 71% of Mixpanel drop-offs happen at that step and customer interviews mention 'too complicated'.",
-              color: '#ee3968',
-            },
-            {
-              letter: 'S',
-              name: 'Success Criteria',
-              description: 'We\'ll know we\'re right if [specific, measurable outcome] happens',
-              example: "We'll know we're right if the quick-start version of step 4 achieves >50% completion vs. current 29%.",
-              color: '#3bc1cc',
-            },
-            {
-              letter: 'T',
-              name: 'Test Design',
-              description: 'The minimum viable test that would give us signal',
-              example: "Show 100 new hosts a simplified version of step 4 (mockup, not built) and measure whether they click 'save' on the pricing rules.",
-              color: '#02556c',
-            },
-            {
-              letter: 'F',
-              name: 'Failure Condition',
-              description: 'We\'ll know we\'re wrong if [specific outcome]',
-              example: "We'll know we're wrong if completion on the simplified version is <40% — meaning the problem isn't complexity, it's something else.",
-              color: '#252f38',
-            },
-            {
-              letter: 'L',
-              name: 'Learning',
-              description: 'Regardless of outcome, what will we learn?',
-              example: "We'll either confirm that simplifying step 4 drives activation (and build it) or learn that the problem is elsewhere (and look at other hypotheses).",
-              color: '#ee3968',
-            },
-          ],
+        {
+          step: 3,
+          name: 'Revise',
+          prompt: `Based on the critique, revise the one-pager. Address each weakness directly. If you can't fix a weakness because we don't have the data, move it to "Risks & Open Questions" with a plan to resolve it.`,
         },
-      },
-      task: {
-        instructions:
-          "Pick the riskiest assumption in your current work — something that, if wrong, would significantly change what you should be building or prioritizing.\n\nDesign a minimum viable experiment using the template. The test: could someone on your team run this experiment in 2 weeks without a kickoff meeting?",
-        fields: [
-          {
-            id: 'risky_assumption',
-            label: 'The risky assumption you\'re testing:',
-            placeholder:
-              "What is the specific assumption that, if wrong, would change your direction? Why is it risky?",
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'experiment',
-            label: 'Your experiment design (use the H, S, T, F, L format):',
-            placeholder:
-              "H (Hypothesis): We believe [X] because [evidence].\n\nS (Success Criteria): We'll know we're right if [specific outcome].\n\nT (Test Design): [Minimum viable test — what you'll do, with whom, in what timeframe].\n\nF (Failure Condition): We'll know we're wrong if [specific outcome].\n\nL (Learning): Regardless of outcome, we'll learn [what].",
-            rows: 14,
-            required: true,
-          },
-          {
-            id: 'mvt_reality_check',
-            label: 'Reality check: could someone actually run this in 2 weeks without a kickoff meeting?',
-            placeholder:
-              "Yes/No — and if No, what makes it too complex? What would you need to simplify?",
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the experiment design. Check: (1) Is the hypothesis specific — does it name the exact assumption and the evidence behind it? 'We believe users want a better experience' fails; 'We believe hosts abandon step 4 because pricing rules feel technical, supported by 71% Mixpanel drop-off at step 4' passes. (2) Are success criteria measurable — do they name a specific metric and threshold? (3) Is the test design truly minimum viable — could it actually run in 2 weeks with existing resources, or does it require months of engineering? (4) Is the failure condition as specific as the success criteria? Many people define success clearly but leave failure vague — that's a red flag. (5) Does the learning section show they'll learn something regardless of outcome?",
-      evaluationCriteria: [
-        'Hypothesis is specific (names assumption + evidence)',
-        'Success criteria are measurable (specific metric and threshold)',
-        'Test design is genuinely minimum viable (2-week runnable)',
-        'Failure condition is as specific as success criteria',
-        'Learning is valuable regardless of outcome direction',
-      ],
+        {
+          step: 4,
+          name: 'Final Polish (use Opus)',
+          prompt: `Final pass. Ensure: (1) every section is specific and evidence-based, (2) the MVP is genuinely minimal, (3) the hypothesis could be validated or invalidated within one quarter, (4) the impact section connects to a business metric that leadership cares about (NRR, activation rate, BtM, GBV). Make it crisp enough that someone could read it in 3 minutes and make a go/no-go decision.`,
+        }
+      ]
     },
 
-    // ── Exercise 5.6 (PM Track Capstone) ─────────────────────────────────────
-    {
-      id: '5P.6',
-      title: 'Capstone: The Complete OKR Package',
-      track: 'pm',
-      duration: '35 min',
-      type: 'capstone',
-      skill: 'Delivering a complete, stakeholder-ready OKR one-pager refined through AI critique',
-      intro:
-        "This capstone is the thing you could put in front of your skip-level or a board member. Not a draft. Not 'directionally right.' A polished, defensible, evidence-backed OKR one-pager that represents the PM craft you've developed across Levels 1-5.",
-      learningObjective:
-        "Deliver a complete OKR one-pager for a real current project that you'd be proud to submit in a planning cycle.",
-      content: {
-        type: 'walkthrough',
-        steps: [
-          { number: 1, title: 'Draft using the Beyond format', description: 'Use your Level 5.1 draft or write fresh for a different initiative.', tip: 'Use your prompt library from Level 4.5 — you should have a prompt for this.' },
-          { number: 2, title: 'Run the Four Risks check', description: "Apply Exercise 4.6's framework to verify you haven't missed a critical risk.", tip: 'Be honest. A risk log that says everything is low risk is a warning sign.' },
-          { number: 3, title: 'Run the DHM check', description: 'Apply the DHM lens from Exercise 5.4 to verify the strategy passes the differentiation bar.', tip: "If it doesn't pass DHM, is it actually the right initiative?" },
-          { number: 4, title: 'Pressure-test with LLM-as-judge', description: 'Use your Exercise 4.2 judge prompt — with a senior PM or board member evaluator — to score the final document.', tip: 'Accept a score below 4 on any criterion as a revision trigger.' },
-          { number: 5, title: 'Submit', description: 'Paste the final document. It should be indistinguishable from something produced by a senior PM with deep context.', tip: "If you wouldn't submit this in a real planning cycle, keep refining." },
-        ],
-      },
-      task: {
-        instructions:
-          "Submit your complete OKR package. The AI Coach will evaluate it against the full PM quality bar: objective quality, KR specificity, evidence behind the problem statement, testable hypotheses, and honest risk identification.\n\nAlso include your Four Risks and DHM summary so the Coach can see your reasoning.",
-        fields: [
-          {
-            id: 'final_okr',
-            label: 'Your complete Beyond one-pager (all 9 sections):',
-            placeholder: "1. PROJECT OVERVIEW\nProject Name: \nBusiness Sponsor: \nProject Owner: \n\n2. QUICK DESCRIPTION\n\n3. BUSINESS HYPOTHESIS / GOALS\n\n4. ENGINEERING EFFORT\n\n5. MVP DEFINITION\n\n6. NOT IN SCOPE\n\n7. KEY DEPENDENCIES\n\n8. EXPECTED IMPACT\n\n9. RISKS & OPEN QUESTIONS",
-            rows: 20,
-            required: true,
-          },
-          {
-            id: 'four_risks_summary',
-            label: 'Your Four Risks assessment (brief summary from Exercise 4.6 or fresh):',
-            placeholder: "Value risk: [High/Med/Low — why]\nUsability risk: ...\nFeasibility risk: ...\nViability risk: ...",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'dhm_summary',
-            label: 'Your DHM check (brief):',
-            placeholder: "Delight: [passes/fails — why]\nHard to copy: ...\nMargin-enhancing: ...",
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'judge_score',
-            label: 'Your LLM-as-judge score and top 2 improvements made from the verdict:',
-            placeholder: "Overall score: [X/5]\nTop improvement 1: [What you changed based on judge feedback]\nTop improvement 2: ...",
-            rows: 4,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "This is the Level 5 PM capstone. Evaluate with a senior PM's eye. Check all sections: (1) Objective — measurable outcome, customer-centric language, no feature terms? (2) KRs — specific numbers, achievable in one quarter, business-connected? (3) Problem statement — evidence-backed with specific data? (4) Hypotheses — testable, with mechanisms? (5) Risks — specific to this initiative? Also evaluate the Four Risks and DHM summaries: are they thoughtful or perfunctory? A perfunctory 'all risks are low' or 'passes DHM on all three' is a red flag. Finally: would this document genuinely inform a planning decision, or is it doing the minimum to satisfy the format?",
-      evaluationCriteria: [
-        'All OKR sections meet the quality bar (see 5P.1 criteria)',
-        'Four Risks assessment is honest and specific',
-        'DHM check shows genuine analysis (not all passing)',
-        'LLM-as-judge was used and improvements documented',
-        'Document would genuinely inform a planning decision',
-      ],
+    task: {
+      instruction: `Write a real one-pager for a project you're working on (or considering proposing). Use the 4-step workflow above: Draft > Critique > Revise > Polish.
+
+The deliverable should be ready to submit for OKR consideration. Not a practice exercise - a real business case.
+
+Paste the final one-pager here.`,
+      prompts: {
+        pm_ic: `Pick a feature or initiative you genuinely believe your team should pursue. It could be something already in your backlog, something from a customer conversation, or a new idea.
+
+The one-pager should be scoped to something your product trio could ship. The MVP should be achievable in one sprint or less. The hypothesis should be testable with real data.
+
+After the 4-step workflow, add a 5th step: "Ask Claude to evaluate this one-pager using Beyond's 7-question product idea evaluation framework." This connects the one-pager to your product culture.`,
+
+        pm_director: `Pick an initiative at the team or portfolio level - something that would be an OKR for one of your teams, or a strategic bet you're considering proposing to leadership.
+
+Director-level one-pagers need to address: why this over other options (opportunity cost), how it connects to company strategy, and what success looks like at 6 and 12 months. The business hypothesis should be framed in terms leadership cares about: NRR impact, competitive positioning, or platform strategy.
+
+After the 4-step workflow, add: "Rewrite the Quick Description as if it's the opening line of a board presentation. It needs to land in 15 seconds."`
+      }
     },
 
-    // ── Exercise 5.1 (Design Track) ───────────────────────────────────────────
-    {
-      id: '5D.1',
-      title: 'The Design Critic',
-      track: 'design',
-      duration: '25 min',
-      type: 'framework',
-      skill: "Using Nielsen's heuristics as a structured lens for AI-powered design critique",
-      intro:
-        "Getting useful design feedback from Claude requires the same thing as getting useful design feedback from a colleague: specificity about what you're evaluating and what the quality bar is.\n\nNielsen's 10 Usability Heuristics are the gold standard for UX critique. Used as explicit evaluation criteria in a Claude prompt, they transform 'what do you think of this design?' into a structured, actionable review.",
-      learningObjective:
-        "You'll write a structured UX critique prompt using Nielsen's heuristics, run it on a current design, and get feedback specific enough to act on.",
-      content: {
-        type: 'framework',
-        framework: {
-          name: "Nielsen's 10 Usability Heuristics",
-          description:
-            "The standard evaluation framework for UX critique. Use 3-4 most relevant to your design challenge as evaluation criteria.",
-          elements: [
-            { letter: '1', name: 'System Status Visibility', description: 'Does the user always know what\'s happening?', example: 'Are loading states, error states, and success states clearly communicated?', color: '#3bc1cc' },
-            { letter: '2', name: 'Match with Mental Models', description: 'Does it work how users expect the world to work?', example: 'Are metaphors and concepts consistent with what users already understand?', color: '#02556c' },
-            { letter: '3', name: 'User Control & Freedom', description: 'Can users easily undo or exit?', example: 'Are there clear escape routes when users take wrong actions?', color: '#ee3968' },
-            { letter: '4', name: 'Consistency & Standards', description: 'Do things look and work the same throughout?', example: 'Are conventions consistent with platform standards and internal patterns?', color: '#3bc1cc' },
-            { letter: '5', name: 'Error Prevention', description: 'Does the design prevent errors before they happen?', example: 'Are dangerous actions confirmed? Are likely mistakes anticipated?', color: '#02556c' },
-            { letter: '6', name: 'Recognition Over Recall', description: 'Are options visible, not memorized?', example: 'Do users need to remember information from one step to apply at another?', color: '#ee3968' },
-            { letter: '7', name: 'Flexibility & Efficiency', description: 'Does it work for both novices and experts?', example: 'Are there shortcuts or accelerators for power users?', color: '#3bc1cc' },
-            { letter: '8', name: 'Aesthetic & Minimal Design', description: 'Does every element serve a purpose?', example: 'Is irrelevant or rarely-used information suppressed?', color: '#02556c' },
-            { letter: '9', name: 'Error Recovery', description: 'Are error messages helpful and constructive?', example: 'Do errors tell users exactly what went wrong and how to fix it?', color: '#ee3968' },
-            { letter: '10', name: 'Help & Documentation', description: 'Can users get help when needed without leaving the flow?', example: 'Is documentation available at the point of need?', color: '#3bc1cc' },
-          ],
+    coachContext: {
+      evaluationCriteria: [
+        'Is the problem statement specific and evidence-based (not "users need X")?',
+        'Is the hypothesis testable and falsifiable?',
+        'Is the MVP genuinely minimal (could it be smaller and still test the hypothesis)?',
+        'Are impact estimates connected to real business metrics, not vanity metrics?',
+        'Did they use the adversarial critique step and actually address the weaknesses?',
+        'Is this specific enough that someone could make a go/no-go decision from reading it?'
+      ],
+      seniorityNote: `PM Director one-pagers should address portfolio-level trade-offs, strategic alignment, and stakeholder considerations. PM IC one-pagers should focus on specific user problems, testable hypotheses, and execution clarity.`,
+      exampleFeedback: {
+        strong: `This one-pager would survive a tough product review. The problem statement is grounded in real data (you cited the specific churn cohort and percentage), the hypothesis is testable ("if we reduce onboarding from 14 steps to 6, hosts who complete setup within 48 hours will increase by X%"), and the MVP is genuinely minimal. I especially like that the adversarial critique caught the gap in your impact estimates and you moved it to Risks rather than pretending you had data you don't. That's the mark of a credible one-pager - honest about uncertainty.`,
+        needsWork: `The one-pager has the right structure but several sections are too vague to be actionable. "Improve user experience" is not a hypothesis - it's a goal. Reframe it as: "We believe [specific change] will cause [specific metric] to improve by [amount] because [evidence/reasoning]." Also, your MVP includes 4 features - that's not a minimum viable anything. What's the ONE thing you could build to test the core hypothesis? Strip everything else to "Not In Scope."`
+      }
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.2 - Opportunity Mapping
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.2',
+    title: 'Opportunity Mapping',
+    subtitle: 'Teresa Torres meets Claude',
+    duration: '30 min',
+    track: 'pm',
+    description: `Opportunity Solution Trees (Teresa Torres) are one of the most powerful frameworks for connecting outcomes to discovery. The tree maps: Desired Outcome > Opportunities (customer needs/pain points) > Solutions > Experiments.
+
+Most teams skip the Opportunity layer - they jump from "we need to improve activation" straight to "let's build a setup wizard." Claude can help you slow down and map the full opportunity space before committing to a solution. This is discovery work accelerated by AI.`,
+
+    workedExample: {
+      outcome: 'Improve host activation rate from 5% to 8%',
+      opportunities: [
+        {
+          opportunity: 'Hosts don\'t understand the value proposition before committing to setup',
+          evidence: 'Gong calls show hosts asking "why should I trust an algorithm?" in first conversations',
+          solutions: ['Show BtM results from similar hosts during onboarding', 'Free 30-day trial with price recommendations visible but not pushed to channels'],
         },
-      },
-      task: {
-        instructions:
-          "Pick a current design flow you're working on — a new feature, a revised onboarding, a settings page, a critical user journey. Describe it to Claude in enough detail for it to evaluate it (screenshots described, or the copy/flow steps written out).\n\nWrite a CRIT prompt using 3-4 heuristics most relevant to your design challenge. Run it and use the feedback.",
-        fields: [
-          {
-            id: 'design_description',
-            label: 'Describe the design flow you\'re critiquing:',
-            placeholder:
-              "Describe the flow step-by-step, including the key UI elements, copy, and the user\'s goal. Be specific enough that Claude can evaluate it without seeing a screenshot.",
-            rows: 8,
-            required: true,
-          },
-          {
-            id: 'critique_prompt',
-            label: 'Your CRIT-structured critique prompt (using Nielsen\'s heuristics as criteria):',
-            placeholder:
-              "C: [Context — what this design is, who the user is, where in the flow]\nR: [Role — e.g., 'experienced UX designer who specializes in B2B SaaS onboarding']\nI: [Instructions — which 3-4 heuristics to evaluate and what to look for]\nT: [Tone — how direct you want the feedback]",
-            rows: 8,
-            required: true,
-          },
-          {
-            id: 'feedback_received',
-            label: "Claude's critique — the 3 most actionable findings:",
-            placeholder:
-              "Finding 1: [Heuristic violated] — [Specific issue] — [Recommended fix]\nFinding 2: ...\nFinding 3: ...",
-            rows: 6,
-            required: true,
-          },
-          {
-            id: 'design_decision',
-            label: 'Which finding will you act on first, and why?',
-            placeholder: 'Which issue has the highest user impact? What specifically will you change?',
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the design critique exercise. Check: (1) Is the design description specific enough for meaningful critique — can you understand the flow, the user's goal, and the key design decisions? If it's vague, the critique will be generic. (2) Does the CRIT prompt correctly apply the heuristics as evaluation criteria (not just mention them)? (3) Are the critique findings specific — do they name actual UI elements or copy choices, not generic 'the design could be clearer'? (4) Is the design decision specific — does it name what exactly will change in the design?",
-      evaluationCriteria: [
-        'Design description is specific enough for meaningful evaluation',
-        'CRIT prompt correctly uses heuristics as evaluation criteria',
-        'Critique findings name specific design elements (not generic)',
-        'Design decision is specific about what will change',
-      ],
-    },
-
-    // ── Exercise 5.2 (Design Track) ───────────────────────────────────────────
-    {
-      id: '5D.2',
-      title: 'Journey Mapping',
-      track: 'design',
-      duration: '25 min',
-      type: 'framework',
-      skill: 'Using AI to generate and validate user journey maps with friction point analysis',
-      intro:
-        "User journey maps are powerful when they represent reality, and useless when they represent what we wish reality was. AI helps you generate a detailed journey quickly — but the real skill is using prompts that force Claude to surface the friction points you'd rather not see.\n\nThe journey map is only as valuable as its ability to make the team uncomfortable about things they've been ignoring.",
-      learningObjective:
-        "You'll generate a realistic journey map for a specific persona and flow, then use adversarial prompts to surface the friction points with highest design impact.",
-      content: {
-        type: 'patterns',
-        patterns: [
-          {
-            name: 'The Journey Generation Prompt',
-            prompt: "Map the complete journey of [specific persona] trying to [specific goal] using [product/feature]. For each stage: (1) what they're doing, (2) what they're thinking, (3) what they're feeling, (4) where they might get stuck or give up. Be realistic — don't show the journey we wish they had.",
-            when: 'The starting point — generates the full journey',
-          },
-          {
-            name: 'The Friction Surface Prompt',
-            prompt: "Looking at the journey above: identify the top 3 friction points where users are most likely to fail, give up, or do the wrong thing. For each: (a) what's the underlying cause (knowledge gap? motivation drop? UX confusion?), (b) what does failure here cost the user and the business, (c) what's the minimal design intervention that would reduce friction?",
-            when: "After generating the journey — surface what's actually hard",
-          },
-          {
-            name: 'The Persona Mismatch Prompt',
-            prompt: "This journey assumes [specific assumption about the user]. What would the journey look like if we're wrong — if the user is more [novice/expert/skeptical/rushed/technical] than we assumed? What changes?",
-            when: "Tests whether your journey is persona-specific or just generic",
-          },
-          {
-            name: 'The Moment of Truth Prompt',
-            prompt: "In this journey, what is the single most critical moment — the point where we either earn the user's trust and continuation, or lose them permanently? What design decisions at that moment matter most?",
-            when: "Focuses team on the highest-stakes interaction",
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Generate a journey map for a specific persona doing a specific task in Beyond's product. The best candidates: host onboarding, a host's first pricing review, or the moment a host considers manual override.\n\nRun the journey generation, friction surface, and moment of truth prompts. Then identify your top 3 friction points and rank them by design impact.",
-        fields: [
-          {
-            id: 'persona_and_goal',
-            label: 'The persona and goal you\'re mapping (be specific):',
-            placeholder:
-              "Persona: [e.g., 'First-time STR host, 1 property, manages it part-time, not tech-savvy']\nGoal: [e.g., 'Complete Beyond pricing setup and see their first recommendation']",
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'journey_map',
-            label: 'Your generated journey map (stages, actions, thoughts, feelings, friction):',
-            placeholder:
-              "Stage 1: [Name]\n• Doing: ...\n• Thinking: ...\n• Feeling: ...\n• Potential friction: ...\n\nStage 2: ...",
-            rows: 14,
-            required: true,
-          },
-          {
-            id: 'top_3_friction',
-            label: 'Top 3 friction points ranked by design impact:',
-            placeholder:
-              "#1 (Highest impact): [What happens] — [Root cause] — [Design opportunity]\n#2: ...\n#3: ...",
-            rows: 6,
-            required: true,
-          },
-          {
-            id: 'moment_of_truth',
-            label: 'The moment of truth — what is it and what design decision matters most there?',
-            placeholder:
-              "The critical moment: [what happens here]\nWhy it matters: [trust/retention/conversion impact]\nKey design decision: [what makes or breaks this moment]",
-            rows: 4,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the journey mapping exercise. Check: (1) Is the persona specific enough to generate a meaningfully different journey than a generic user? 'A host' is not specific enough; 'First-time STR host with 1 property, non-technical, managing part-time' is. (2) Does the journey map show realistic friction (emotional lows, confusion points, potential abandonment) — not an idealized version of the flow? (3) Are the top 3 friction points ranked with a genuine reasoning about design impact — not just listed? (4) Is the moment of truth actually critical — is it the make-or-break moment, or just an important moment among many?",
-      evaluationCriteria: [
-        'Persona is specific (not just "a host")',
-        'Journey map shows realistic friction (not idealized)',
-        'Friction points are ranked with design impact reasoning',
-        'Moment of truth is genuinely critical to retention/conversion',
-      ],
-    },
-
-    // ── Exercise 5.3 (Design Track) ───────────────────────────────────────────
-    {
-      id: '5D.3',
-      title: 'Behavioral Design Lab',
-      track: 'design',
-      duration: '20 min',
-      type: 'framework',
-      skill: 'Applying behavioral design principles via prompting to improve user decision-making in the product',
-      intro:
-        "Behavioral design is the application of cognitive psychology to interface decisions. The goal: make it easier for users to do what's good for them and harder to do what's harmful to them.\n\nFor Beyond, this means making it easier for hosts to trust the algorithm, follow through on setup, and stick to dynamic pricing rather than manual overrides. Every friction point in the journey is a behavioral design opportunity.",
-      learningObjective:
-        "You'll apply behavioral design principles to a specific challenge in Beyond's product and generate concrete design recommendations.",
-      content: {
-        type: 'framework',
-        framework: {
-          name: 'Behavioral Design Principles',
-          description: 'Six principles with direct application to STR platform design.',
-          elements: [
-            {
-              letter: 'D',
-              name: 'Defaults',
-              description: 'The most powerful principle: people stick with whatever is pre-selected',
-              example: "Prompt: 'How should we set default pricing rules for new hosts — what default makes it most likely they achieve BtM without overriding?'",
-              color: '#ee3968',
-            },
-            {
-              letter: 'L',
-              name: 'Loss Aversion',
-              description: 'Losses feel ~2x more painful than equivalent gains feel good',
-              example: "Prompt: 'Reframe our algorithm recommendation UI using loss aversion — show hosts what they risk losing by overriding vs. what they gain by following the recommendation.'",
-              color: '#3bc1cc',
-            },
-            {
-              letter: 'P',
-              name: 'Progressive Disclosure',
-              description: 'Show only what\'s needed for the current decision; reveal complexity as needed',
-              example: "Prompt: 'Redesign our pricing rules interface using progressive disclosure — what\'s shown by default, what\'s one level deeper, what\'s advanced-only?'",
-              color: '#02556c',
-            },
-            {
-              letter: 'Z',
-              name: 'Zeigarnik Effect',
-              description: 'Incomplete tasks create psychological tension that motivates completion',
-              example: "Prompt: 'How can we use the Zeigarnik effect in our onboarding checklist to increase completion rates? What visual and copy changes create the right tension?'",
-              color: '#252f38',
-            },
-            {
-              letter: 'S',
-              name: 'Social Proof',
-              description: 'People follow what others like them do',
-              example: "Prompt: 'Design social proof elements for the pricing recommendation UI — what data about similar hosts\'s behavior would most increase trust in the algorithm?'",
-              color: '#ee3968',
-            },
-            {
-              letter: 'R',
-              name: 'Reduction of Choice',
-              description: 'Fewer options increase satisfaction and reduce paralysis',
-              example: "Prompt: 'Our pricing rules setup has 12 configuration options. Using the paradox of choice principle, which 3 should be the only options shown to new hosts?'",
-              color: '#3bc1cc',
-            },
-          ],
+        {
+          opportunity: 'Setup process requires too many decisions before showing any value',
+          evidence: 'PostHog funnel shows 60% drop-off between step 3 (connect PMS) and step 5 (configure preferences)',
+          solutions: ['Skip-ahead option: enable pricing with smart defaults, configure later', 'Progressive onboarding: basic setup in 3 steps, advanced setup as optional follow-up'],
         },
-      },
-      task: {
-        instructions:
-          "Pick a specific design challenge in Beyond's product where user behavior doesn't match what's good for them. Examples: hosts overriding algorithm recommendations, hosts abandoning onboarding, hosts not enabling automatic pricing.\n\nApply 3 behavioral principles to generate specific design recommendations. Each recommendation should be concrete enough to put in a design brief.",
-        fields: [
-          {
-            id: 'behavioral_challenge',
-            label: 'The behavioral challenge — what are users doing that hurts them or the business?',
-            placeholder:
-              "Specific user behavior + why it's problematic + current design context...",
-            rows: 3,
-            required: true,
-          },
-          {
-            id: 'principle_1',
-            label: 'Behavioral Principle 1 applied — principle, prompt used, design recommendation:',
-            placeholder:
-              "Principle: [Which one]\nPrompt: [What you asked Claude]\nDesign recommendation: [Specific, actionable UI/copy change]",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'principle_2',
-            label: 'Behavioral Principle 2 applied:',
-            placeholder: "Principle: ...\nPrompt: ...\nDesign recommendation: ...",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'principle_3',
-            label: 'Behavioral Principle 3 applied:',
-            placeholder: "Principle: ...\nPrompt: ...\nDesign recommendation: ...",
-            rows: 5,
-            required: true,
-          },
-          {
-            id: 'highest_impact',
-            label: 'Which recommendation would have the highest behavioral impact, and why?',
-            placeholder: 'Rank your 3 recommendations and explain your reasoning...',
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the behavioral design exercise. Check: (1) Is the behavioral challenge specific — does it name a real behavior, not just 'users struggle with onboarding'? (2) Are the three principles applied correctly — does the prompt match the principle's actual mechanism? (3) Are the design recommendations specific enough to put in a design brief — 'make it clearer' fails; 'change the algorithm recommendation card to show potential revenue lost by overriding' passes. (4) Is the highest-impact selection justified with reasoning about the behavioral mechanism, not just preference?",
-      evaluationCriteria: [
-        'Behavioral challenge names a specific problematic user behavior',
-        'Three principles are correctly applied (prompts match mechanism)',
-        'Design recommendations are brief-ready specific (not generic)',
-        'Highest-impact selection is justified with behavioral reasoning',
+        {
+          opportunity: 'Hosts with one listing don\'t see Beyond as worth the effort vs. manual pricing',
+          evidence: 'Single-listing hosts churn at 2x the rate of 3+ listing hosts within 90 days',
+          solutions: ['Simplified "one listing" mode with zero-config pricing', 'Market comparison showing what they\'re leaving on the table vs. manual pricing'],
+        }
       ],
+      keyInsight: 'Notice that each opportunity is grounded in evidence - not assumptions. And each has multiple possible solutions. The tree prevents premature commitment to a single solution before exploring the full opportunity space.'
     },
 
-    // ── Exercise 5.4 (Design Track) ───────────────────────────────────────────
-    {
-      id: '5D.4',
-      title: 'The Accessibility Audit',
-      track: 'design',
-      duration: '20 min',
-      type: 'reflection',
-      skill: 'Using AI to audit designs for accessibility issues and generate WCAG-compliant improvements',
-      intro:
-        "Accessibility is often the thing design teams know matters and don't have enough bandwidth to address properly. AI dramatically lowers the cost of a first-pass accessibility audit — not as a replacement for real accessibility testing with users, but as a way to catch the obvious issues before they reach production.\n\nThe skill is describing your design precisely enough that Claude can identify real accessibility concerns, not just generic advice.",
-      learningObjective:
-        "You'll run an AI accessibility audit on a current design flow and generate specific WCAG-compliant improvement recommendations.",
-      content: {
-        type: 'patterns',
-        patterns: [
-          {
-            name: 'The Comprehensive Audit Prompt',
-            prompt: "Audit this design flow for accessibility issues using WCAG 2.1 AA standards. Check specifically: (1) color contrast ratios for all text on backgrounds — flag anything below 4.5:1 for normal text or 3:1 for large text, (2) interactive element sizing — flag anything below 44×44px touch target, (3) keyboard navigation path — can a keyboard-only user complete this flow, (4) screen reader experience — are all interactive elements properly labeled, (5) motion/animation — is there a way to reduce motion? Design description: [your description]",
-            when: 'Comprehensive first-pass audit',
-          },
-          {
-            name: 'The Color Contrast Checker',
-            prompt: "For this design: [describe colors used, e.g., '#3bc1cc text on white background', '#ee3968 on dark background']. Calculate the approximate contrast ratios and flag any combinations that would fail WCAG AA standards for normal text, large text, or UI components.",
-            when: 'Quick color check before handoff',
-          },
-          {
-            name: 'The Screen Reader Simulation',
-            prompt: "Simulate the screen reader experience for a blind user navigating this flow. What would they hear, in what order, and where would they likely get confused or stuck? Write the screen reader output as if narrating the page.",
-            when: "Most revealing — shows what's invisible to sighted designers",
-          },
-          {
-            name: 'The Fix Generator',
-            prompt: "For each accessibility issue you identified: give me the specific code change, copy change, or design specification needed to fix it. Be precise enough that a developer could implement the fix without a follow-up question.",
-            when: 'Converting findings to actionable specs',
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Run an AI accessibility audit on a real design you're working on. Describe the design in enough detail for meaningful evaluation (colors, interactive elements, flow structure, copy).\n\nRun at least 2 of the audit prompts and generate specific fixes for the top 3 issues found.",
-        fields: [
-          {
-            id: 'design_to_audit',
-            label: 'The design you\'re auditing (describe in accessible-audit-ready detail):',
-            placeholder:
-              "Include: colors with hex codes, text sizes, interactive elements, the flow sequence, and any motion/animation. E.g., 'Primary button: #3bc1cc background, white #ffffff text, 14px regular weight...'",
-            rows: 8,
-            required: true,
-          },
-          {
-            id: 'audit_results',
-            label: "Accessibility issues found (from 2+ audit prompts):",
-            placeholder:
-              "Issue 1: [WCAG criterion] — [Specific problem] — [Where in the design]\nIssue 2: ...\nIssue 3: ...\n[List all issues found]",
-            rows: 8,
-            required: true,
-          },
-          {
-            id: 'top_3_fixes',
-            label: 'Specific fixes for the top 3 issues (developer-ready specs):',
-            placeholder:
-              "Fix 1: [Issue] → [Specific change: color value, size, ARIA label, etc.]\nFix 2: ...\nFix 3: ...",
-            rows: 6,
-            required: true,
-          },
-          {
-            id: 'priority_issue',
-            label: 'Which accessibility issue would have the biggest impact on the largest number of users, and why?',
-            placeholder:
-              'Consider: frequency of impact, severity of barrier, user population affected...',
-            rows: 3,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the accessibility audit. Check: (1) Is the design description specific enough for real evaluation — does it include colors with hex codes, text sizes, element descriptions? Generic descriptions get generic audits. (2) Are the issues found specific WCAG violations — do they name the criterion and the specific design element? 'The colors might be hard to read' fails; 'Primary button #3bc1cc on white fails WCAG AA at 2.8:1 contrast ratio (needs 4.5:1)' passes. (3) Are the fixes developer-ready — could a developer implement them without follow-up questions? (4) Is the priority issue reasoning substantive — does it reference user population size or severity of barrier?",
-      evaluationCriteria: [
-        'Design description includes specific details (colors, sizes)',
-        'Issues name specific WCAG criteria and design elements',
-        'Fixes are developer-ready specifications',
-        'Priority reasoning is substantive',
-      ],
+    task: {
+      instruction: `Build an Opportunity Solution Tree for a real outcome your team is pursuing. Use Claude to:
+
+1. Start with the desired outcome (from your team's OKRs or a key metric you're trying to move)
+2. Generate 4-6 opportunities (customer needs/pain points that, if addressed, would drive the outcome)
+3. For each opportunity, ask Claude to find supporting evidence using Nexus-Product tools (support tickets, Gong calls, PostHog data)
+4. For each opportunity, brainstorm 2-3 possible solutions
+5. Adversarially critique: "Which of these opportunities have the strongest evidence? Which am I assuming without data?"
+
+Paste the complete tree here.`,
+      prompts: {
+        pm_ic: `Pick an outcome from your team's current OKRs. Build the full tree.
+
+The most valuable part of this exercise is step 3 - using Nexus data to validate your opportunities. Ask Claude to pull support tickets, Gong call themes, or PostHog data that either supports or contradicts each opportunity. An opportunity with no data behind it isn't wrong - it's unvalidated. Move it to "needs research" rather than treating it as proven.
+
+After building the tree, ask: "If I could only pursue one opportunity this quarter, which one has the best ratio of evidence strength to potential impact?"`,
+
+        pm_director: `Pick an outcome that spans multiple teams or product areas. Build the tree at a strategic level.
+
+Director-level opportunity mapping should consider: which opportunities are unique to Beyond (vs. table stakes), which create competitive defensibility, and which have compounding effects across customer segments. Ask Claude: "Which of these opportunities, if solved well, would make PriceLabs' response hardest?"
+
+After building the tree, ask: "Map these opportunities to my teams. Which team is best positioned to pursue each one? Are there opportunities that fall between teams?"`
+      }
     },
 
-    // ── Exercise 5.5 (Design Track) ───────────────────────────────────────────
-    {
-      id: '5D.5',
-      title: 'Design System Documenter',
-      track: 'design',
-      duration: '20 min',
-      type: 'framework',
-      skill: 'Using AI to generate design system documentation from component descriptions',
-      intro:
-        "Design system documentation is the thing every design team knows they need and never has time to do properly. It exists in Figma comments, in someone's head, and in pull request reviews — but rarely in a form that a new designer or developer can actually use.\n\nAI can dramatically reduce the cost of creating good documentation, if you know how to describe components precisely enough. This exercise teaches you to write descriptions that produce useful documentation.",
-      learningObjective:
-        "You'll generate design system documentation for 2-3 components by writing precise component descriptions and using AI to structure them into usable docs.",
-      content: {
-        type: 'patterns',
-        patterns: [
-          {
-            name: 'The Component Documentation Prompt',
-            prompt: "Document this UI component for our design system. Component: [name]. Description: [how it works, what it does, what it looks like]. Use this structure: (1) Purpose (what problem it solves), (2) Anatomy (the visual parts), (3) Variants (states and configurations), (4) Usage guidelines (when to use, when NOT to use), (5) Accessibility requirements, (6) Copy guidelines (if it contains text).",
-            when: 'For individual component documentation',
-          },
-          {
-            name: 'The Pattern Documentation Prompt',
-            prompt: "Document this UX pattern for our design system. Pattern: [name]. Context: [when this pattern appears, what user need it addresses]. Structure as: (1) Problem this pattern solves, (2) How it works, (3) Examples of correct use, (4) Anti-patterns (incorrect use cases), (5) Relationship to other patterns.",
-            when: 'For interaction pattern documentation',
-          },
-          {
-            name: 'The Critique-and-Improve Prompt',
-            prompt: "Here's our current documentation for [component]: [paste existing docs]. Evaluate it: (1) What would a new designer misunderstand based on this doc? (2) What's missing that would cause implementation errors? (3) Rewrite the weakest section to be more precise and usable.",
-            when: 'For improving existing documentation',
-          },
-        ],
-      },
-      task: {
-        instructions:
-          "Choose 2-3 components or patterns from Beyond's product that lack good documentation. Write precise component descriptions and generate documentation for each.\n\nThe test: could a developer implement this component correctly from the documentation alone, without asking a designer?",
-        fields: [
-          {
-            id: 'components_chosen',
-            label: 'The 2-3 components or patterns you\'re documenting and why they need better docs:',
-            placeholder:
-              "Component 1: [name] — Current documentation gap: [what\'s missing or unclear]\nComponent 2: ...",
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'documentation',
-            label: 'Your generated design system documentation (for all 2-3 components):',
-            placeholder:
-              "=== COMPONENT 1: [Name] ===\nPurpose: ...\nAnatomy: ...\nVariants: ...\nUsage guidelines: ...\nAccessibility: ...\n\n=== COMPONENT 2: [Name] ===\n[etc.]",
-            rows: 18,
-            required: true,
-          },
-          {
-            id: 'dev_test',
-            label: 'Developer implementation test: what\'s the hardest thing to implement correctly from this doc alone?',
-            placeholder:
-              "What would a developer most likely get wrong, even with this documentation? What would you add to prevent it?",
-            rows: 4,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "Evaluate the design system documentation. Check: (1) Are the component descriptions precise enough for real documentation — do they name specific visual properties, behaviors, and states? (2) Does the documentation follow the structured format (Purpose, Anatomy, Variants, Usage, Accessibility, Copy)? (3) Does it include 'when NOT to use' — this is often the most valuable section and usually missing? (4) Is the developer implementation test genuine — does it identify a real edge case, not just 'they might misunderstand something'?",
+    coachContext: {
       evaluationCriteria: [
-        'Component descriptions are specific (visual properties, behaviors, states)',
-        'Documentation follows the structured format',
-        'Includes "when NOT to use" for each component',
-        'Developer test identifies a real implementation edge case',
+        'Does the tree start with a specific, measurable outcome?',
+        'Are opportunities framed as customer needs/pain points (not solutions)?',
+        'Is each opportunity supported by evidence (data, not assumption)?',
+        'Do the solutions map clearly to the opportunities (not the outcome directly)?',
+        'Did they use Nexus tools to find supporting evidence?',
+        'Did they adversarially critique which opportunities have the weakest evidence?'
       ],
+      seniorityNote: `Director-level trees should address strategic opportunities (competitive positioning, platform evolution) while IC-level trees should address tactical opportunities (user behavior, feature-level improvements).`,
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.3 - The Premium Test
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.3',
+    title: 'The Premium Test',
+    subtitle: 'Arguing both sides of the price gap',
+    duration: '25 min',
+    track: 'pm',
+    description: `Beyond charges 3-5x more than PriceLabs. Every product decision either justifies or undermines that premium. This exercise teaches you to use Claude to systematically evaluate whether a feature, initiative, or strategy strengthens your premium positioning.
+
+The technique: argue both sides. First, make the strongest case that your work justifies the premium. Then, play PriceLabs and make the strongest case that it doesn't. The gap between these arguments reveals the real strategic question.`,
+
+    task: {
+      instruction: `Pick a feature you've recently shipped, are currently building, or are proposing. Use Claude to:
+
+1. **Make the premium case:** "Here's why this feature makes Beyond worth 3-5x more than PriceLabs. Be genuinely persuasive."
+2. **Make the counter-case:** "Now you're PriceLabs' VP of Product. Write a memo to your sales team explaining why this Beyond feature doesn't matter. Be genuinely persuasive - don't strawman."
+3. **Identify the crux:** "Based on both arguments, what's the single most important thing that determines whether this feature actually justifies our premium?"
+4. **Design the test:** "How could we validate whether customers perceive this as premium-worthy within 30 days?"
+
+Paste the full argument, counter-argument, crux, and test design here.`,
+      prompts: {
+        pm_ic: `Pick a specific feature in your domain. The exercise works best when you genuinely believe the feature is valuable but haven't stress-tested that belief.
+
+The PriceLabs counter-argument is the most important step. Give Claude enough context about PriceLabs' positioning (configurability, transparency, low cost) to generate a genuinely strong counter. A weak counter-argument means a weak exercise.
+
+Ask Claude to pull any relevant data via Nexus that could strengthen either argument: BtM data, adoption rates, support ticket themes about the feature, or Gong calls where customers discuss it.`,
+
+        pm_director: `Pick a strategic initiative or roadmap theme, not just a single feature. At the director level, the premium test applies to the narrative, not just individual features.
+
+For example: "Our Q2 roadmap theme is 'AI-powered revenue intelligence.' Does this theme justify our premium, or could PriceLabs replicate the value with manual configuration at 1/3 the price?"
+
+The crux question is especially valuable for directors: it cuts through feature-level debate to identify the strategic assumption that matters most.`
+      }
     },
 
-    // ── Exercise 5.6 (Design Track Capstone) ─────────────────────────────────
-    {
-      id: '5D.6',
-      title: 'Capstone: The Design Spec',
-      track: 'design',
-      duration: '35 min',
-      type: 'capstone',
-      skill: 'Delivering a complete, AI-refined design spec for a real current project',
-      intro:
-        "This capstone is the design equivalent of the PM one-pager: a complete, polished design spec for a real current project that you'd be proud to share in a design review or hand off to engineering.",
-      learningObjective:
-        "Deliver a complete design spec incorporating AI-generated critique, behavioral design principles, and accessibility requirements.",
-      content: {
-        type: 'walkthrough',
-        steps: [
-          { number: 1, title: 'Choose a real design challenge', description: 'Pick something current — a feature redesign, a new flow, a component overhaul. It should be complex enough that the spec has real substance.', tip: 'The best specs are for something that\'s been talked about but not fully designed yet.' },
-          { number: 2, title: 'Generate the journey and friction analysis', description: 'Use Exercise 5D.2 techniques to map the user journey and identify the top friction points the design must address.', tip: 'Your design decisions should directly connect to the friction points you identified.' },
-          { number: 3, title: 'Apply behavioral design', description: 'Use Exercise 5D.3 techniques to embed behavioral design principles into your key design decisions.', tip: 'Name which principle each design decision applies — this makes your reasoning transparent.' },
-          { number: 4, title: 'Run the accessibility audit', description: 'Use Exercise 5D.4 techniques to audit your design before finalizing. Fix issues before submission.', tip: 'Including accessibility specs in the design brief saves engineering rework.' },
-          { number: 5, title: 'Get AI critique using Nielsen\'s heuristics', description: 'Run the CRIT-structured critique from 5D.1 on the full spec. Revise based on the top findings.', tip: 'Aim for at least 2 rounds of critique and revision.' },
-        ],
-      },
-      task: {
-        instructions:
-          "Submit your complete design spec. Include: the design challenge, friction analysis, design decisions with behavioral design rationale, accessibility requirements, and the Nielsen\'s heuristics critique and revision log.\n\nThe AI Coach will evaluate against the full design quality bar.",
-        fields: [
-          {
-            id: 'design_challenge',
-            label: 'The design challenge (what you\'re designing and why):',
-            placeholder: 'What problem does this design solve? Who is the user? What are the constraints?',
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'friction_analysis',
-            label: 'Top 3 friction points this design must address (from your journey analysis):',
-            placeholder: "#1: [Friction point] — [How the design addresses it]\n#2: ...\n#3: ...",
-            rows: 6,
-            required: true,
-          },
-          {
-            id: 'design_decisions',
-            label: 'Key design decisions with behavioral design rationale:',
-            placeholder:
-              "Decision 1: [What you designed]\nBehavioral principle applied: [Which one]\nRationale: [Why this principle matters here]\n\nDecision 2: ...",
-            rows: 10,
-            required: true,
-          },
-          {
-            id: 'accessibility_specs',
-            label: 'Accessibility requirements incorporated into the spec:',
-            placeholder: "Color contrast ratios, touch target sizes, keyboard navigation, ARIA labels, motion guidelines...",
-            rows: 4,
-            required: true,
-          },
-          {
-            id: 'critique_log',
-            label: "Nielsen's heuristics critique summary + what you revised:",
-            placeholder: "Top finding: [Issue] → [What you changed]\nSecond finding: ...",
-            rows: 4,
-            required: true,
-          },
-        ],
-      },
-      coachContext:
-        "This is the Level 5 Design capstone. Evaluate as a design lead would in a design review. Check: (1) Does the design challenge clearly define the problem space (user, goal, constraints)? (2) Are the friction points specific and directly addressed by the design decisions? (3) Do the behavioral design decisions name specific principles with clear mechanisms — not just 'we used progressive disclosure' but 'we use progressive disclosure because hosts are overwhelmed by the 12 configuration options, so we show only 3 until they opt in to advanced settings'? (4) Are accessibility specs specific (actual contrast ratios, actual pixel sizes)? (5) Does the critique log show genuine revision based on feedback — not just acknowledging the feedback?",
+    coachContext: {
       evaluationCriteria: [
-        'Design challenge clearly defines problem, user, and constraints',
-        'Friction points are specific and directly addressed by design decisions',
-        'Behavioral design decisions name specific principles with mechanisms',
-        'Accessibility specs include actual measurements',
-        'Critique log shows genuine revision (not just acknowledgment)',
+        'Is the premium case specific about WHY this justifies the price gap (not just "it\'s better")?',
+        'Is the PriceLabs counter genuinely persuasive (not a strawman)?',
+        'Does the crux identification cut to the real strategic question?',
+        'Is the test design feasible within 30 days?',
+        'Did they use Nexus data to ground either argument?'
       ],
+      seniorityNote: `Director-level premium tests should evaluate strategic themes and narratives. IC-level tests should evaluate specific features.`,
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.4 - Strategy Stress Test
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.4',
+    title: 'Strategy Stress Test',
+    subtitle: 'Multiple lenses on one strategy',
+    duration: '30 min',
+    track: 'pm',
+    description: `The best product strategies survive examination from multiple angles. This exercise teaches you to systematically pressure-test a strategy using frameworks from the thinkers who shape Beyond's product culture.
+
+You'll run the same strategy through 4 different lenses. Each lens surfaces different weaknesses. Together, they produce a comprehensive stress test that makes your strategy genuinely robust.`,
+
+    lenses: [
+      {
+        name: 'Cagan\'s Four Risks',
+        prompt: 'Evaluate this strategy against value risk (will customers want this?), usability risk (can they figure it out?), feasibility risk (can we build it?), and viability risk (does it work for the business?). Which risk is highest and what would reduce it?',
+      },
+      {
+        name: 'Gibson Biddle DHM',
+        prompt: 'Evaluate this strategy: Is it Delightful (does it create genuine customer delight, not just satisfaction)? Is it Hard-to-copy (would a competitor struggle to replicate it)? Is it Margin-enhancing (does it improve our economics, not just our product)?',
+      },
+      {
+        name: 'Teresa Torres Assumptions',
+        prompt: 'List every assumption embedded in this strategy. For each, rate: validated with evidence, reasonable but unvalidated, or risky. Which unvalidated assumptions could kill this strategy if they\'re wrong?',
+      },
+      {
+        name: 'Melissa Perri Build Trap',
+        prompt: 'Is this strategy actually a strategy, or is it a feature roadmap in disguise? Does it describe the change we want to see in the world, or just the things we want to build? If I removed all feature names, would the strategy still make sense?',
+      }
+    ],
+
+    task: {
+      instruction: `Pick a real strategy document, roadmap narrative, or OKR set. Run it through all 4 lenses above. Then synthesize:
+
+1. Which lens surfaced the most significant weakness?
+2. What's the one change you'd make to the strategy based on this stress test?
+3. Which assumption should you validate first?
+
+Paste the 4-lens analysis and your synthesis here.`,
+      prompts: {
+        pm_ic: `Use your team's current OKR or a strategy document from your product area. The four-lens analysis works best on something you've already committed to - finding weaknesses in existing plans is more actionable than finding them in hypotheticals.
+
+The Melissa Perri "Build Trap" lens is often the most uncomfortable: it forces you to ask whether your roadmap is actually outcome-driven or secretly a feature list.`,
+
+        pm_director: `Use a strategy document that you own - a quarterly roadmap narrative, a product area strategy, or a board-level positioning document. Run it through all 4 lenses with Opus for maximum analytical depth.
+
+Director-level insight: the DHM lens is especially powerful for strategic narratives. If your strategy isn't hard-to-copy, you're building features that PriceLabs can match at 1/3 the price. That's the premium test applied at the strategy level.`
+      }
     },
-  ],
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they run all 4 lenses (not just 1-2)?',
+        'Does each lens produce genuinely different feedback (not repetitive)?',
+        'Is the synthesis specific about which weakness matters most?',
+        'Is the proposed change actionable (not just "we should think more about this")?',
+        'Did they identify a specific assumption to validate first?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.5 - The Experiment Designer
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.5',
+    title: 'The Experiment Designer',
+    subtitle: 'Small tests for big assumptions',
+    duration: '25 min',
+    track: 'pm',
+    description: `"Big bets without small tests" is one of Beyond's anti-patterns. This exercise uses Claude to design rapid experiments that validate your riskiest assumptions before you commit engineering resources.
+
+The best experiments are cheap, fast, and decisive. Claude can help you find the minimum viable test for any assumption - but you need to push it. Claude's first suggestion is usually too big. Ask "what's smaller?" at least twice.`,
+
+    task: {
+      instruction: `Pick the riskiest assumption from your one-pager (5P.1), opportunity tree (5P.2), or strategy stress test (5P.4). Use Claude to:
+
+1. State the assumption clearly
+2. Ask: "What's the cheapest experiment to validate or invalidate this in 2 weeks?"
+3. Push back: "That's still too big. What's the smallest test that would give us a signal?"
+4. Define: hypothesis, success criteria, sample size consideration, timeline, and "what we'll do with each result"
+
+The experiment design should be ready to pitch to your team.`,
+      prompts: {
+        pm_ic: `Your experiment should be something your product trio could run without any engineering changes if possible. Think: fake door tests, concierge MVPs, customer interviews, data analysis, or prototype tests.
+
+The "what we'll do with each result" section is the most important and most often skipped. If the experiment succeeds, what do you build? If it fails, do you pivot or abandon? If it's inconclusive, what do you test next?`,
+
+        pm_director: `Director-level experiment design is about teaching your teams to think experimentally. Pick an assumption from one of your team's proposals and design the experiment, then share it as an example of how you want your teams to approach validation.
+
+Consider: "What would I need to see to kill this initiative?" That's the strongest form of an experiment - it's designed to invalidate, not confirm.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Is the assumption clearly stated and specific?',
+        'Is the experiment genuinely small (could run in 2 weeks or less)?',
+        'Are success criteria defined with specific thresholds?',
+        'Does "what we\'ll do with each result" cover success, failure, AND inconclusive?',
+        'Did they push Claude to make the experiment smaller at least once?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5P.6 - PM Capstone
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5P.6',
+    title: 'The Portfolio Manager\'s Toolkit',
+    subtitle: 'A complete project proposal for your team\'s OKRs',
+    duration: '35 min',
+    track: 'pm',
+    isCapstone: true,
+    description: `The PM capstone integrates everything from Level 5 into a single, complete project proposal. This should be a real initiative ready for OKR consideration - not a course exercise.
+
+You'll produce: a polished one-pager backed by an opportunity tree, stress-tested through multiple frameworks, with an experiment plan for the riskiest assumption. This is a complete product proposal package.`,
+
+    task: {
+      instruction: `Produce a complete project proposal that includes:
+
+1. **One-Pager** (from 5P.1 or revised): The business case
+2. **Opportunity Tree excerpt** (from 5P.2): The discovery evidence supporting this project
+3. **Premium Test summary** (from 5P.3): Why this justifies Beyond's positioning
+4. **Top risk + experiment plan** (from 5P.5): How you'll validate before committing
+
+Package these into a single shareable artifact and publish it to Beyond Share.
+
+This deliverable should be ready to present in your next product review or OKR planning session.`,
+      prompts: {
+        pm_ic: `Your proposal should be scoped to your product area and actionable within the next quarter. The one-pager drives the overall narrative, the opportunity tree shows your discovery evidence, the premium test shows strategic fit, and the experiment plan shows how you'll validate quickly.
+
+Use Claude to connect the pieces: "Review all four components together. Does the experiment plan actually test the riskiest assumption from the one-pager? Does the opportunity tree support the problem statement? Flag any disconnects."`,
+
+        pm_director: `Your proposal can be at the team or portfolio level - an OKR proposal, a strategic initiative, or a resource allocation recommendation. The premium test and strategy stress test components are especially important at the director level.
+
+Use Opus for the final synthesis. Ask: "If I have 5 minutes to present this to our VP, what's the narrative arc? What do I lead with, what do I skip, and what's my answer to the hardest question they'll ask?"`
+      }
+    },
+
+    assessment: {
+      questions: [
+        {
+          question: 'What makes a one-pager\'s Business Hypothesis section strong?',
+          options: [
+            'It describes the feature in detail',
+            'It states a testable hypothesis connecting a specific change to a measurable outcome with a timeline',
+            'It includes competitive analysis',
+            'It has approval from stakeholders'
+          ],
+          correct: 1,
+          explanation: 'A strong hypothesis is testable and falsifiable: "We believe [change] will cause [metric] to improve by [amount] because [evidence]." If you can\'t imagine a result that would disprove it, it\'s not a hypothesis.'
+        },
+        {
+          question: 'In an Opportunity Solution Tree, what\'s the difference between an opportunity and a solution?',
+          options: [
+            'Opportunities are bigger than solutions',
+            'Opportunities are customer needs or pain points; solutions are specific product changes that might address those needs',
+            'Opportunities come from customers; solutions come from the team',
+            'There is no meaningful difference'
+          ],
+          correct: 1,
+          explanation: 'This distinction is the core of Teresa Torres\' framework. Opportunities are in the problem space (customer needs). Solutions are in the solution space (product changes). Multiple solutions can address one opportunity, and the best solution is rarely the first one you think of.'
+        },
+        {
+          question: 'When stress-testing a strategy with Gibson Biddle\'s DHM model, what does "Hard-to-copy" evaluate?',
+          options: [
+            'How difficult the engineering implementation is',
+            'Whether competitors can replicate the strategic advantage within a reasonable timeframe',
+            'How hard it is for users to understand',
+            'How expensive it is to build'
+          ],
+          correct: 1,
+          explanation: 'Hard-to-copy is about defensibility. At Beyond, our data moat (forward-looking demand signals from search data) is hard to copy. A new settings page is not. Every strategic bet should include something that gets harder for competitors to replicate over time.'
+        }
+      ],
+      selfReflection: `How has using AI changed the quality of your product proposals? What would you do differently in your next OKR planning cycle based on what you learned in Level 5?`
+    },
+
+    milestone: {
+      message: `You're a Property Manager now - managing not just features, but strategy, evidence, and competitive positioning. That project proposal isn't a course deliverable; it's real work that's ready for your next planning cycle.`,
+      dadJoke: `Why did the Product Manager bring an Opportunity Solution Tree to the holiday party? Because they couldn't stop branching out. Gerard says he workshopped this one for 20 minutes and it still isn't great.`,
+      nextLevel: `Level 6: The Destination Definer - Claude Code, the BMAD method, and building your personal AI Operating System. You're about to go agentic.`
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Does the proposal include all four components (one-pager, opportunity tree, premium test, experiment)?',
+        'Are the components connected (does the experiment test the one-pager\'s riskiest assumption)?',
+        'Is the one-pager strong enough for OKR consideration?',
+        'Is the premium test genuinely adversarial (not just self-congratulatory)?',
+        'Is the experiment small enough to run in 2 weeks?',
+        'Did they publish and share the artifact?'
+      ],
+    }
+  },
+
+
+  // ── Design Track Exercises ─────────────────────────────────────────────
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5D.1 - The Design Critic
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5D.1',
+    title: 'The Design Critic',
+    subtitle: 'Structured UX critique with AI',
+    duration: '30 min',
+    track: 'design',
+    description: `Design critique is a skill - and Claude can be an incredibly sharp critic if you set it up correctly. The key is giving Claude a specific evaluative framework rather than asking "what do you think?"
+
+This exercise teaches you to get critique from multiple expert perspectives on the same design, producing feedback that's more thorough than most in-person design reviews.`,
+
+    critiqueFrameworks: [
+      {
+        name: 'Nielsen\'s 10 Heuristics',
+        prompt: 'Evaluate this design against each of Nielsen\'s 10 usability heuristics. For each heuristic: pass, concern, or fail - with specific evidence from the design.',
+        bestFor: 'General usability evaluation, catching broad UX issues'
+      },
+      {
+        name: 'Cognitive Walkthrough',
+        prompt: 'Walk through this flow as [specific user persona]. At each step, answer: Will the user know what to do? Will the user notice the right action? Will the user understand the feedback? Where will they get stuck or confused?',
+        bestFor: 'Evaluating task flows, onboarding, and multi-step processes'
+      },
+      {
+        name: 'Beyond\'s "Feel in Control" Test',
+        prompt: 'Evaluate this design against Beyond\'s core UX principle: "make users feel in control without needing to control." Where does the design give users unnecessary work? Where are the defaults not smart enough? Where does automation feel like a black box instead of a superpower?',
+        bestFor: 'Beyond-specific design quality evaluation'
+      },
+      {
+        name: 'Behavioral Design Audit',
+        prompt: 'Evaluate the behavioral design elements: What defaults are set, and are they the right ones? Where does friction help (preventing errors) vs. hurt (blocking desired actions)? Is progressive disclosure applied effectively? Are there commitment devices or loss aversion elements that could improve completion?',
+        bestFor: 'Evaluating motivation, engagement, and behavior change'
+      }
+    ],
+
+    task: {
+      instruction: `Pick a real design you're working on (or recently completed). Describe it to Claude in enough detail for meaningful critique - the user persona, the flow steps, the key interactions, and any constraints.
+
+Run it through at least 2 of the critique frameworks above. Then synthesize:
+1. What's the #1 issue across both frameworks?
+2. What's one thing the critique missed because Claude doesn't have visual context?
+3. How would you revise the design based on this feedback?`,
+      prompts: {
+        design_ic: `Pick a specific flow or screen you're designing. Describe it step by step - what the user sees, what they can interact with, what happens when they take actions. The more specific your description, the more specific the critique.
+
+Run it through Nielsen's heuristics AND the "Feel in Control" test. The combination catches both universal usability issues and Beyond-specific design quality issues.
+
+After the critique, ask: "If I could only fix one thing before shipping, what would have the highest impact on user success?"`,
+
+        design_lead: `Pick a design from one of your team members' recent work (with their permission). Run it through the same critique process you'd want your team to adopt.
+
+This serves a dual purpose: you get actionable feedback on the design, and you develop a critique process you can teach to your team. After running the critique, ask Claude: "Turn this critique process into a template my design team can use for self-review before bringing designs to design review."`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they describe the design in enough detail for meaningful critique?',
+        'Did they use at least 2 different critique frameworks?',
+        'Did they synthesize across frameworks to identify the most important issue?',
+        'Did they acknowledge what the critique missed (visual context limitations)?',
+        'Is the proposed revision specific and actionable?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5D.2 - Journey Mapping
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5D.2',
+    title: 'Journey Mapping',
+    subtitle: 'AI-assisted user journey analysis',
+    duration: '25 min',
+    track: 'design',
+    description: `User journey maps are powerful but time-consuming to create from scratch. Claude can accelerate the process dramatically - especially when combined with real data from Nexus-Product (support tickets, usage analytics, Gong call themes).
+
+The result: journey maps grounded in evidence, not assumptions. The AI doesn't replace user research, but it synthesizes existing data into a structured journey map that you can then validate with real users.`,
+
+    task: {
+      instruction: `Build an evidence-grounded journey map for a specific user persona and key flow in your product area. Use Nexus-Product to pull real data for each journey stage.
+
+Steps:
+1. Define the persona and the journey (e.g., "first-time host from signup to first booking priced by Beyond")
+2. Map the stages (awareness > consideration > setup > first use > ongoing use > expansion/churn)
+3. For each stage, pull real data: PostHog for behavior data, Kustomer for pain points, Gong for customer voice
+4. For each stage, identify: what the user does, thinks, and feels; the pain points; the opportunities
+
+Generate this as a shareable artifact and publish to Beyond Share.`,
+      prompts: {
+        design_ic: `Map a journey that's directly relevant to your current design work. The most valuable journeys to map right now:
+- First-time host from signup to enabling pricing (the activation journey)
+- Property manager from receiving a pricing recommendation to accepting or overriding it (the trust journey)
+- Enterprise PM from onboarding to sharing an owner report (the value delivery journey)
+
+Use Nexus data at every stage. Don't guess at pain points when you can pull support tickets. Don't assume emotions when you can read Gong transcripts.`,
+
+        design_lead: `Map a journey that spans multiple touchpoints and potentially multiple designers' work. This exercise helps you identify where handoffs between product areas create friction that no single designer sees.
+
+After building the journey, ask: "Where are the handoff points between different product areas? Which of these handoffs creates the most friction for the user?" This is the kind of systems-level insight that only a design leader is positioned to act on.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Is the journey grounded in real data (not just assumptions)?',
+        'Did they use Nexus-Product tools to pull evidence for each stage?',
+        'Does the journey include user actions, thoughts, AND feelings?',
+        'Are pain points and opportunities identified at each stage?',
+        'Is the artifact shareable and professional quality?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5D.3 - Behavioral Design Lab
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5D.3',
+    title: 'Behavioral Design Lab',
+    subtitle: 'Defaults, friction, and motivation',
+    duration: '25 min',
+    track: 'design',
+    description: `Behavioral design is the science of designing for how people actually behave, not how we wish they would. This exercise teaches you to use Claude as a behavioral design thinking partner - applying principles like smart defaults, strategic friction, progressive disclosure, loss aversion, and the Zeigarnik effect to real Beyond design challenges.
+
+Beyond's UX principle ("feel in control without needing to control") is fundamentally a behavioral design statement. Smarter defaults are a behavioral intervention. Reducing cognitive load is a behavioral intervention. This exercise makes that connection explicit.`,
+
+    principles: [
+      {
+        name: 'Smart Defaults',
+        definition: 'Pre-set options that work well for most users, reducing decisions without removing choice.',
+        beyondExample: 'Auto Base Rates (ABR) is a smart default - Beyond calculates the starting price so hosts don\'t have to guess. But do hosts trust it? That\'s the design challenge.',
+        prompt: 'For [DESIGN], identify every decision the user makes. Which of these could have a smart default that works for 80%+ of users? What data would we need to set that default well?'
+      },
+      {
+        name: 'Strategic Friction',
+        definition: 'Intentionally adding friction where it prevents errors or improves decisions. Removing friction everywhere isn\'t the goal.',
+        beyondExample: 'When a host overrides a price recommendation, a confirmation showing the potential revenue impact is strategic friction - it prevents an impulsive change while preserving their control.',
+        prompt: 'For [DESIGN], where should we ADD friction (to prevent costly mistakes or ensure deliberate choice)? Where should we REMOVE friction (where it\'s blocking desired behavior without adding value)?'
+      },
+      {
+        name: 'Progressive Disclosure',
+        definition: 'Show the essential first, reveal complexity only when needed. Reduces initial cognitive load without removing capability.',
+        beyondExample: 'The pricing calendar could show recommended prices by default, with override options one click deeper. Power users still have full control; new users aren\'t overwhelmed.',
+        prompt: 'For [DESIGN], what\'s the minimum information a user needs to make the primary decision? What can be hidden behind "advanced" or "learn more"? What should NEVER be hidden?'
+      },
+      {
+        name: 'Loss Aversion',
+        definition: 'People feel losses more strongly than equivalent gains. Frame choices in terms of what they\'d lose by not acting.',
+        beyondExample: '"You left $2,340 on the table last month by overriding our recommendations on high-demand dates" is more motivating than "You could earn $2,340 more by following our recommendations."',
+        prompt: 'For [DESIGN], where can we frame the user\'s choice in terms of what they\'d lose rather than what they\'d gain? Where is loss framing appropriate vs. where would it feel manipulative?'
+      },
+      {
+        name: 'Zeigarnik Effect',
+        definition: 'People remember and are more motivated to complete unfinished tasks than tasks they haven\'t started.',
+        beyondExample: 'Showing "Your pricing is 60% set up" with a progress bar creates an open loop that motivates completion. Starting the setup process (even with defaults) makes hosts more likely to finish.',
+        prompt: 'For [DESIGN], how can we create an "open loop" that motivates completion? Where can we show progress to leverage the completion drive? Where does a progress indicator actually ADD anxiety (and should be avoided)?'
+      }
+    ],
+
+    task: {
+      instruction: `Pick a specific design challenge in your product area. Run it through at least 3 of the behavioral design principles above.
+
+For each principle, identify:
+1. Where the principle applies to your design
+2. A specific design change that applies the principle
+3. A potential downside or risk of applying it (behavioral principles can be misused)
+
+Then synthesize: which 1-2 behavioral interventions would have the highest impact on user behavior?`,
+      prompts: {
+        design_ic: `Pick a flow or screen where user behavior isn't matching your expectations - maybe a step with high drop-off, a feature with low adoption, or a setting that users configure badly.
+
+Run it through Smart Defaults, Progressive Disclosure, and one other principle of your choice. The combination of defaults + disclosure is especially powerful for Beyond's "feel in control" philosophy.
+
+After the analysis, ask: "Describe this redesign to me as if I'm a first-time host who is nervous about letting an algorithm control my pricing. Does this feel empowering or threatening?"`,
+
+        design_lead: `Pick a design challenge that affects multiple flows or product areas - something systemic rather than a single screen. This could be onboarding patterns, pricing trust signals, or notification design.
+
+Run it through all 5 principles and look for patterns: which principles keep surfacing the same underlying issue? That's your design system-level opportunity.
+
+After the analysis, ask: "Which of these behavioral interventions could become a design pattern or guideline for the whole team, not just a one-off improvement?"`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they apply at least 3 behavioral principles to a real design challenge?',
+        'Are the design changes specific and actionable (not just theoretical)?',
+        'Did they identify potential downsides or risks of each intervention?',
+        'Is the synthesis focused on highest-impact interventions?',
+        'Did they consider the user\'s emotional response, not just their behavior?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5D.4 - Accessibility Audit
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5D.4',
+    title: 'The Accessibility Audit',
+    subtitle: 'Inclusive design with AI assistance',
+    duration: '20 min',
+    track: 'design',
+    description: `Accessibility isn't a checklist at the end of a project - it's a design quality signal. Claude can help you identify accessibility issues early, when they're cheap to fix, and suggest specific remediation strategies.
+
+The limitation: Claude can't see your visual designs, so you need to describe them in detail. The upside: the act of describing your design in enough detail for an accessibility audit often surfaces issues on its own. If you can't describe the interaction model clearly, users probably can't figure it out either.`,
+
+    task: {
+      instruction: `Pick a flow or component you're designing. Describe it in detail to Claude, then ask for a WCAG 2.1 AA accessibility audit.
+
+Your description should include: visual hierarchy, color usage, interactive elements, keyboard flow, error states, and any dynamic content changes. The more specific your description, the more useful the audit.
+
+Document the top 3 issues found and your proposed fixes.`,
+      prompts: {
+        design_ic: `Pick something you're actively working on. Describe it as if you're explaining it to someone who can't see the screen - element by element, interaction by interaction.
+
+After the audit, ask: "Now walk through this flow using only keyboard navigation. Where does the focus order break? Where would a screen reader miss context?"
+
+This exercise builds a habit: if you can describe a design well enough for Claude to audit it, you've already thought more carefully about accessibility than most designers.`,
+
+        design_lead: `Pick a component or pattern that's used across multiple areas of the product. An accessibility issue in a shared component multiplies across every instance.
+
+After the audit, ask: "Turn the top 5 accessibility findings into guidelines my design team should follow for all new designs. Format them as actionable rules, not abstract principles."
+
+This creates team-level accessibility standards from a concrete audit - much more effective than generic accessibility training.`
+      }
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Did they describe the design in enough detail for a meaningful audit?',
+        'Did they identify at least 3 specific accessibility issues?',
+        'Are the proposed fixes specific and implementable?',
+        'Did they consider keyboard navigation and screen reader compatibility?',
+        'Did they think beyond visual accessibility (cognitive load, error recovery, etc.)?'
+      ],
+    }
+  },
+
+  // ──────────────────────────────────────────────────────────
+  // EXERCISE 5D.5 - Design Capstone
+  // ──────────────────────────────────────────────────────────
+  {
+    id: '5D.5',
+    title: 'The Design Specification',
+    subtitle: 'A complete design proposal for your team',
+    duration: '35 min',
+    track: 'design',
+    isCapstone: true,
+    description: `The Design capstone integrates everything from Level 5 into a single, complete design proposal. This should be a real deliverable for a current project - not a course exercise.
+
+You'll produce: a design spec that includes structured critique evidence, a user journey grounding, behavioral design rationale, and accessibility considerations. This is a design proposal that demonstrates craft.`,
+
+    task: {
+      instruction: `Produce a complete design specification for a real project that includes:
+
+1. **Problem statement** grounded in data (support tickets, PostHog, Gong)
+2. **User journey excerpt** showing where this design fits in the broader experience
+3. **Design approach** with rationale connecting to Beyond's "feel in control" principle
+4. **Behavioral design rationale** for key decisions (defaults, friction, disclosure)
+5. **Accessibility considerations** for the design
+6. **Self-critique** using at least one framework from 5D.1
+
+Package into a shareable artifact and publish to Beyond Share.`,
+      prompts: {
+        design_ic: `Your design spec should be for a specific feature or flow you're working on. The data-grounding (step 1) and behavioral rationale (step 4) are what elevate this from "a design doc" to "a design doc that product and engineering partners take seriously."
+
+Use Claude to connect the dots: "Review this complete spec. Does the behavioral design rationale actually address the pain points from the user journey? Are there gaps?"`,
+
+        design_lead: `Your design spec can be for a broader design initiative - a design pattern, a system-level improvement, or a cross-product UX standard. The journey mapping and behavioral design components should show how the initiative affects the full user experience, not just a single screen.
+
+Use Opus for the final synthesis. Ask: "If I'm presenting this to our VP of Product, what's the 2-minute version? What data point do I lead with, and what's my answer to 'why now?'"`
+      }
+    },
+
+    assessment: {
+      questions: [
+        {
+          question: 'What\'s the most important thing about Beyond\'s "feel in control without needing to control" principle for design?',
+          options: [
+            'Remove all user controls and automate everything',
+            'Give users smart defaults that work well while preserving the ability to override when they want to',
+            'Add as many settings as possible so users feel in control',
+            'Hide all automation so users don\'t know it\'s happening'
+          ],
+          correct: 1,
+          explanation: 'The principle balances automation with agency. Smart defaults do the work; override capability preserves control. This is the opposite of both PriceLabs (too many controls) and full automation (no control).'
+        },
+        {
+          question: 'When is adding friction to a design a good thing?',
+          options: [
+            'Never - friction always hurts',
+            'When it prevents costly mistakes or ensures deliberate decision-making',
+            'When you want to reduce engagement with a feature',
+            'Only when required by legal compliance'
+          ],
+          correct: 1,
+          explanation: 'Strategic friction protects users from impulsive actions with big consequences. A confirmation showing revenue impact before a price override is friction that helps users make better decisions.'
+        },
+        {
+          question: 'What makes a user journey map evidence-grounded vs. assumption-based?',
+          options: [
+            'Evidence-grounded maps are longer',
+            'Evidence-grounded maps use data from real systems (support tickets, analytics, call transcripts) at each stage rather than guessing what users think and feel',
+            'Evidence-grounded maps only include positive experiences',
+            'There is no meaningful difference'
+          ],
+          correct: 1,
+          explanation: 'Pulling real data from Kustomer (pain points), PostHog (behavior), and Gong (voice of customer) grounds each journey stage in reality. Assumed journeys are useful starting points but should be validated with real data.'
+        }
+      ],
+      selfReflection: `How has using AI changed your design practice? Which technique from Level 5 would you recommend to every designer on the team?`
+    },
+
+    milestone: {
+      message: `You're a Property Manager! Your design work is now grounded in data, structured by behavioral science, and tested for accessibility. That design spec is ready for your next design review.`,
+      dadJoke: `Why did the designer bring Nielsen's heuristics to the dinner party? Because they wanted to evaluate the "visibility of system status" on the menu. Gerard says this one kills in design circles. (It does not.)`,
+      nextLevel: `Level 6: The Destination Definer - Claude Code, the BMAD method, and building your personal AI Operating System. You're about to go agentic.`
+    },
+
+    coachContext: {
+      evaluationCriteria: [
+        'Does the spec include all 6 components?',
+        'Is the problem statement grounded in real data (not assumptions)?',
+        'Does the behavioral design rationale connect to specific design decisions?',
+        'Are accessibility considerations included and specific?',
+        'Is the self-critique genuine (not just "looks good")?',
+        'Is this a real deliverable, not a practice exercise?'
+      ],
+    }
+  }
+],
 
   assessment: {
-    title: 'Level 5 Assessment',
-    questions: [
-      {
-        id: 'q5_1',
-        text: "In an Opportunity Solution Tree, which of the following is an 'opportunity' (not a solution)?",
-        options: [
-          "A) 'Add a guided setup wizard to onboarding'",
-          "B) 'Hosts find the pricing rules setup too technical to complete'",
-          "C) 'Increase onboarding completion rate to 70%'",
-          "D) 'Reduce the number of required steps from 6 to 3'",
-        ],
-        correct: 'B',
-        explanation:
-          "Opportunities are customer problems, needs, or pain points. Solutions (A, D) and outcomes (C) are different nodes in the tree. 'Hosts find setup too technical' is the customer problem the solutions should address.",
-      },
-      {
-        id: 'q5_2',
-        text: "What is the most important quality check for a behavioral design decision?",
-        options: [
-          'A) It looks good in the design review',
-          'B) It is technically feasible',
-          'C) It uses a behavioral principle whose mechanism directly addresses the specific user behavior you want to change',
-          'D) It was validated in user research',
-        ],
-        correct: 'C',
-        explanation:
-          "Behavioral design works when the principle's mechanism matches the problem. 'Adding social proof' only works if the user's barrier is uncertainty about whether others succeed — if the barrier is something else, the principle doesn't apply.",
-      },
-      {
-        id: 'q5_3',
-        text: "What makes a PM hypothesis 'testable' vs. just an assertion?",
-        options: [
-          'A) It uses data to support it',
-          'B) It names a specific mechanism (X will move Y because Z) and defines what confirmation and disconfirmation look like',
-          'C) The team agrees with it',
-          'D) It is written in COSTAR format',
-        ],
-        correct: 'B',
-        explanation:
-          "A testable hypothesis names the mechanism (what causes the effect) and defines success and failure conditions. 'Better onboarding will improve activation' is an assertion. 'Simplifying step 4 will increase activation by >30% because step 4 has a 71% drop-off rate, suggesting it\'s the critical barrier' is testable.",
-      },
-    ],
-    selfReflection: {
-      id: 'sr5',
-      question:
-        "Which technique from Level 5 changed how you think about your craft as a PM or Designer? How will you use it on your next real project?",
-      placeholder:
-        "Be specific: name the technique, the next project you'll apply it to, and what it will change about your approach.",
+      questions: [
+        {
+          question: 'What makes a one-pager\'s Business Hypothesis section strong?',
+          options: [
+            'It describes the feature in detail',
+            'It states a testable hypothesis connecting a specific change to a measurable outcome with a timeline',
+            'It includes competitive analysis',
+            'It has approval from stakeholders'
+          ],
+          correct: 1,
+          explanation: 'A strong hypothesis is testable and falsifiable: "We believe [change] will cause [metric] to improve by [amount] because [evidence]." If you can\'t imagine a result that would disprove it, it\'s not a hypothesis.'
+        },
+        {
+          question: 'In an Opportunity Solution Tree, what\'s the difference between an opportunity and a solution?',
+          options: [
+            'Opportunities are bigger than solutions',
+            'Opportunities are customer needs or pain points; solutions are specific product changes that might address those needs',
+            'Opportunities come from customers; solutions come from the team',
+            'There is no meaningful difference'
+          ],
+          correct: 1,
+          explanation: 'This distinction is the core of Teresa Torres\' framework. Opportunities are in the problem space (customer needs). Solutions are in the solution space (product changes). Multiple solutions can address one opportunity, and the best solution is rarely the first one you think of.'
+        },
+        {
+          question: 'When stress-testing a strategy with Gibson Biddle\'s DHM model, what does "Hard-to-copy" evaluate?',
+          options: [
+            'How difficult the engineering implementation is',
+            'Whether competitors can replicate the strategic advantage within a reasonable timeframe',
+            'How hard it is for users to understand',
+            'How expensive it is to build'
+          ],
+          correct: 1,
+          explanation: 'Hard-to-copy is about defensibility. At Beyond, our data moat (forward-looking demand signals from search data) is hard to copy. A new settings page is not. Every strategic bet should include something that gets harder for competitors to replicate over time.'
+        }
+      ],
+      selfReflection: `How has using AI changed the quality of your product proposals? What would you do differently in your next OKR planning cycle based on what you learned in Level 5?`
     },
-  },
 
   milestone: {
-    title: 'Property Manager Status!',
-    emoji: '🏢',
-    message:
-      "Your PM and Design craft just got a serious AI upgrade. You're writing OKRs that survive adversarial critique, running behavioral design labs, doing opportunity mapping, and shipping specs that include the reasoning behind every decision. This is what empowered product work looks like.",
-    gerardJokeId: 'beyond_4',
-    nextLevelTeaser:
-      "Level 6 is the destination — BMAD method, Claude Code, agentic workflows, and your personal AI Operating System. This is where everything comes together.",
-  },
+      message: `You're a Property Manager now - managing not just features, but strategy, evidence, and competitive positioning. That project proposal isn't a course deliverable; it's real work that's ready for your next planning cycle.`,
+      dadJoke: `Why did the Product Manager bring an Opportunity Solution Tree to the holiday party? Because they couldn't stop branching out. Gerard says he workshopped this one for 20 minutes and it still isn't great.`,
+      nextLevel: `Level 6: The Destination Definer - Claude Code, the BMAD method, and building your personal AI Operating System. You're about to go agentic.`
+    },
 }
 
 // ─── Track detection helpers ─────────────────────────────────────────────────

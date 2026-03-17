@@ -31,7 +31,6 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
   const handleAnswerChange = (fieldId, value) => {
     const updated = { ...answers, [fieldId]: value }
     setAnswers(updated)
-    // Auto-save draft
     saveExerciseDraft(exercise.id, { answers: updated })
   }
 
@@ -40,19 +39,25 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
 
   const getSubmissionText = () => {
     const fields = getFields()
-    return Object.entries(answers)
-      .map(([key, val]) => {
-        const field = fields.find(f => f.id === key)
-        return `${field?.label || key}:\n${val}`
-      })
-      .join('\n\n')
+    if (fields.length > 0) {
+      return Object.entries(answers)
+        .map(([key, val]) => {
+          const field = fields.find(f => f.id === key)
+          return `${field?.label || key}:\n${val}`
+        })
+        .join('\n\n')
+    }
+    // New format: single submission field
+    return answers['submission'] || ''
   }
 
   const hasRequiredAnswers = () => {
     const fields = getFields()
-    if (!fields.length) return true
+    if (!fields.length) {
+      // New format: allow completion even without a submission
+      return true
+    }
     const requiredFields = fields.filter(f => f.required !== false)
-    // If none are explicitly required, any answer is sufficient
     if (requiredFields.length === 0) return Object.values(answers).some(v => v?.trim?.()?.length > 0)
     return requiredFields.every(f => answers[f.id]?.trim?.()?.length > 0)
   }
@@ -82,11 +87,6 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
   }
 
   const handleComplete = () => {
-    if (!hasRequiredAnswers()) {
-      setFeedbackError('Complete the required fields before finishing.')
-      return
-    }
-
     const exerciseData = {
       answers,
       ai_feedback: feedback,
@@ -124,6 +124,9 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
   }
 
   const taskPrompt = getTaskPrompt(exercise, user?.role)
+  const fields = getFields()
+  // New format: task.instruction (singular); old format: task.instructions (plural)
+  const taskInstruction = exercise.task?.instruction || exercise.task?.instructions
 
   return (
     <div className="animate-fade-in">
@@ -134,7 +137,10 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
           <span className="text-gray-400 text-xs font-body">⏱️ {exercise.duration}</span>
           {completed && <span className="badge bg-green-100 text-green-700">✅ Complete</span>}
         </div>
-        <h2 className="text-2xl font-header font-bold text-beyond-dark mb-2">{exercise.title}</h2>
+        <h2 className="text-2xl font-header font-bold text-beyond-dark mb-1">{exercise.title}</h2>
+        {exercise.subtitle && (
+          <p className="text-gray-500 text-sm font-body italic mb-2">{exercise.subtitle}</p>
+        )}
         {exercise.learningObjective && (
           <p className="text-beyond-deep text-sm font-body bg-teal-50 border border-teal-100 rounded-lg px-4 py-2.5">
             <span className="font-semibold">By the end of this exercise: </span>
@@ -143,21 +149,23 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
         )}
       </div>
 
-      {/* Intro */}
-      {exercise.intro && (
+      {/* Description / Intro — new format uses description, old format uses intro */}
+      {(exercise.description || exercise.intro) && (
         <div className="mb-6">
           <div className="exercise-prose">
-            {exercise.intro.split('\n\n').map((para, i) => (
-              <p key={i} className={i > 0 ? 'mt-3' : ''}>{para}</p>
+            {(exercise.description || exercise.intro).split('\n\n').map((para, i) => (
+              <p key={i} className={i > 0 ? 'mt-3' : ''}>
+                {renderInlineMarkdown(para)}
+              </p>
             ))}
           </div>
         </div>
       )}
 
-      {/* Content section — varies by exercise type */}
-      <ExerciseContent exercise={exercise} />
+      {/* Content section — handles both old content.type format and new direct properties */}
+      <ExerciseContent exercise={exercise} user={user} />
 
-      {/* Task section — supports both exercise.task (old) and exercise.taskFields (new) */}
+      {/* Task section */}
       {(exercise.task || exercise.taskFields) && (
         <div className="mt-8">
           <div className="border-t border-gray-100 pt-6">
@@ -169,23 +177,25 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                 <p className="text-xs font-semibold text-amber-700 font-header mb-1">
                   Your starting point ({user?.role || 'your role'}):
                 </p>
-                <p className="text-amber-800 font-body text-sm font-medium">"{taskPrompt}"</p>
+                <p className="text-amber-800 font-body text-sm font-medium whitespace-pre-wrap">"{taskPrompt}"</p>
               </div>
             )}
 
-            {/* Instructions (old format only) */}
-            {exercise.task?.instructions && (
+            {/* Task instructions */}
+            {taskInstruction && (
               <div className="exercise-prose mb-5">
-                {exercise.task.instructions.split('\n\n').map((para, i) => (
-                  <p key={i} className={i > 0 ? 'mt-3' : ''}>{para}</p>
+                {taskInstruction.split('\n\n').map((para, i) => (
+                  <p key={i} className={i > 0 ? 'mt-3' : ''}>
+                    {renderInlineMarkdown(para)}
+                  </p>
                 ))}
               </div>
             )}
 
-            {/* Submission fields */}
-            {getFields().length > 0 && (
+            {/* Submission fields — old format has task.fields, new format uses single textarea */}
+            {fields.length > 0 ? (
               <div className="space-y-5">
-                {getFields().map((field) => (
+                {fields.map((field) => (
                   <div key={field.id}>
                     <label className="label">
                       {field.label}
@@ -213,6 +223,19 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                   </div>
                 ))}
               </div>
+            ) : (
+              /* New format: single open submission field */
+              <div>
+                <label className="label">Your work and reflection</label>
+                <textarea
+                  value={answers['submission'] || ''}
+                  onChange={(e) => handleAnswerChange('submission', e.target.value)}
+                  placeholder="Paste your prompt, describe what you did, or share your reflection from Claude Desktop..."
+                  rows={7}
+                  disabled={completed}
+                  className="textarea-field disabled:opacity-60 disabled:cursor-not-allowed"
+                />
+              </div>
             )}
 
             {/* Error message */}
@@ -227,7 +250,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   onClick={getCoachFeedbackHandler}
-                  disabled={feedbackLoading || !hasRequiredAnswers()}
+                  disabled={feedbackLoading}
                   className="btn-secondary flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {feedbackLoading ? (
@@ -236,9 +259,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                       Getting feedback...
                     </>
                   ) : (
-                    <>
-                      🤖 Get AI Coach Feedback
-                    </>
+                    <>🤖 Get AI Coach Feedback</>
                   )}
                 </button>
 
@@ -276,7 +297,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
             )}
 
             {/* Self-rating + Complete */}
-            {!completed && hasRequiredAnswers() && (
+            {!completed && (
               <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
                 <p className="font-header font-semibold text-beyond-dark text-sm mb-3">
                   How confident do you feel after this exercise?
@@ -300,10 +321,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                   </span>
                 </div>
 
-                <button
-                  onClick={handleComplete}
-                  className="btn-primary w-full"
-                >
+                <button onClick={handleComplete} className="btn-primary w-full">
                   Mark Complete ✓
                 </button>
               </div>
@@ -320,7 +338,6 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                   </div>
                 </div>
 
-                {/* Bonus round */}
                 {!showBonus && (
                   <button
                     onClick={handleBonusRound}
@@ -351,10 +368,30 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
   )
 }
 
-// ─── Exercise Content Renderer ────────────────────────────────────────────────
-function ExerciseContent({ exercise }) {
-  if (!exercise.content) return null
+// ─── Inline markdown renderer (bold only) ────────────────────────────────────
+function renderInlineMarkdown(text) {
+  if (!text || !text.includes('**')) return text
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  )
+}
+
+// ─── Exercise Content Dispatcher ─────────────────────────────────────────────
+// Routes to old content.type renderer OR new direct-property renderer
+function ExerciseContent({ exercise, user }) {
+  // OLD FORMAT: exercise.content.type switch
+  if (exercise.content) {
+    return <LegacyExerciseContent exercise={exercise} />
+  }
+  // NEW FORMAT: properties directly on exercise
+  return <NewExerciseContent exercise={exercise} user={user} />
+}
+
+// ─── Legacy Content Renderer (old content.type format) ───────────────────────
+function LegacyExerciseContent({ exercise }) {
   const { content } = exercise
+  if (!content) return null
 
   switch (content.type) {
     case 'comparison':
@@ -384,10 +421,774 @@ function ExerciseContent({ exercise }) {
   }
 }
 
+// ─── New Exercise Content Renderer ───────────────────────────────────────────
+// Renders all new-format content properties (directly on exercise object)
+function NewExerciseContent({ exercise, user }) {
+  const blocks = []
+
+  // Comparison (bad/good)
+  if (exercise.comparison) {
+    const c = exercise.comparison
+    // Direct bad/good keys
+    if (c.bad || c.good) {
+      blocks.push(<NewComparisonBlock key="comparison" bad={c.bad} good={c.good} />)
+    }
+    // Track-keyed (pm/design) with without/with sub-keys
+    else if (c.pm || c.design) {
+      blocks.push(
+        <div key="comparison-tracks" className="space-y-4">
+          {c.pm && <TrackComparison label="PM Example" data={c.pm} />}
+          {c.design && <TrackComparison label="Design Example" data={c.design} />}
+        </div>
+      )
+    }
+  }
+
+  // Three-way comparison
+  if (exercise.comparisonThree) {
+    const c = exercise.comparisonThree
+    blocks.push(
+      <div key="comparisonThree" className="space-y-4">
+        {c.tooLittle && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+            <div className="text-xs font-header font-semibold text-red-600 mb-2">{c.tooLittle.label || 'Too little context ❌'}</div>
+            <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-red-100 leading-relaxed whitespace-pre-wrap">"{c.tooLittle.prompt}"</div>
+            <p className="text-red-700 text-sm font-body leading-relaxed">{c.tooLittle.result || c.tooLittle.why}</p>
+          </div>
+        )}
+        {c.justRight && (
+          <div className="rounded-xl border border-green-200 bg-green-50 p-5">
+            <div className="text-xs font-header font-semibold text-green-700 mb-2">{c.justRight.label || 'Just right ✅'}</div>
+            <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-green-100 leading-relaxed whitespace-pre-wrap">"{c.justRight.prompt}"</div>
+            <p className="text-green-700 text-sm font-body leading-relaxed">{c.justRight.result || c.justRight.why}</p>
+          </div>
+        )}
+        {c.tooMuch && (
+          <div className="rounded-xl border border-orange-200 bg-orange-50 p-5">
+            <div className="text-xs font-header font-semibold text-orange-600 mb-2">{c.tooMuch.label || 'Too much context ❌'}</div>
+            <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-orange-100 leading-relaxed whitespace-pre-wrap">"{c.tooMuch.prompt}"</div>
+            <p className="text-orange-700 text-sm font-body leading-relaxed">{c.tooMuch.result || c.tooMuch.why}</p>
+          </div>
+        )}
+        {c.rule && (
+          <div className="bg-beyond-dark rounded-lg px-4 py-3 text-beyond-teal text-sm font-header font-semibold">
+            💡 {c.rule}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Worked example (single, with steps)
+  if (exercise.workedExample) {
+    blocks.push(<WorkedExampleBlock key="workedExample" example={exercise.workedExample} />)
+  }
+
+  // Worked examples (pm/design keyed)
+  if (exercise.workedExamples) {
+    const we = exercise.workedExamples
+    blocks.push(
+      <div key="workedExamples" className="space-y-4">
+        {we.pm && <WorkedExampleBlock example={we.pm} label="PM Example" />}
+        {we.design && <WorkedExampleBlock example={we.design} label="Design Example" />}
+      </div>
+    )
+  }
+
+  // Patterns array
+  if (exercise.patterns?.length) {
+    blocks.push(
+      <div key="patterns" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Patterns</p>
+        {exercise.patterns.map((p, i) => (
+          <PatternCard key={i} pattern={p} />
+        ))}
+      </div>
+    )
+  }
+
+  // Techniques array
+  if (exercise.techniques?.length) {
+    blocks.push(
+      <div key="techniques" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Techniques</p>
+        {exercise.techniques.map((t, i) => (
+          <PatternCard key={i} pattern={t} />
+        ))}
+      </div>
+    )
+  }
+
+  // Chain patterns
+  if (exercise.chainPatterns?.length) {
+    blocks.push(
+      <div key="chainPatterns" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Chain Patterns</p>
+        {exercise.chainPatterns.map((p, i) => (
+          <PatternCard key={i} pattern={p} />
+        ))}
+      </div>
+    )
+  }
+
+  // Tool categories (Exercise 3.1)
+  if (exercise.toolCategories?.length) {
+    blocks.push(
+      <div key="toolCategories" className="space-y-4">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Available Tools</p>
+        {exercise.toolCategories.map((cat, i) => (
+          <ToolCategoryCard key={i} category={cat} />
+        ))}
+      </div>
+    )
+  }
+
+  // Artifact types
+  if (exercise.artifactTypes?.length) {
+    blocks.push(
+      <div key="artifactTypes" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Choose Your Artifact Type</p>
+        {exercise.artifactTypes.map((a, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{a.type || a.name}</div>
+            {a.useWhen && <p className="text-gray-500 text-xs font-body"><span className="font-semibold text-gray-600">Use when: </span>{a.useWhen}</p>}
+            {a.bestFor && <p className="text-gray-500 text-xs font-body"><span className="font-semibold text-gray-600">Best for: </span>{a.bestFor}</p>}
+            {a.description && <p className="text-gray-500 text-xs font-body mt-1">{a.description}</p>}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Starter queries (pm/design keyed)
+  if (exercise.starterQueries) {
+    const sq = exercise.starterQueries
+    const roleKey = user?.role?.toLowerCase().includes('design') ? 'design' : 'pm'
+    const queries = sq[roleKey] || sq.pm || sq.design || []
+    if (queries.length) {
+      blocks.push(
+        <StarterQueriesBlock key="starterQueries" queries={queries} label="Starter Queries for Your Role" />
+      )
+    }
+  }
+
+  // Combination queries
+  if (exercise.combinationQueries) {
+    const cq = exercise.combinationQueries
+    const allQueries = []
+    if (Array.isArray(cq)) {
+      allQueries.push(...cq)
+    } else {
+      Object.values(cq).forEach(v => Array.isArray(v) && allQueries.push(...v))
+    }
+    if (allQueries.length) {
+      blocks.push(<StarterQueriesBlock key="combinationQueries" queries={allQueries} label="Combination Queries" />)
+    }
+  }
+
+  // Model guide
+  if (exercise.modelGuide) {
+    blocks.push(<ModelGuideBlock key="modelGuide" guide={exercise.modelGuide} />)
+  }
+
+  // Surgery steps (Exercise 4.4)
+  if (exercise.surgerySteps?.length) {
+    blocks.push(
+      <div key="surgerySteps" className="space-y-4">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">The 4-Step Surgery Process</p>
+        {exercise.surgerySteps.map((step, i) => (
+          <div key={i} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-4">
+            <div className="w-7 h-7 bg-beyond-teal rounded-full flex items-center justify-center text-white text-sm font-header font-bold shrink-0">
+              {step.step || i + 1}
+            </div>
+            <div>
+              <div className="font-header font-bold text-beyond-dark text-sm mb-1">{step.name || step.title}</div>
+              <p className="text-gray-600 text-xs font-body mb-2">{step.description}</p>
+              {step.prompt && (
+                <div className="bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed">
+                  {step.prompt}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Starter libraries (Exercise 4.5) — show track-appropriate library
+  if (exercise.starterLibraries) {
+    const role = user?.role?.toLowerCase() || ''
+    let trackKey = 'pm_ic'
+    if (role.includes('design director') || role.includes('lead product designer')) trackKey = 'design_lead'
+    else if (role.includes('design')) trackKey = 'design_ic'
+    else if (role.includes('director') || role.includes('principal') || role.includes('associate director')) trackKey = 'pm_director'
+
+    const lib = exercise.starterLibraries[trackKey] || exercise.starterLibraries['pm_ic'] || []
+    if (lib.length) {
+      blocks.push(<StarterLibraryBlock key="starterLibraries" library={lib} />)
+    }
+  }
+
+  // Word pairs
+  if (exercise.wordPairs?.length) {
+    blocks.push(
+      <div key="wordPairs" className="space-y-5">
+        {exercise.wordPairs.map((group, i) => (
+          <div key={i}>
+            <h4 className="font-header font-bold text-beyond-dark text-sm mb-2">{group.category || group.name}</h4>
+            <div className="flex flex-wrap gap-2">
+              {(group.pairs || group.words || []).map((w, j) => (
+                <div key={j} className="bg-white rounded-lg border border-gray-100 px-3 py-2">
+                  <div className="font-header font-bold text-beyond-dark text-sm">{w.weak || w.word}</div>
+                  <div className="text-gray-400 text-xs">→</div>
+                  <div className="font-header font-bold text-beyond-teal text-sm">{w.strong || w.replacement}</div>
+                  {w.effect && <div className="text-gray-500 text-xs font-body mt-0.5">{w.effect}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Lenses (strategy evaluation frameworks)
+  if (exercise.lenses?.length) {
+    blocks.push(
+      <div key="lenses" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Evaluation Lenses</p>
+        {exercise.lenses.map((lens, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{lens.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{lens.description}</p>
+            {lens.prompt && (
+              <div className="bg-gray-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-gray-100 leading-relaxed italic">
+                "{lens.prompt}"
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Principles (behavioral design)
+  if (exercise.principles?.length) {
+    blocks.push(
+      <div key="principles" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Principles</p>
+        {exercise.principles.map((p, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{p.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{p.description}</p>
+            {p.prompt && (
+              <div className="bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed italic">
+                "{p.prompt}"
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Critique frameworks
+  if (exercise.critiqueFrameworks?.length) {
+    blocks.push(
+      <div key="critiqueFrameworks" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Critique Frameworks</p>
+        {exercise.critiqueFrameworks.map((f, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{f.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{f.description}</p>
+            {f.criteria?.length && (
+              <ul className="space-y-0.5">
+                {f.criteria.map((c, j) => (
+                  <li key={j} className="text-xs font-body text-gray-600 flex items-start gap-1.5">
+                    <span className="text-beyond-teal shrink-0">·</span>{c}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Setup (Exercise 6.1 — Claude Code installation)
+  if (exercise.setup) {
+    blocks.push(<SetupBlock key="setup" setup={exercise.setup} />)
+  }
+
+  // Basic commands (Exercise 6.1)
+  if (exercise.basicCommands?.length) {
+    blocks.push(
+      <div key="basicCommands" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Basic Commands to Try</p>
+        {exercise.basicCommands.map((cmd, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{cmd.what}</div>
+            <div className="bg-gray-900 rounded-lg px-3 py-2 font-mono text-sm text-green-400 mb-2 leading-relaxed">
+              {cmd.example}
+            </div>
+            <p className="text-gray-500 text-xs font-body">{cmd.why}</p>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // BMAD installation steps (Exercise 6.2)
+  if (exercise.installation) {
+    blocks.push(<InstallationBlock key="installation" installation={exercise.installation} />)
+  }
+
+  // Workflow examples (Exercise 6.4)
+  if (exercise.workflowExamples?.length) {
+    blocks.push(
+      <div key="workflowExamples" className="space-y-4">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Workflow Examples</p>
+        {exercise.workflowExamples.map((wf, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-3">{wf.name}</div>
+            <ol className="space-y-1 mb-3">
+              {wf.steps.map((step, j) => (
+                <li key={j} className="text-xs font-body text-gray-600 flex items-start gap-2">
+                  <span className="text-beyond-teal font-bold shrink-0">{j + 1}.</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            {wf.humanInput && (
+              <div className="bg-amber-50 rounded px-3 py-2 text-amber-700 text-xs font-body border border-amber-100">
+                <span className="font-semibold">Your role: </span>{wf.humanInput}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Template (Exercise 6.5 — AI OS document template)
+  if (exercise.template) {
+    blocks.push(<TemplateBlock key="template" template={exercise.template} />)
+  }
+
+  // Guide (Exercise 1.6 / 2.6 — setup guides)
+  if (exercise.guide) {
+    blocks.push(<GuideBlock key="guide" guide={exercise.guide} />)
+  }
+
+  if (blocks.length === 0) return null
+
+  return <div className="space-y-6">{blocks}</div>
+}
+
+// ─── New Format Sub-components ────────────────────────────────────────────────
+
+function NewComparisonBlock({ bad, good }) {
+  return (
+    <div className="space-y-4">
+      {bad && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+          <div className="text-xs font-header font-semibold text-red-600 mb-2">{bad.label || 'Search Query ❌'}</div>
+          <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-red-100 leading-relaxed whitespace-pre-wrap">
+            "{bad.prompt}"
+          </div>
+          <p className="text-red-700 text-sm font-body leading-relaxed">{bad.why}</p>
+        </div>
+      )}
+      {good && (
+        <div className="rounded-xl border border-green-200 bg-green-50 p-5">
+          <div className="text-xs font-header font-semibold text-green-700 mb-2">{good.label || 'Thought Partner ✅'}</div>
+          <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-green-100 leading-relaxed whitespace-pre-wrap">
+            "{good.prompt}"
+          </div>
+          <p className="text-green-700 text-sm font-body leading-relaxed">{good.why}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TrackComparison({ label, data }) {
+  return (
+    <div>
+      <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider mb-2">{label}</p>
+      <div className="grid grid-cols-2 gap-4">
+        {data.without && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+            <div className="text-xs font-header font-semibold text-red-600 mb-2">Without ❌</div>
+            <div className="bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 border border-red-100 leading-relaxed">
+              "{data.without}"
+            </div>
+          </div>
+        )}
+        {data.with && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="text-xs font-header font-semibold text-green-700 mb-2">With framework ✅</div>
+            <div className="bg-white rounded px-3 py-2 font-mono text-xs text-gray-600 border border-green-100 leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
+              {data.with}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function PatternCard({ pattern }) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 p-4">
+      <div className="font-header font-bold text-beyond-dark text-sm mb-1">{pattern.name}</div>
+      {pattern.description && (
+        <p className="text-gray-500 text-xs font-body mb-2">{pattern.description}</p>
+      )}
+      {pattern.prompt && (
+        <div className="bg-gray-50 rounded px-3 py-2.5 font-mono text-sm text-gray-700 mb-2 border border-gray-100 leading-relaxed">
+          "{pattern.prompt}"
+        </div>
+      )}
+      {pattern.example && !pattern.prompt && (
+        <div className="bg-gray-50 rounded px-3 py-2.5 font-mono text-sm text-gray-700 mb-2 border border-gray-100 leading-relaxed italic">
+          e.g. "{pattern.example}"
+        </div>
+      )}
+      {pattern.steps?.length > 0 && (
+        <ul className="space-y-1 mb-2">
+          {pattern.steps.map((s, i) => (
+            <li key={i} className="text-xs font-body text-gray-600 flex items-start gap-2">
+              <span className="text-beyond-teal font-bold shrink-0">{i + 1}.</span>
+              <span className="font-mono leading-relaxed">{s}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {pattern.when && (
+        <p className="text-gray-500 text-xs font-body">
+          <span className="font-semibold text-gray-600">When to use: </span>{pattern.when}
+        </p>
+      )}
+      {pattern.useCase && (
+        <p className="text-gray-500 text-xs font-body">
+          <span className="font-semibold text-gray-600">Best for: </span>{pattern.useCase}
+        </p>
+      )}
+      {pattern.template && (
+        <div className="mt-2 bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed whitespace-pre-wrap">
+          {pattern.template}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function WorkedExampleBlock({ example, label }) {
+  return (
+    <div className="bg-teal-50 border border-teal-200 rounded-xl p-5">
+      {label && <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider mb-3">{label}</p>}
+      <div className="font-header font-bold text-beyond-deep text-sm mb-1">{example.title}</div>
+      {example.description && (
+        <p className="text-beyond-deep/70 text-xs font-body mb-4">{example.description}</p>
+      )}
+      {example.steps?.length > 0 && (
+        <div className="space-y-3">
+          {example.steps.map((step, i) => (
+            <div key={i} className="flex gap-3 bg-white rounded-lg p-3 border border-teal-100">
+              <div className="w-6 h-6 bg-beyond-teal rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0">
+                {step.step || i + 1}
+              </div>
+              <div className="min-w-0">
+                {step.name && <div className="font-header font-semibold text-beyond-dark text-xs mb-1">{step.name}</div>}
+                {step.prompt && (
+                  <div className="font-mono text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{step.prompt}</div>
+                )}
+                {step.output && (
+                  <div className="mt-2 bg-gray-50 rounded px-2 py-1.5 text-xs text-gray-600 font-body leading-relaxed italic">
+                    Output: {step.output}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ToolCategoryCard({ category }) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 p-5">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-8 h-8 bg-beyond-teal rounded-lg flex items-center justify-center text-white text-sm">
+          {category.icon || '🔧'}
+        </div>
+        <div>
+          <div className="font-header font-bold text-beyond-dark text-sm">{category.category || category.name}</div>
+          {category.description && (
+            <p className="text-gray-500 text-xs font-body">{category.description}</p>
+          )}
+        </div>
+      </div>
+      {category.tools?.length > 0 && (
+        <div className="space-y-2">
+          {category.tools.map((tool, i) => (
+            <div key={i} className="bg-gray-50 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="font-header font-semibold text-beyond-dark text-xs">{tool.name}</span>
+              </div>
+              <p className="text-gray-500 text-xs font-body">{tool.description}</p>
+              {tool.typicalWorkflow && (
+                <p className="text-beyond-teal text-xs font-body mt-1 italic">💡 {tool.typicalWorkflow}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function StarterQueriesBlock({ queries, label }) {
+  const [copiedIdx, setCopiedIdx] = useState(null)
+
+  const copy = (text, idx) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx)
+      setTimeout(() => setCopiedIdx(null), 2000)
+    })
+  }
+
+  return (
+    <div className="space-y-3">
+      {label && <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">{label}</p>}
+      {queries.map((q, i) => (
+        <div key={i} className="bg-teal-50 border border-teal-200 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-header font-semibold text-beyond-deep">{q.name || q.label || `Query ${i + 1}`}</p>
+            <button
+              onClick={() => copy(q.prompt || q.query || q.template || '', i)}
+              className="text-xs font-body text-beyond-teal hover:text-beyond-deep flex items-center gap-1 transition-colors"
+            >
+              {copiedIdx === i ? '✓ Copied!' : '📋 Copy'}
+            </button>
+          </div>
+          <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 border border-teal-100 leading-relaxed whitespace-pre-wrap">
+            {q.prompt || q.query || q.template || ''}
+          </div>
+          {q.tip && <p className="mt-2 text-beyond-teal text-xs font-body italic">💡 {q.tip}</p>}
+          {q.expectedOutput && <p className="mt-1 text-gray-500 text-xs font-body">Output: {q.expectedOutput}</p>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function StarterLibraryBlock({ library }) {
+  const [copiedIdx, setCopiedIdx] = useState(null)
+
+  const copy = (text, idx) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx)
+      setTimeout(() => setCopiedIdx(null), 2000)
+    })
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Your Starter Prompt Library</p>
+      {library.map((entry, i) => (
+        <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <div className="font-header font-bold text-beyond-dark text-sm">{entry.name}</div>
+              {entry.when && <p className="text-gray-500 text-xs font-body">{entry.when}</p>}
+            </div>
+            <button
+              onClick={() => copy(entry.template || '', i)}
+              className="text-xs font-body text-beyond-teal hover:text-beyond-deep flex items-center gap-1 transition-colors shrink-0 ml-2"
+            >
+              {copiedIdx === i ? '✓ Copied!' : '📋 Copy'}
+            </button>
+          </div>
+          {entry.template && (
+            <div className="bg-gray-50 rounded px-3 py-2.5 font-mono text-xs text-gray-700 border border-gray-100 leading-relaxed whitespace-pre-wrap">
+              {entry.template}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ModelGuideBlock({ guide }) {
+  return (
+    <div className="space-y-4">
+      {guide.models?.length > 0 && (
+        <div className="space-y-3">
+          {guide.models.map((model, i) => (
+            <div key={i} className="bg-white rounded-xl border border-gray-200 p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-2xl">{model.emoji || '🤖'}</span>
+                <div>
+                  <div className="font-header font-bold text-beyond-dark text-sm">{model.name}</div>
+                  <div className="text-gray-500 text-xs font-body">{model.tagline}</div>
+                </div>
+              </div>
+              {model.strengths?.length > 0 && (
+                <div className="mb-2">
+                  <p className="text-xs font-header font-semibold text-green-700 mb-1">Best for</p>
+                  <ul className="space-y-0.5">
+                    {model.strengths.map((s, j) => (
+                      <li key={j} className="text-xs font-body text-gray-600 flex items-start gap-1">
+                        <span className="text-green-500 shrink-0">+</span>{s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {model.bestFor && (
+                <div className="bg-teal-50 rounded-lg px-3 py-1.5">
+                  <span className="text-xs font-header font-semibold text-beyond-deep">Use when: </span>
+                  <span className="text-xs font-body text-beyond-dark">{model.bestFor}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {guide.rules?.length > 0 && (
+        <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
+          <h4 className="font-header font-bold text-beyond-dark text-sm mb-3">Decision Rules</h4>
+          <div className="space-y-2">
+            {guide.rules.map((rule, i) => (
+              <div key={i} className="flex gap-3">
+                <span className="text-beyond-teal font-bold font-header text-sm shrink-0">→</span>
+                <p className="text-sm font-body text-beyond-dark">{rule}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SetupBlock({ setup }) {
+  return (
+    <div className="space-y-4">
+      {setup.prerequisites?.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <p className="text-xs font-header font-semibold text-amber-800 mb-2">Prerequisites</p>
+          <ul className="space-y-1">
+            {setup.prerequisites.map((p, i) => (
+              <li key={i} className="flex items-start gap-2 text-amber-700 text-sm font-body">
+                <span className="text-amber-400 shrink-0">□</span>{p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {setup.installSteps?.length > 0 && (
+        <div className="space-y-3">
+          <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Installation Steps</p>
+          {setup.installSteps.map((step, i) => (
+            <div key={i} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-4">
+              <div className="w-7 h-7 bg-beyond-teal rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0">
+                {step.step || i + 1}
+              </div>
+              <div>
+                <div className="font-header font-bold text-beyond-dark text-sm mb-1">{step.instruction}</div>
+                {step.command && (
+                  <div className="bg-gray-900 rounded-lg px-3 py-2 font-mono text-sm text-green-400 mb-2">{step.command}</div>
+                )}
+                {step.detail && <p className="text-gray-500 text-xs font-body">{step.detail}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function InstallationBlock({ installation }) {
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Installation Steps</p>
+      {(installation.steps || []).map((step, i) => (
+        <div key={i} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-4">
+          <div className="w-7 h-7 bg-beyond-teal rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0">
+            {step.step || i + 1}
+          </div>
+          <div>
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{step.instruction}</div>
+            {step.command && (
+              <div className="bg-gray-900 rounded-lg px-3 py-2 font-mono text-sm text-green-400 mb-2">{step.command}</div>
+            )}
+            {step.prompt && (
+              <div className="bg-teal-50 rounded-lg px-3 py-2 font-mono text-sm text-gray-700 border border-teal-100 mb-2 leading-relaxed">
+                {step.prompt}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function TemplateBlock({ template }) {
+  if (!template.sections?.length) return null
+  return (
+    <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+      <div className="text-sm font-header font-semibold text-beyond-dark mb-4">Document Template</div>
+      <div className="space-y-3">
+        {template.sections.map((section, i) => (
+          <div key={i} className="flex gap-3">
+            <span className="text-beyond-teal font-bold font-header text-sm shrink-0">→</span>
+            <div>
+              <div className="font-header font-semibold text-beyond-dark text-sm">{section.title}</div>
+              {section.guidance && <p className="text-gray-500 text-xs font-body">{section.guidance}</p>}
+              {section.description && <p className="text-gray-500 text-xs font-body">{section.description}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function GuideBlock({ guide }) {
+  if (!guide.sections?.length) return null
+  return (
+    <div className="bg-teal-50 border border-teal-200 rounded-xl p-5">
+      <div className="text-sm font-header font-semibold text-beyond-deep mb-4">{guide.title || 'Guide'}</div>
+      <div className="space-y-3">
+        {guide.sections.map((section, i) => (
+          <div key={i} className="bg-white rounded-lg p-3 border border-teal-100">
+            <div className="text-xs font-header font-semibold text-beyond-dark mb-1">{section.title}</div>
+            {section.guidance && <p className="text-xs font-body text-gray-600">{section.guidance}</p>}
+            {section.example && (
+              <div className="mt-1 text-xs font-mono text-gray-600 italic">e.g. "{section.example}"</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Legacy Content Renderers (unchanged) ────────────────────────────────────
+
 function ComparisonContent({ content }) {
   return (
     <div className="space-y-4">
-      {/* Bad example */}
       <div className="rounded-xl border border-red-200 bg-red-50 p-5">
         <div className="text-xs font-header font-semibold text-red-600 mb-2">{content.badExample.label}</div>
         <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-red-100">
@@ -396,7 +1197,6 @@ function ComparisonContent({ content }) {
         <p className="text-red-700 text-sm font-body leading-relaxed">{content.badExample.why}</p>
       </div>
 
-      {/* Good example */}
       <div className="rounded-xl border border-green-200 bg-green-50 p-5">
         <div className="text-xs font-header font-semibold text-green-700 mb-2">{content.goodExample.label}</div>
         <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 mb-3 border border-green-100 leading-relaxed whitespace-pre-wrap">
@@ -405,7 +1205,6 @@ function ComparisonContent({ content }) {
         <p className="text-green-700 text-sm font-body leading-relaxed">{content.goodExample.why}</p>
       </div>
 
-      {/* Breakdown */}
       {content.breakdown && (
         <div className="grid grid-cols-2 gap-3 mt-2">
           {content.breakdown.map((item) => (
@@ -467,10 +1266,7 @@ function FrameworkContent({ content, exercise }) {
 
   return (
     <div className="space-y-5">
-      {/* Framework description */}
       <p className="exercise-prose">{content.framework.description}</p>
-
-      {/* Framework elements */}
       <div className="grid gap-3">
         {content.framework.elements.map((el) => (
           <div key={el.letter} className="flex gap-4 bg-white rounded-xl border border-gray-100 p-4">
@@ -491,7 +1287,6 @@ function FrameworkContent({ content, exercise }) {
         ))}
       </div>
 
-      {/* Phase/step prompts — used in Level 5 framework exercises and Level 6 PRD */}
       {content.prompts && (
         <div className="space-y-3">
           {content.prompts.map((p, i) => (
@@ -513,7 +1308,6 @@ function FrameworkContent({ content, exercise }) {
         </div>
       )}
 
-      {/* Single example prompt (COSTAR, CRIT etc.) */}
       {content.example && (
         <div className="bg-teal-50 border border-teal-200 rounded-xl p-5">
           <div className="text-xs font-header font-semibold text-beyond-deep mb-3">{content.example.label}</div>
@@ -523,7 +1317,6 @@ function FrameworkContent({ content, exercise }) {
         </div>
       )}
 
-      {/* Comparison for CRIT */}
       {content.comparison && (
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -548,39 +1341,7 @@ function PatternsContent({ content }) {
   return (
     <div className="space-y-3">
       {content.patterns.map((pattern) => (
-        <div key={pattern.name} className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="font-header font-bold text-beyond-dark text-sm mb-1">{pattern.name}</div>
-          {pattern.description && (
-            <p className="text-gray-500 text-xs font-body mb-2">{pattern.description}</p>
-          )}
-          {/* Old format: single prompt string */}
-          {pattern.prompt && (
-            <div className="bg-gray-50 rounded px-3 py-2.5 font-mono text-sm text-gray-700 mb-2 border border-gray-100 leading-relaxed">
-              "{pattern.prompt}"
-            </div>
-          )}
-          {/* New format: steps array */}
-          {pattern.steps && (
-            <ul className="space-y-1 mb-2">
-              {pattern.steps.map((s, i) => (
-                <li key={i} className="text-xs font-body text-gray-600 flex items-start gap-2">
-                  <span className="text-beyond-teal font-bold shrink-0">{i + 1}.</span>
-                  <span className="font-mono leading-relaxed">{s}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-          {pattern.when && (
-            <p className="text-gray-500 text-xs font-body">
-              <span className="font-semibold text-gray-600">When to use: </span>{pattern.when}
-            </p>
-          )}
-          {pattern.useCase && (
-            <p className="text-gray-500 text-xs font-body">
-              <span className="font-semibold text-gray-600">Best for: </span>{pattern.useCase}
-            </p>
-          )}
-        </div>
+        <PatternCard key={pattern.name} pattern={pattern} />
       ))}
     </div>
   )
@@ -615,7 +1376,6 @@ function DecisionTreeContent({ content }) {
 function WalkthroughContent({ content }) {
   return (
     <div className="space-y-5">
-      {/* Steps — supports both step.number (old) and step.step (new) */}
       {content.steps && (
         <div className="space-y-4">
           {content.steps.map((step) => {
@@ -628,13 +1388,11 @@ function WalkthroughContent({ content }) {
                 <div className="flex-1 min-w-0">
                   <div className="font-header font-bold text-beyond-dark text-sm mb-1">{step.title}</div>
                   <p className="text-gray-600 text-sm font-body leading-relaxed">{step.description}</p>
-                  {/* Terminal command block */}
                   {step.prompt && (
                     <div className="mt-2 bg-gray-900 rounded-lg px-4 py-2.5 font-mono text-sm text-green-400 leading-relaxed whitespace-pre-wrap overflow-x-auto">
                       {step.prompt}
                     </div>
                   )}
-                  {/* Callout / tip */}
                   {(step.callout || step.tip) && (
                     <p className="text-beyond-teal text-xs font-body mt-1.5 italic">
                       💡 {step.callout || step.tip}
@@ -647,7 +1405,6 @@ function WalkthroughContent({ content }) {
         </div>
       )}
 
-      {/* Reflection (new format) */}
       {content.reflection && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
           <p className="text-xs font-header font-semibold text-amber-700 mb-1">Reflection</p>
@@ -655,7 +1412,6 @@ function WalkthroughContent({ content }) {
         </div>
       )}
 
-      {/* System prompt guide */}
       {content.systemPromptGuide && (
         <div className="bg-teal-50 border border-teal-200 rounded-xl p-5">
           <div className="text-sm font-header font-semibold text-beyond-deep mb-4">{content.systemPromptGuide.label}</div>
@@ -670,7 +1426,6 @@ function WalkthroughContent({ content }) {
         </div>
       )}
 
-      {/* Playbook template */}
       {content.playbookTemplate && (
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
           <div className="text-sm font-header font-semibold text-beyond-dark mb-4">{content.playbookTemplate.label}</div>
@@ -711,7 +1466,6 @@ function WordComparisonContent({ content }) {
   )
 }
 
-// ─── Nexus Walkthrough Content ───────────────────────────────────────────────
 function NexusWalkthroughContent({ content }) {
   const [copied, setCopied] = useState(null)
 
@@ -724,7 +1478,6 @@ function NexusWalkthroughContent({ content }) {
 
   return (
     <div className="space-y-5">
-      {/* Prerequisite checklist */}
       {content.prerequisite && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -742,7 +1495,6 @@ function NexusWalkthroughContent({ content }) {
         </div>
       )}
 
-      {/* Artifact type cards (Exercise 3.4) */}
       {content.artifactTypes && (
         <div className="space-y-3">
           <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Choose your artifact type:</p>
@@ -750,24 +1502,17 @@ function NexusWalkthroughContent({ content }) {
             <div key={a.type} className="bg-white rounded-xl border border-gray-100 p-4">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-6 h-6 bg-beyond-teal rounded flex items-center justify-center">
-                  <span className="text-white text-xs font-bold font-header">
-                    {a.type[0]}
-                  </span>
+                  <span className="text-white text-xs font-bold font-header">{a.type[0]}</span>
                 </div>
                 <div className="font-header font-bold text-beyond-dark text-sm">{a.type}</div>
               </div>
-              <p className="text-gray-500 text-xs font-body mb-1">
-                <span className="font-semibold text-gray-600">Use when: </span>{a.useWhen}
-              </p>
-              <p className="text-gray-500 text-xs font-body">
-                <span className="font-semibold text-gray-600">Best for: </span>{a.bestFor}
-              </p>
+              <p className="text-gray-500 text-xs font-body mb-1"><span className="font-semibold text-gray-600">Use when: </span>{a.useWhen}</p>
+              <p className="text-gray-500 text-xs font-body"><span className="font-semibold text-gray-600">Best for: </span>{a.bestFor}</p>
             </div>
           ))}
         </div>
       )}
 
-      {/* Query patterns */}
       {content.patterns && (
         <div className="space-y-3">
           {content.patterns.map((p) => (
@@ -782,7 +1527,6 @@ function NexusWalkthroughContent({ content }) {
         </div>
       )}
 
-      {/* Prompts to copy and run in Claude Desktop */}
       {content.prompts && (
         <div className="space-y-4">
           {content.prompts.map((p, i) => (
@@ -799,9 +1543,7 @@ function NexusWalkthroughContent({ content }) {
               <div className="bg-white rounded-lg px-4 py-3 font-mono text-sm text-gray-700 border border-teal-100 leading-relaxed">
                 {p.prompt}
               </div>
-              {p.tip && (
-                <p className="mt-2 text-beyond-teal text-xs font-body italic">💡 {p.tip}</p>
-              )}
+              {p.tip && <p className="mt-2 text-beyond-teal text-xs font-body italic">💡 {p.tip}</p>}
             </div>
           ))}
         </div>
@@ -810,11 +1552,9 @@ function NexusWalkthroughContent({ content }) {
   )
 }
 
-// ─── Model Comparison Content ─────────────────────────────────────────────────
 function ModelComparisonContent({ content }) {
   return (
     <div className="space-y-6">
-      {/* Model cards */}
       {content.models && (
         <div className="grid gap-4">
           {content.models.map((model) => (
@@ -857,7 +1597,6 @@ function ModelComparisonContent({ content }) {
         </div>
       )}
 
-      {/* Decision framework */}
       {content.decisionFramework && (
         <div className="bg-gray-50 rounded-xl border border-gray-200 p-5">
           <h4 className="font-header font-bold text-beyond-dark text-sm mb-3">Decision Framework</h4>
@@ -878,7 +1617,6 @@ function ModelComparisonContent({ content }) {
   )
 }
 
-// ─── Reflection Content ───────────────────────────────────────────────────────
 function ReflectionContent({ content }) {
   if (!content.sections && !content.buildPrompt) return null
 
@@ -913,7 +1651,6 @@ function ReflectionContent({ content }) {
   )
 }
 
-// ─── Capstone Content ─────────────────────────────────────────────────────────
 function CapstoneContent({ content }) {
   if (!content.deliverables && !content.finalReflection) return null
 
@@ -957,7 +1694,7 @@ function CapstoneContent({ content }) {
   )
 }
 
-// ─── Bonus Exercise Panel ────────────────────────────────────────────────────
+// ─── Bonus Exercise Panel ─────────────────────────────────────────────────────
 function BonusExercise({ exercise, user, onDismiss }) {
   const [answer, setAnswer] = useState('')
 
