@@ -1,6 +1,6 @@
 export default function StoryBridge() {
   return (
-    <section className="section-padding px-6 bg-deep-blue">
+    <section id="the-workshop" className="section-padding px-6 bg-deep-blue">
       <div className="max-w-4xl mx-auto">
         <div
           className="

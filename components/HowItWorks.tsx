@@ -24,7 +24,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="section-padding px-6 bg-deep-blue">
+    <section id="how-it-works" className="section-padding px-6 bg-deep-blue">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-14">

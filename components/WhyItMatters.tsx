@@ -15,7 +15,7 @@ const reasons = [
 
 export default function WhyItMatters() {
   return (
-    <section className="section-padding px-6 bg-midnight relative overflow-hidden">
+    <section id="why-it-matters" className="section-padding px-6 bg-midnight relative overflow-hidden">
       <div className="divider-gold absolute top-0 left-0 right-0" />
 
       {/* Gold radial glow */}

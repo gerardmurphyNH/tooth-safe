@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import Script from "next/script";
 import StructuredData from "@/components/StructuredData";
@@ -18,6 +18,11 @@ const inter = Inter({
 });
 
 const BASE_URL = "https://tooth-safe.com";
+
+// Viewport / theme-colour (separate from metadata per Next.js 14 spec)
+export const viewport: Viewport = {
+  themeColor: "#C9A036", // ToothSafe gold — colours the browser chrome on mobile
+};
 
 export const metadata: Metadata = {
   // ── Core ─────────────────────────────────────────────────────────────────
@@ -64,10 +69,10 @@ export const metadata: Metadata = {
     siteName: "ToothSafe",
     title: "ToothSafe — A Discovery by Arlo",
     description:
-      "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth. Coming soon.",
+      "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop, discovered by a boy named Arlo.",
     images: [
       {
-        url: "/images/og-image.png", // 1200×630 — create this later
+        url: "/images/og-image.png", // 1200×630 branded share image
         width: 1200,
         height: 630,
         alt: "ToothSafe — the keepsake disc for a child's first lost tooth",
@@ -80,14 +85,18 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "ToothSafe — A Discovery by Arlo",
-    description: "Some things are too important to lose. Coming soon.",
+    description:
+      "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop.",
     images: ["/images/og-image.png"],
   },
 
   // ── Icons ─────────────────────────────────────────────────────────────────
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" }, // modern browsers
+      { url: "/favicon.ico" },                         // fallback
+    ],
+    shortcut: "/favicon.svg",
     apple: "/apple-touch-icon.png",
   },
 

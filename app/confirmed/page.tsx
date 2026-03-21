@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "You're on the list — ToothSafe",
   description: "Thank you for signing up. We'll be in touch soon.",
+  robots: {
+    index: false,  // thank-you pages should never be indexed
+    follow: false,
+  },
 };
 
 export default function ConfirmedPage() {

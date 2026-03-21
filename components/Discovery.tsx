@@ -1,6 +1,6 @@
 export default function Discovery() {
   return (
-    <section className="section-padding px-6 bg-midnight relative overflow-hidden">
+    <section id="the-story" className="section-padding px-6 bg-midnight relative overflow-hidden">
       <div className="divider-gold absolute top-0 left-0 right-0" />
 
       {/* Subtle background texture */}

@@ -2,7 +2,7 @@ import EmailForm from "./EmailForm";
 
 export default function CTASection() {
   return (
-    <section className="section-padding px-6 bg-deep-blue relative overflow-hidden">
+    <section id="join-the-list" className="section-padding px-6 bg-deep-blue relative overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"

@@ -12,7 +12,7 @@ const VIDEO_ID = process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_ID;
 
 export default function VideoBlock() {
   return (
-    <section className="section-padding px-6 bg-midnight relative">
+    <section id="the-story-in-motion" className="section-padding px-6 bg-midnight relative">
       <div className="divider-gold absolute top-0 left-0 right-0" />
 
       <div className="max-w-4xl mx-auto">
