@@ -1,0 +1,22 @@
+<svg width="384" height="384" viewBox="0 0 384 384" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="192" cy="192" r="180" fill="#1A2744" stroke="#C9A036" stroke-width="1" stroke-opacity="0.4"/>
+  <!-- Outer glow ring -->
+  <circle cx="192" cy="192" r="160" stroke="#C9A036" stroke-width="0.5" stroke-opacity="0.2"/>
+  <!-- Box shape (product representation) -->
+  <rect x="130" y="140" width="124" height="104" rx="8" fill="#0D1B2A" stroke="#C9A036" stroke-width="1.5" stroke-opacity="0.6"/>
+  <!-- Box lid -->
+  <rect x="122" y="130" width="140" height="24" rx="6" fill="#1A2744" stroke="#C9A036" stroke-width="1.5" stroke-opacity="0.8"/>
+  <!-- Hinge detail -->
+  <rect x="188" y="126" width="8" height="12" rx="2" fill="#C9A036" fill-opacity="0.5"/>
+  <!-- Velvet interior hint -->
+  <rect x="140" y="170" width="104" height="64" rx="4" fill="#2A1A0A" fill-opacity="0.6"/>
+  <!-- Tooth shape inside -->
+  <ellipse cx="192" cy="202" rx="18" ry="22" fill="#FAF8F3" fill-opacity="0.15"/>
+  <ellipse cx="192" cy="202" rx="18" ry="22" stroke="#FAF8F3" stroke-width="1" stroke-opacity="0.3"/>
+  <!-- Decorative marks on lid -->
+  <text x="192" y="145" font-family="serif" font-size="10" fill="#C9A036" fill-opacity="0.6" text-anchor="middle">✦</text>
+  <!-- Label placeholder -->
+  <text x="192" y="296" font-family="serif" font-size="13" fill="#C9A036" fill-opacity="0.7" text-anchor="middle">ToothSafe</text>
+  <text x="192" y="316" font-family="sans-serif" font-size="9" fill="#FAF8F3" fill-opacity="0.3" text-anchor="middle">Replace with product image</text>
+</svg>
