@@ -1,12 +1,15 @@
+"use client";
+
 /**
  * VideoBlock — YouTube embed section
  *
  * To activate: set NEXT_PUBLIC_YOUTUBE_VIDEO_ID in .env.local
  * e.g. NEXT_PUBLIC_YOUTUBE_VIDEO_ID=dQw4w9WgXcQ
- * See .env.local.example for all config options.
  *
- * If the env var is not set, a styled placeholder is shown instead.
+ * Fires a GA4 `video_interact` event when the user clicks into the embed.
  */
+
+import { trackVideoInteract } from "@/lib/analytics";
 
 const VIDEO_ID = process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_ID;
 
@@ -29,8 +32,12 @@ export default function VideoBlock() {
         {/* Video container */}
         <div className="rounded-xl overflow-hidden border border-white/10 glow-gold">
           {VIDEO_ID ? (
-            /* Real YouTube embed */
-            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+            /* Real YouTube embed — click overlay fires GA4 event */
+            <div
+              className="relative w-full"
+              style={{ paddingBottom: "56.25%" }}
+              onClick={() => trackVideoInteract("ToothSafe — The Story")}
+            >
               <iframe
                 className="absolute inset-0 w-full h-full"
                 src={`https://www.youtube.com/embed/${VIDEO_ID}?rel=0&modestbranding=1`}

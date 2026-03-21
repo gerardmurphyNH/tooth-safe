@@ -12,6 +12,8 @@ interface EmailFormProps {
   redirect?: boolean;
   showFirstName?: boolean;
   className?: string;
+  /** Identifies which form fired the conversion in GA4. */
+  location?: "hero" | "cta_section";
 }
 
 export default function EmailForm({
@@ -20,6 +22,7 @@ export default function EmailForm({
   redirect = true,
   showFirstName = false,
   className = "",
+  location = "hero",
 }: EmailFormProps) {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -35,7 +38,7 @@ export default function EmailForm({
   function handleInteraction() {
     if (!hasInteracted) {
       setHasInteracted(true);
-      trackFormStart();
+      trackFormStart(location);
     }
   }
 
@@ -68,7 +71,7 @@ export default function EmailForm({
     const result = await submitLead(email, firstName);
 
     if (result.success) {
-      trackSignupSuccess();
+      trackSignupSuccess(location);
       if (redirect) {
         router.push("/confirmed");
       } else {

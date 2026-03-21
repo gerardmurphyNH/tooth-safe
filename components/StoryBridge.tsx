@@ -1,3 +1,5 @@
+import TrackedLink from "./TrackedLink";
+
 export default function StoryBridge() {
   return (
     <section id="the-workshop" className="section-padding px-6 bg-deep-blue">
@@ -49,8 +51,9 @@ export default function StoryBridge() {
               learn where teeth really go.
             </p>
 
-            <a
+            <TrackedLink
               href="https://wigglytoothworkshop.com/"
+              label="story_bridge_workshop"
               target="_blank"
               rel="noopener noreferrer"
               className="
@@ -64,7 +67,7 @@ export default function StoryBridge() {
             >
               Enter the Wiggly Tooth Workshop
               <span aria-hidden="true">→</span>
-            </a>
+            </TrackedLink>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TrackedLink from "./TrackedLink";
 
 export default function Nav() {
   return (
@@ -10,8 +11,9 @@ export default function Nav() {
         </Link>
 
         {/* Workshop link */}
-        <a
+        <TrackedLink
           href="https://wigglytoothworkshop.com/"
+          label="nav_workshop"
           target="_blank"
           rel="noopener noreferrer"
           className="
@@ -22,7 +24,7 @@ export default function Nav() {
         >
           Visit the Workshop
           <span aria-hidden="true" className="text-gold">→</span>
-        </a>
+        </TrackedLink>
       </div>
 
       {/* Subtle bottom border */}

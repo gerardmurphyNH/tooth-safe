@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import TrackedLink from "@/components/TrackedLink";
 
 export const metadata: Metadata = {
   title: "You're on the list — ToothSafe",
@@ -41,8 +42,9 @@ export default function ConfirmedPage() {
           While you wait, you might enjoy the wider world this came from.
         </p>
 
-        <a
+        <TrackedLink
           href="https://wigglytoothworkshop.com/"
+          label="confirmed_workshop"
           target="_blank"
           rel="noopener noreferrer"
           className="
@@ -56,7 +58,7 @@ export default function ConfirmedPage() {
         >
           Visit the Wiggly Tooth Workshop
           <span aria-hidden="true">→</span>
-        </a>
+        </TrackedLink>
 
         <Link
           href="/"

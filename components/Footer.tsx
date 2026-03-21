@@ -1,3 +1,5 @@
+import TrackedLink from "./TrackedLink";
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -8,14 +10,15 @@ export default function Footer() {
 
         <p>
           Part of the{" "}
-          <a
+          <TrackedLink
             href="https://wigglytoothworkshop.com/"
+            label="footer_workshop"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gold hover:text-gold-light transition-colors duration-200"
           >
             Wiggly Tooth Workshop
-          </a>{" "}
+          </TrackedLink>{" "}
           universe
         </p>
 

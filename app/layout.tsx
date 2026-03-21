@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import Script from "next/script";
 import StructuredData from "@/components/StructuredData";
+import ScrollDepthTracker from "@/components/ScrollDepthTracker";
+import SectionViewTracker from "@/components/SectionViewTracker";
 import { GA_MEASUREMENT_ID } from "@/lib/config";
 import "./globals.css";
 
@@ -117,6 +119,8 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className="min-h-screen bg-deep-blue text-cream">
+        <ScrollDepthTracker />
+        <SectionViewTracker />
         {children}
 
         {/* Google Analytics 4 */}

@@ -33,6 +33,7 @@ export default function CTASection() {
           placeholder="Your email address"
           buttonText="Reserve My Spot"
           className="w-full max-w-md"
+          location="cta_section"
         />
 
         <p className="text-cream-muted text-xs">

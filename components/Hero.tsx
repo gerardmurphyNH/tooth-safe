@@ -54,6 +54,7 @@ export default function Hero() {
                 placeholder="Your email address"
                 buttonText="Join the List"
                 className="max-w-md"
+                location="hero"
               />
             </div>
 
