@@ -124,6 +124,72 @@ export async function postLevelCompletion(user, levelId, levelTitle) {
   return postToSlack(blocks)
 }
 
+// ─── Signal (bug / feedback / beer) ──────────────────────────────────────────
+export async function postSignal({ user, signalType, location, message }) {
+  const configs = {
+    bug: {
+      header: '🐛 NexusYou Bug Report',
+      label: 'Report',
+    },
+    feedback: {
+      header: '💡 NexusYou Feedback',
+      label: 'Feedback',
+    },
+    beer: {
+      header: '🍺 Virtual Beer Alert!',
+      label: null,
+    },
+  }
+
+  const cfg = configs[signalType] || configs.feedback
+
+  let blocks
+
+  if (signalType === 'beer') {
+    blocks = [
+      {
+        type: 'header',
+        text: { type: 'plain_text', text: cfg.header, emoji: true },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*From:* ${user.name} (${user.role})\n\n${message || 'Just spreading good vibes!'}\n\n*Cheers!* 🍻`,
+        },
+      },
+      {
+        type: 'context',
+        elements: [{ type: 'mrkdwn', text: `Sent from NexusYou at ${new Date().toISOString()}` }],
+      },
+    ]
+  } else {
+    blocks = [
+      {
+        type: 'header',
+        text: { type: 'plain_text', text: cfg.header, emoji: true },
+      },
+      {
+        type: 'section',
+        fields: [
+          { type: 'mrkdwn', text: `*From:*\n${user.name} (${user.role})` },
+          { type: 'mrkdwn', text: `*Location:*\n${location || 'NexusYou'}` },
+        ],
+      },
+      {
+        type: 'section',
+        text: { type: 'mrkdwn', text: `*${cfg.label}:*\n${message}` },
+      },
+      {
+        type: 'context',
+        elements: [{ type: 'mrkdwn', text: `Sent from NexusYou at ${new Date().toISOString()}` }],
+      },
+    ]
+  }
+
+  return postToSlack(blocks)
+}
+
 // ─── Certification announcement ───────────────────────────────────────────────
 export async function postCertification(user) {
   const joke = getRandomJoke()

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../App.jsx'
 import { LEVELS, getLevelExerciseIds } from '../content/levels.js'
-import { getTrackForRole, getLevel5Exercises } from '../content/level5.js'
-import { isLevelUnlocked, isExerciseComplete, getLevelProgress, completeLevel } from '../utils/progress.js'
+import { getTrackForRole, getLevel5Exercises, level5EngManagerExercises } from '../content/level5.js'
+import { isLevelUnlocked, isExerciseComplete, getLevelProgress, completeLevel, syncLevelCompletion } from '../utils/progress.js'
 import { postLevelCompletion } from '../utils/slack.js'
 import { evaluateAssessment } from '../utils/api.js'
 import { MILESTONE_JOKES } from '../content/dadJokes.js'
@@ -49,11 +49,15 @@ export default function LevelView() {
 
   // For Level 5, use track-filtered exercises
   const activeExercises = level.hasTracks
-    ? level.exercises.filter(ex => ex.track === selectedTrack || ex.track === 'all')
+    ? selectedTrack === 'engineering'
+      ? level5EngManagerExercises
+      : level.exercises.filter(ex => ex.track === selectedTrack || ex.track === 'all')
     : level.exercises
 
   const exerciseIds = level.hasTracks
-    ? getLevelExerciseIds(level.id, selectedTrack)
+    ? selectedTrack === 'engineering'
+      ? level5EngManagerExercises.map(ex => ex.id)
+      : getLevelExerciseIds(level.id, selectedTrack)
     : getLevelExerciseIds(level.id)
   const levelPct = getLevelProgress(level.id, exerciseIds)
   const allExercisesComplete = exerciseIds.every(id => isExerciseComplete(id))
@@ -130,8 +134,9 @@ export default function LevelView() {
       })
       refreshProgress()
 
-      // Post to Slack
+      // Post to Slack and Sheets
       postLevelCompletion(user, level.id, level.title)
+      syncLevelCompletion({ user, levelId: level.id, levelTitle: level.title, mcScore, totalMC })
 
       // Show milestone after delay
       setTimeout(() => {
@@ -228,22 +233,32 @@ export default function LevelView() {
           {level.hasTracks && (
             <div className="mb-4">
               <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider mb-2 px-2">Your Track</p>
-              <div className="flex bg-gray-100 rounded-lg p-1">
+              <div className="flex flex-col gap-1 bg-gray-100 rounded-lg p-1">
+                <div className="flex">
+                  <button
+                    onClick={() => handleTrackSwitch('pm')}
+                    className={`flex-1 py-1.5 rounded-md text-xs font-header font-semibold transition-all ${
+                      selectedTrack === 'pm' ? 'bg-white text-beyond-dark shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    PM Track
+                  </button>
+                  <button
+                    onClick={() => handleTrackSwitch('design')}
+                    className={`flex-1 py-1.5 rounded-md text-xs font-header font-semibold transition-all ${
+                      selectedTrack === 'design' ? 'bg-white text-beyond-dark shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Design Track
+                  </button>
+                </div>
                 <button
-                  onClick={() => handleTrackSwitch('pm')}
-                  className={`flex-1 py-1.5 rounded-md text-xs font-header font-semibold transition-all ${
-                    selectedTrack === 'pm' ? 'bg-white text-beyond-dark shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                  onClick={() => handleTrackSwitch('engineering')}
+                  className={`w-full py-1.5 rounded-md text-xs font-header font-semibold transition-all ${
+                    selectedTrack === 'engineering' ? 'bg-white text-beyond-dark shadow-sm' : 'text-gray-500 hover:text-gray-700'
                   }`}
                 >
-                  PM Track
-                </button>
-                <button
-                  onClick={() => handleTrackSwitch('design')}
-                  className={`flex-1 py-1.5 rounded-md text-xs font-header font-semibold transition-all ${
-                    selectedTrack === 'design' ? 'bg-white text-beyond-dark shadow-sm' : 'text-gray-500 hover:text-gray-700'
-                  }`}
-                >
-                  Design Track
+                  Engineering Track
                 </button>
               </div>
             </div>

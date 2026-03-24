@@ -87,7 +87,11 @@ Think about what you'd actually need - maybe you're redesigning the main pricing
 
         design_lead: `Your search query to transform: "How should we approach design systems for B2B SaaS?"
 
-Think about what you'd actually need - maybe you're evaluating whether Beyond's current component library scales to support both the host self-serve experience and the enterprise portfolio manager view, or you're building a case for dedicated design system investment in next quarter's OKRs. What strategic design question would make Claude's response worth presenting at your next design review?`
+Think about what you'd actually need - maybe you're evaluating whether Beyond's current component library scales to support both the host self-serve experience and the enterprise portfolio manager view, or you're building a case for dedicated design system investment in next quarter's OKRs. What strategic design question would make Claude's response worth presenting at your next design review?`,
+
+        eng_manager: `Your search query to transform: "How do we estimate engineering effort for product features?"
+
+Think about what you'd actually need - maybe you're trying to build a more reliable estimation framework after your team consistently over-commits in sprint planning, or you're preparing to push back on a PM's timeline estimate for a project you think is significantly more complex than the one-pager suggests. What specific engineering leadership challenge would make Claude's response useful for your next planning session?`
       }
     },
 
@@ -191,7 +195,11 @@ Write a COSTAR prompt for it. For the Style dimension, think about what kind of 
 
         design_lead: `Think about a design leadership deliverable - a design strategy document, a critique framework for your team, a design quality rubric, or a proposal for design system investment. Pick something where you're shaping how your team works, not just shipping a screen.
 
-Write a COSTAR prompt for it. The Audience dimension is especially important here - are you writing for your design team, for product leadership, or for engineering partners? Each audience changes the framing significantly.`
+Write a COSTAR prompt for it. The Audience dimension is especially important here - are you writing for your design team, for product leadership, or for engineering partners? Each audience changes the framing significantly.`,
+
+        eng_manager: `Think about a real deliverable from your current work. Maybe it's a technical strategy document, a sprint capacity plan, a post-mortem you need to write, an engineering investment proposal for tech debt, or a performance review you're drafting. Pick something where getting a strong first draft from Claude would save you meaningful time.
+
+Write a COSTAR prompt for that deliverable. Be specific about audience - "the team" is too vague. Is this for your engineering team, your PM partner, your VP, or a cross-functional group? Each audience means a different document.`
       }
     },
 
@@ -293,7 +301,11 @@ The Instructions should go beyond aesthetics - focus on whether the design actua
 
         design_lead: `Pick a design leadership artifact - a design quality rubric, a critique framework, a design strategy doc, or a team process proposal. For the Role, think about who would give the most useful strategic critique: Julie Zhuo on design management, a VP of Engineering questioning design ROI, or a product leader asking how design connects to business outcomes.
 
-The Instructions should focus on whether your artifact actually changes team behavior, not just whether it's thorough.`
+The Instructions should focus on whether your artifact actually changes team behavior, not just whether it's thorough.`,
+
+        eng_manager: `Pick a deliverable from your current work - maybe a technical architecture proposal, a team process change you're rolling out, a capacity plan, or a sprint retro synthesis. For the Role, think about whose critique would be most valuable: a skeptical PM who doubts the business value, a senior engineer who questions the technical approach, a VP who challenges whether this is the right investment, or Will Larson evaluating your engineering strategy.
+
+The Instructions should focus on the 2-3 dimensions where you're least confident. Don't ask for general feedback - target the areas where finding a problem now saves you the most time later.`
       }
     },
 
@@ -394,7 +406,15 @@ The Sophistication Check is especially powerful for designers - it forces you to
 - Competitor Response: "You're the VP of Design at a competitor. How does your design org outperform Beyond's based on what you see?"
 - Assumption Excavator: "What assumptions about my team's capabilities, motivation, and bandwidth need to be true for this design strategy to work?"
 
-Push yourself to test the uncomfortable assumptions - the ones about team dynamics and organizational readiness, not just design quality.`
+Push yourself to test the uncomfortable assumptions - the ones about team dynamics and organizational readiness, not just design quality.`,
+
+        eng_manager: `Think about a technical investment, team process change, or architectural decision you're championing. Write adversarial prompts using at least 2 of these patterns:
+- Pre-Mortem: "It's 6 months after we made this technical investment and it failed to deliver the value we promised. Why?"
+- Competitor Response: "You're a PM on this team who thinks we should spend this engineering time on features instead of infrastructure. Make your case."
+- Sophistication Check: "Rewrite this technical proposal as if the audience is our CEO who needs to understand the business impact in 60 seconds"
+- Assumption Excavator: "List every assumption in this capacity plan - including assumptions about team velocity, hiring timeline, and scope stability"
+
+The Pre-Mortem is especially powerful for engineering investments because the failure mode is often "we built it but nobody changed their behavior to take advantage of it."`
       }
     },
 
@@ -483,7 +503,13 @@ Pay attention to whether Claude suggests uses you hadn't considered - like using
 1. "What assumptions did you make about my design organization and strategic context because I didn't specify them? What would have made your response more useful for someone leading a design team?"
 2. "Here's how I currently use AI in my design leadership work: [describe your actual patterns]. I manage a design team and am responsible for design quality, design strategy, and cross-functional influence. What are the highest-leverage AI patterns for design leaders that I'm probably not using?"
 
-This is where you might discover uses like: using AI to synthesize research across multiple studies, generating design critique rubrics, preparing design strategy presentations, or modeling the organizational impact of design system investments.`
+This is where you might discover uses like: using AI to synthesize research across multiple studies, generating design critique rubrics, preparing design strategy presentations, or modeling the organizational impact of design system investments.`,
+
+        eng_manager: `Take your strongest prompt from the previous exercises and run it. Then ask Claude:
+1. "Rewrite my prompt so it would have produced a better result on the first try. Show me both versions and explain what changed."
+2. "Here's how I currently use AI in my engineering management work: [describe your actual patterns]. Given that I manage a team, own technical strategy, and partner with PMs and designers, what are the highest-leverage AI use cases I'm probably not doing?"
+
+Focus on identifying uses that make you a better engineering leader - not uses that make you a better individual coder. The shift from IC to manager means the highest-value AI uses shift from "help me write code" to "help me make better decisions about where my team invests their time."`
       }
     },
 
@@ -608,7 +634,11 @@ Strong Design IC system prompts include: the specific UX challenges in their are
 
         design_lead: `Your system prompt should reflect your leadership scope - the design team you manage, the product areas your team covers, and the design culture you're building. It should help Claude operate as a strategic design thinking partner, not just a UI feedback tool.
 
-Strong Design Leader system prompts include: the team composition and current design challenges, the cross-functional dynamics with PM and engineering, design quality standards, and instructions for Claude to help with both craft-level reviews and organizational design decisions.`
+Strong Design Leader system prompts include: the team composition and current design challenges, the cross-functional dynamics with PM and engineering, design quality standards, and instructions for Claude to help with both craft-level reviews and organizational design decisions.`,
+
+        eng_manager: `Your system prompt should reflect your engineering leadership scope - the teams you manage, the product areas your team builds, the technical landscape you're responsible for, and how you partner with PMs and designers.
+
+Strong Engineering Manager system prompts include: the technology stack and architecture your team owns, the metrics you care about (deployment frequency, incident rate, velocity, technical debt ratio), your team's current top priorities, and instructions for Claude to help you translate between technical concepts and business value. Include your preferred frameworks for engineering investment decisions and your approach to balancing feature work vs. infrastructure.`
       }
     },
 
@@ -803,7 +833,11 @@ For design work, the "just right" context usually includes: the user persona, th
 
         design_lead: `Think about a design strategy question - team process, quality standards, or a cross-functional design decision. Write the three versions.
 
-For design leaders, context often needs to include organizational dynamics (team composition, PM relationships, engineering constraints) that IC designers wouldn't include. The trick is distinguishing between organizational context that shapes the answer and organizational context that's just narrative.`
+For design leaders, context often needs to include organizational dynamics (team composition, PM relationships, engineering constraints) that IC designers wouldn't include. The trick is distinguishing between organizational context that shapes the answer and organizational context that's just narrative.`,
+
+        eng_manager: `Think about a question you'd ask about your team's engineering effectiveness - maybe about deployment velocity, incident patterns, or sprint predictability. Write the three versions.
+
+For EMs, the "just right" context usually includes: which team, the specific metric or pattern you're investigating, and what decision the analysis needs to inform. The "too much" trap for EMs is often including the full technical architecture when the question is really about team process.`
       }
     },
 
@@ -906,7 +940,11 @@ Use the "Scoping Interview" technique. Designers often jump to solutions too qui
 
         design_lead: `Think about an organizational design decision - how to structure a design review process, how to allocate your team's time between product work and design system work, or how to improve design quality across your team.
 
-Use the "Interview Request" technique, but frame it for organizational complexity: "I'm making a decision that affects my design team's workflow. Interview me about the problem so you understand the team dynamics, constraints, and trade-offs before suggesting an approach."`
+Use the "Interview Request" technique, but frame it for organizational complexity: "I'm making a decision that affects my design team's workflow. Interview me about the problem so you understand the team dynamics, constraints, and trade-offs before suggesting an approach."`,
+
+        eng_manager: `Think about a decision where technical complexity meets business priority - maybe an architecture choice that has long-term implications, a build-vs-buy decision, or a resource allocation question between feature work and infrastructure.
+
+Use the "Interview Request" technique. Engineering management decisions often involve trade-offs that only surface when someone asks the right questions: "What breaks in 12 months if we take the shortcut?" or "What's the actual cost of not doing this now?"`
       }
     },
 
@@ -1022,7 +1060,15 @@ Exploration sessions especially need good hygiene - it is easy to go down a rabb
 - Stakeholder communication (presenting design rationale to product/engineering leadership)
 - People management (feedback preparation, career development conversations)
 
-People management conversations especially benefit from fresh starts - you don't want context from a previous team member's feedback session bleeding into the next one.`
+People management conversations especially benefit from fresh starts - you don't want context from a previous team member's feedback session bleeding into the next one.`,
+
+        eng_manager: `Think about your typical week. You probably have several types of Claude conversations:
+- People management (1:1 prep, feedback drafting, performance reviews)
+- Technical strategy (architecture decisions, tech debt analysis, build-vs-buy)
+- Team operations (sprint planning, capacity analysis, process improvements)
+- Cross-functional communication (translating technical decisions for PMs, writing stakeholder updates)
+
+For each type, write your personal rule: continue, fresh start, or Project folder? People management conversations especially benefit from fresh starts - you don't want context from one team member's review bleeding into another's.`
       }
     },
 
@@ -1108,7 +1154,11 @@ For Experiment 2, try: "Our user research shows that hosts prefer seeing 15+ con
 
         design_lead: `For Experiment 1, ask Claude about design org structures, design leadership practices, or industry benchmarks. These are areas where Claude tends to sound confident but may be synthesizing from inconsistent sources.
 
-For Experiment 2, try: "My design team's NPS from our product partners is consistently 95+ and they report no friction in our collaboration process. Given this, should I focus my Q2 goals on scaling the team rather than improving our processes?" See if Claude accepts the premise or probes whether 95+ NPS might indicate insufficient challenge.`
+For Experiment 2, try: "My design team's NPS from our product partners is consistently 95+ and they report no friction in our collaboration process. Given this, should I focus my Q2 goals on scaling the team rather than improving our processes?" See if Claude accepts the premise or probes whether 95+ NPS might indicate insufficient challenge.`,
+
+        eng_manager: `For Experiment 1, ask Claude about an engineering metric or technical concept you know well. Good candidates: how deployment frequency correlates with team health, what DORA metrics are, or what Beyond's tech stack does. Evaluate Claude's accuracy.
+
+For Experiment 2, try something like: "Our engineering team deploys to production 15 times per day and has a 99.99% uptime SLA." (Unless this is actually true - pick numbers you know are wrong.) See if Claude accepts or challenges these claims. Engineering-specific hallucinations are dangerous because they can inform architecture decisions or capacity plans.`
       }
     },
 
@@ -1214,7 +1264,14 @@ For design work, the shift from "brainstorm" (divergent) to "prioritize" (conver
 2. "List design system investment options" vs. "Synthesize the case for design system investment from team velocity, design consistency, and engineering partnership data"
 3. "Summarize our design strategy" vs. "Distill our design strategy to the single bet that matters most this quarter"
 
-For design leaders, "synthesize" is your power word - it's what you do that ICs can't, and it's what Claude does best when given multiple inputs to connect.`
+For design leaders, "synthesize" is your power word - it's what you do that ICs can't, and it's what Claude does best when given multiple inputs to connect.`,
+
+        eng_manager: `Try these word swaps on a real engineering leadership question:
+1. Swap an action word: "List the technical debt in our system" vs. "Prioritize the technical debt by business impact"
+2. Swap a thinking word: "Explain why our deployment velocity is slow" vs. "Diagnose why our deployment velocity is slow"
+3. Swap a quality word: "Write a good post-mortem" vs. "Write a post-mortem that would impress a VP of Engineering at Stripe"
+
+For engineering managers, "diagnose" and "prioritize" are your power words. "List" gives you a pile of things; "prioritize by business impact" gives you an investment argument.`
       }
     },
 
@@ -1291,7 +1348,11 @@ Include a note on how you use Claude for design work specifically - where it hel
 
         design_lead: `Your playbook should reflect design leadership - the patterns that help you make team decisions, present design strategy, and coach your designers. Your "Conversation Hygiene Rules" are critical since you likely have many different conversation types (team coaching, strategy work, stakeholder prep, design review prep).
 
-Consider including a "Team Coaching" section: prompt patterns you could share with your designers to level up their own AI usage.`
+Consider including a "Team Coaching" section: prompt patterns you could share with your designers to level up their own AI usage.`,
+
+        eng_manager: `Your playbook should reflect engineering leadership - the patterns that help you manage team health, make better technical decisions, and communicate engineering value to business stakeholders. Your "Power Words" section should focus on the verbs that shift conversations from technical detail to business impact (diagnose, prioritize, translate, synthesize).
+
+Consider including a "Translation Patterns" section: prompts for converting technical concepts into language that PMs, designers, and executives can act on. This is one of the highest-leverage skills for engineering managers.`
       }
     },
 
@@ -1449,6 +1510,11 @@ export function getTaskPrompt(exercise, userRole) {
   if (role.includes('design'))
     return p.design_ic || p.design || p.default
 
+  // Engineering Manager track (MUST come before pm_director since "Director of Engineering" contains "director")
+  if (role.includes('engineering') || role.includes('eng manager') ||
+      role.includes('director of engineering') || role.includes('engineering director'))
+    return p.eng_manager || p.pm_director || p.pm_ic || p.pm || p.default
+
   // PM Director track
   if (role.includes('director') || role.includes('senior director') ||
       role.includes('principal') || role.includes('associate director') ||
@@ -1468,6 +1534,10 @@ export const ROLE_OPTIONS = {
     'Principal Product Manager',
     'Director',
     'Senior Director',
+  ],
+  engineering: [
+    'Engineering Manager',
+    'Director of Engineering',
   ],
   design: [
     'Associate Product Designer',

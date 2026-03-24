@@ -158,7 +158,13 @@ The PostHog tools are especially powerful for design work - you can check featur
 
         design_lead: `As a design leader, you need tools that give you a view across the product - not just one feature area. PostHog for product-wide usage patterns, Kustomer for cross-product support themes, and Gong for understanding how customers talk about the product holistically.
 
-Also consider the Publishing tools (core_publish_artifacts) - as a design leader, being able to publish shareable dashboards and research summaries raises the visibility of your team's work.`
+Also consider the Publishing tools (core_publish_artifacts) - as a design leader, being able to publish shareable dashboards and research summaries raises the visibility of your team's work.`,
+
+        eng_manager: `As an engineering manager, your highest-value Nexus tools span customer data (understanding what your team builds for), support patterns (identifying where technical quality creates user friction), and product analytics (measuring the impact of what your team ships).
+
+Focus on tools that help you answer: "Is what my team built actually working?" and "Where is technical quality most affecting the customer experience?" The Kustomer support tools are especially valuable - support ticket patterns often reveal technical debt that isn't visible in Jira.
+
+Also pay attention to the PostHog tools - understanding how to pull experiment results and feature adoption data makes you a better partner to your PM, because you can independently verify whether engineering investment is producing outcomes.`
       }
     },
 
@@ -275,7 +281,14 @@ For designers, the support data and experiment results are gold mines. You're he
 2. Check PostHog surveys or feedback for design-relevant insights
 3. Look at experiment results for recent design changes - did they actually move the metrics?
 
-As a design leader, these queries help you make data-informed decisions about where to invest your team's effort. If one product area generates 3x the support tickets, that's a design quality signal.`
+As a design leader, these queries help you make data-informed decisions about where to invest your team's effort. If one product area generates 3x the support tickets, that's a design quality signal.`,
+
+        eng_manager: `Run 3 queries that would actually help your engineering leadership:
+1. Pull support tickets for your team's product area - are there patterns that suggest technical issues (timeouts, errors, data inconsistencies) vs. UX issues?
+2. Check PostHog for feature adoption on something your team recently shipped - are users actually using it?
+3. Look at deployment or incident data if available, or pull Jira issues for your team to see the backlog patterns
+
+The follow-up question matters most for EMs: "The support tickets show recurring timeout errors on the pricing calendar page. Can you cross-reference with PostHog to see if page load time correlates with user drop-off?"`
       }
     },
 
@@ -367,7 +380,14 @@ For designers, the "So What?" chain should focus on behavior: "Users are clickin
 
         design_lead: `Run a cross-product investigation: "Pull support ticket volume by product area for the last quarter. Then check PostHog for feature adoption rates in the areas with the highest support load. Are the highest-friction areas also the lowest-adoption areas?"
 
-This kind of analysis helps you make data-informed decisions about where to invest your design team's effort. If you can show that a design-led intervention reduced support volume by 30% in one area, that's the case for design investment in another.`
+This kind of analysis helps you make data-informed decisions about where to invest your design team's effort. If you can show that a design-led intervention reduced support volume by 30% in one area, that's the case for design investment in another.`,
+
+        eng_manager: `The most powerful EM investigation combines support data with product analytics:
+- "Pull support tickets about errors or slowness in [your product area], then check PostHog for the corresponding user flows. Is there a correlation between technical issues and user drop-off?"
+
+This is how you translate technical debt into business language: "Our pricing calendar has a 3.2-second load time, which correlates with a 15% higher bounce rate compared to pages under 1 second. Fixing this is estimated at 2 sprints and could recover X sessions per month."
+
+That's an engineering investment case built from data your PM can actually use.`
       }
     },
 
@@ -469,7 +489,15 @@ Design artifacts should be visual and scannable. Ask Claude to use charts, color
 - A research dashboard aggregating user feedback themes across your team's product areas
 - A design strategy artifact showing where design investment has the highest leverage based on data
 
-This artifact should be something you could share at an all-hands or include in a design strategy presentation.`
+This artifact should be something you could share at an all-hands or include in a design strategy presentation.`,
+
+        eng_manager: `Build an artifact that serves your engineering leadership role. Strong options:
+- A team health dashboard combining deployment metrics, support ticket trends, and sprint velocity
+- A technical debt impact report showing which technical issues generate the most customer-facing friction
+- A sprint effectiveness analysis: what shipped, what slipped, and the patterns behind each
+- An engineering investment case using support + analytics data to justify infrastructure work
+
+Ask Claude to format it so it tells a story, not just displays numbers. The narrative is what makes an engineering artifact useful in a cross-functional meeting.`
       }
     },
 
@@ -524,7 +552,11 @@ For your design team: share the technique as much as the output. "I pulled suppo
 
         design_lead: `Share your artifact with your cross-functional partners (PM leads, engineering leads) and your design team. For cross-functional partners, frame it as design's contribution to data-informed decision-making. For your design team, frame it as a workflow they can adopt.
 
-Consider creating a brief Slack post or team demo showing the end-to-end process: "I asked Claude to pull support data, analyze patterns, and generate this report. Total time: 20 minutes. Here's how you can do the same for your product area."`
+Consider creating a brief Slack post or team demo showing the end-to-end process: "I asked Claude to pull support data, analyze patterns, and generate this report. Total time: 20 minutes. Here's how you can do the same for your product area."`,
+
+        eng_manager: `Share your artifact with your PM partner and your engineering team. For your PM partner: "Built this technical debt impact analysis using support and analytics data. Does this match the customer pain you're hearing?" This builds credibility and helps your PM advocate for engineering investment.
+
+For your engineering team: share the technique as much as the output. "I used Nexus to pull support patterns and cross-reference with PostHog data. Here's how we can make data-driven arguments for infrastructure investment."`
       }
     },
 
@@ -601,7 +633,15 @@ Choose the one that would be most useful for your next design review or sprint p
 - **Design Roadmap Prioritization:** Combine user pain point data, business impact metrics, and team capacity signals into a data-informed design roadmap for next quarter
 - **Team Impact Showcase:** A shareable artifact that your design team can be proud of - showing the measurable impact of design work across the product
 
-This should be something you could present to Beyond's leadership to demonstrate design's strategic contribution.`
+This should be something you could present to Beyond's leadership to demonstrate design's strategic contribution.`,
+
+        eng_manager: `Build something that bridges engineering and business value. Ideas:
+- **Technical Debt Business Case:** Pull support ticket patterns, cross-reference with PostHog performance data, and build an artifact showing the customer impact of technical issues - with a clear "here's what fixing this would improve"
+- **Team Health Dashboard:** Combine sprint velocity, deployment data, support trends, and team satisfaction signals into a team health view
+- **Post-Launch Impact Report:** For a recent engineering initiative, pull the before/after metrics from PostHog, check support ticket trends, and show the measurable impact of your team's work
+- **Sprint Planning Data Pack:** Pull the current backlog, support ticket trends, recent experiment results, and customer feedback to inform your next sprint planning session
+
+Choose the one that would be most useful in your next meeting with your PM partner or VP.`
       }
     },
 

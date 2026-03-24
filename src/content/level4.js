@@ -127,7 +127,15 @@ The "Diverge > Evaluate > Converge" pattern is especially powerful for design wo
 - **Team process improvement:** Document current design process > Identify bottlenecks and pain points > Brainstorm process changes > Evaluate each against team capacity and PM partnership needs
 - **Design quality audit:** Pull UX metrics across product areas > Rank areas by friction/quality > Draft improvement plan > Pressure-test against resource constraints
 
-Add a "communication calibration" step: "Rewrite this for my cross-functional partners who need to approve design investment."`
+Add a "communication calibration" step: "Rewrite this for my cross-functional partners who need to approve design investment."`,
+
+        eng_manager: `Design a chain for a real engineering management workflow:
+- **Post-mortem creation:** Pull incident data > Analyze timeline and contributing factors > Generate root cause hypotheses > Draft post-mortem document with action items
+- **Engineering investment proposal:** Pull support/performance data > Identify highest-impact technical debt > Estimate effort and business impact > Draft investment proposal for PM/leadership
+- **Sprint retrospective synthesis:** Pull sprint data from Jira > Analyze patterns in what shipped vs. slipped > Cross-reference with deployment data > Produce a structured retro document with themes and action items
+- **Capacity planning:** Pull team velocity history > Analyze by project type (feature vs. infrastructure vs. bug) > Model next quarter's capacity > Produce a capacity allocation proposal
+
+Engineering management chains often need a "translation step" at the end: "Rewrite the technical findings for a non-technical audience."`
       }
     },
 
@@ -254,7 +262,16 @@ After the evaluation, ask: "Which approach would a user who is skeptical of algo
 
 Your criteria should include organizational dimensions: team growth impact, cross-functional alignment, design quality consistency, and scalability. Design leaders often need to optimize for the team's capability development, not just the output quality.
 
-After the evaluation, ask: "Which approach builds the most design capability on my team over 12 months, even if it's not the fastest to show results?"`
+After the evaluation, ask: "Which approach builds the most design capability on my team over 12 months, even if it's not the fastest to show results?"`,
+
+        eng_manager: `Pick a real engineering decision with multiple options. Good candidates:
+- 3 approaches to addressing a technical debt problem (refactor, replace, or work around)
+- 3 ways to allocate next quarter's engineering capacity across feature work, infrastructure, and hiring/ramp-up
+- 3 candidates for your team's next infrastructure investment
+
+Your criteria should include both technical AND business dimensions: implementation risk, maintenance burden, team growth impact, time-to-value for customers, and opportunity cost. The best engineering decisions optimize for business outcomes, not just technical elegance.
+
+After the evaluation, ask: "Now evaluate these options from my PM partner's perspective. Would they rank them the same way? Where would they disagree, and why?"`
       }
     },
 
@@ -363,7 +380,13 @@ Designers should generally default to Sonnet for critique and analysis, and use 
 - **Sonnet vs. Opus:** Ask both to "evaluate whether our design team should invest in a component library or focus on shipping product work for the next quarter. Consider team development, cross-functional impact, and long-term design quality." Strategic organizational decisions genuinely benefit from Opus-level reasoning.
 - **Sonnet vs. Haiku:** Ask both to "organize these 15 design feedback items into themes." Haiku handles structured categorization well.
 
-The pattern for design leaders: Opus for strategy and organizational decisions, Sonnet for design critique and analysis, Haiku for information processing and formatting.`
+The pattern for design leaders: Opus for strategy and organizational decisions, Sonnet for design critique and analysis, Haiku for information processing and formatting.`,
+
+        eng_manager: `Compare on engineering management tasks:
+- **Sonnet vs. Opus:** Ask both to "evaluate whether my team should invest 3 sprints in refactoring our pricing service, considering the trade-off against the PM's feature roadmap. Include the second-order effects on team velocity, incident rate, and developer experience." Opus handles multi-factor trade-off reasoning better.
+- **Sonnet vs. Haiku:** Ask both to "reformat these sprint retro notes into a structured action items list grouped by theme." Haiku is fast and effective for structured reorganization.
+
+For EMs: use Opus for engineering investment arguments (where the reasoning quality directly affects whether you get the investment), Sonnet for daily analysis and communication, Haiku for data processing and reformatting.`
       }
     },
 
@@ -464,7 +487,15 @@ Common Design IC system prompt gaps: missing your design system constraints, mis
 - Design strategy (does Claude reason about team capability and organizational dynamics?)
 - Cross-functional communication (does Claude translate design rationale into PM/engineering language?)
 
-Common Design Leader system prompt gaps: missing team composition and skill levels, missing the cross-functional dynamics you navigate, and missing your design quality standards. Add: "When I'm working on team-level decisions, consider the design team's development needs alongside output quality."`
+Common Design Leader system prompt gaps: missing team composition and skill levels, missing the cross-functional dynamics you navigate, and missing your design quality standards. Add: "When I'm working on team-level decisions, consider the design team's development needs alongside output quality."`,
+
+        eng_manager: `Focus your stress test on the tasks that define your EM role:
+- Technical investment proposals (does Claude translate technical value into business language?)
+- 1:1 and feedback preparation (does Claude know enough about your team dynamics to be useful?)
+- Sprint planning analysis (does Claude understand your team's velocity patterns and capacity?)
+- Cross-functional communication (does Claude calibrate technical depth for PM vs. VP audiences?)
+
+Common EM system prompt gaps: missing your team's tech stack and architecture context, missing your relationship with your PM partner (who they are, what they prioritize), and missing instructions about defaulting to business-impact framing rather than technical detail.`
       }
     },
 
@@ -648,7 +679,27 @@ Good candidates for your custom prompts: prompts for specific types of design wo
 
         design_lead: `Start with the Design Lead starter library but customize for your team's specific challenges and your organizational context. Then add 3+ prompts for leadership tasks unique to your role.
 
-Design leaders should include prompts for: 1:1 prep with direct reports, design quality calibration across the team, and communicating design impact to non-design stakeholders. These are high-leverage activities that AI can meaningfully accelerate.`
+Design leaders should include prompts for: 1:1 prep with direct reports, design quality calibration across the team, and communicating design impact to non-design stakeholders. These are high-leverage activities that AI can meaningfully accelerate.`,
+
+        eng_manager: `Build your prompt library around the core EM workflows. Your starter set:
+
+1. **Tech Debt Business Case** - "Translate this technical debt item into a business impact argument: [ITEM]. Include: customer impact, velocity impact, risk if unaddressed, estimated effort, and recommended priority vs. feature work."
+
+2. **1:1 Prep** - "I have a 1:1 with [ENGINEER] tomorrow. Their recent work includes [CONTEXT]. Generate 3 discussion topics: one about their growth, one about a current challenge, and one about team dynamics. Frame each as an open question, not a directive."
+
+3. **Sprint Retro Synthesis** - "Here are the themes from our last 3 sprint retros: [THEMES]. Identify: which themes are recurring (we keep talking about them but don't fix them), which are improving, and which are new. For the recurring ones, suggest a concrete intervention we haven't tried."
+
+4. **Post-Mortem Draft** - "Draft a post-mortem for this incident: [INCIDENT DETAILS]. Include: timeline, contributing factors, root causes (use 5 Whys), customer impact, immediate remediation, and long-term prevention actions. Tone: blameless, learning-focused."
+
+5. **Estimation Challenge** - "My team estimated this project at [ESTIMATE]. Challenge the estimate: what are we likely underestimating? What hidden complexity, integration points, or dependency risks aren't reflected? What would a more realistic range look like?"
+
+6. **Stakeholder Translation** - "I need to explain [TECHNICAL DECISION] to [AUDIENCE: PM / VP / CEO]. Rewrite the explanation focusing on business impact, customer value, and timeline rather than technical detail. They care about [THEIR PRIORITIES]."
+
+7. **Capacity Planning** - "We have [N] engineers for Q[X]. Current commitments: [LIST]. Historically we lose ~20% of capacity to support, incidents, and meetings. Model the realistic capacity and flag where we're over-committed."
+
+8. **Hiring Case** - "Build the case for adding [ROLE] to my team. Include: what work isn't getting done without this role, the business impact of that gap, and what changes if we hire. Frame this for a VP-level audience approving headcount."
+
+Customize these with your team's specific context and add 3+ more for tasks unique to your role.`
       }
     },
 
@@ -725,7 +776,14 @@ Use your Design Critique prompt from your library on the final deliverable.`,
 - **Option B:** A design impact report for stakeholders (chain: pull experiment results + support data + adoption metrics > synthesize design's measurable impact > LLM-as-Judge evaluation of narrative strength > produce polished report)
 - **Option C:** A design quality improvement plan (chain: audit current design patterns against heuristics > identify systemic quality issues > generate process/system improvements > evaluate with LLM-as-Judge > produce plan with timeline)
 
-This should be something you'd present at a leadership review or include in a quarterly planning document.`
+This should be something you'd present at a leadership review or include in a quarterly planning document.`,
+
+        eng_manager: `Produce a real engineering leadership deliverable using the full workflow:
+- **Option A:** An engineering investment proposal (chain: pull support/performance data > analyze technical debt impact > generate investment options > evaluate with LLM-as-Judge on business impact criteria > produce proposal)
+- **Option B:** A team capacity plan for next quarter (chain: pull sprint velocity history > analyze capacity by work type > model next quarter's allocation > evaluate allocation options against PM roadmap > produce capacity plan using Opus for strategic framing)
+- **Option C:** A cross-functional alignment document (chain: pull team metrics + PM roadmap + support trends > identify misalignment between engineering investment and business priorities > draft alignment proposal > pressure-test from PM perspective > produce final document)
+
+The deliverable should be something you'd present at your next planning meeting or share with your VP.`
       }
     },
 

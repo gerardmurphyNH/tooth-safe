@@ -7,6 +7,7 @@ import LevelView from './components/LevelView.jsx'
 import PromptPlayground from './components/PromptPlayground.jsx'
 import Certification from './components/Certification.jsx'
 import AICoach from './components/AICoach.jsx'
+import SignalPanel from './components/SignalPanel.jsx'
 import { LEVELS } from './content/levels.js'
 
 // ─── App Context ─────────────────────────────────────────────────────────────
@@ -209,6 +210,9 @@ function AppLayout({ user, progress }) {
           <AICoach user={user} onClose={() => setCoachOpen(false)} />
         </div>
       )}
+
+      {/* ── Signal Panel (always visible) ────────────────────────────────── */}
+      <SignalPanel user={user} />
     </div>
   )
 }

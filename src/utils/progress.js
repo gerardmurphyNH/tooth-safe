@@ -154,6 +154,7 @@ export function getEstimatedTimeSpent() {
 // Fire-and-forget POST to Google Sheets webhook. Never blocks UI.
 
 const WEBHOOK_URL = import.meta.env.VITE_GOOGLE_WEBHOOK_URL
+  || 'https://script.google.com/macros/s/AKfycbx36WlzJ5sMZz3zgkgEs7iJ71C26qb6lE7m2IMeZp4JQ-LvH0rtarDxfEoSEXuB3tmqtA/exec'
 
 async function postToWebhook(payload) {
   if (!WEBHOOK_URL) return // Silently skip if not configured
@@ -194,6 +195,51 @@ export function syncExerciseCompletion({ user, level, exercise, exerciseTitle, s
     status: 'completed',
     self_rating: selfRating || null,
     buddy_name: user.buddy || null,
+    timestamp: new Date().toISOString(),
+  })
+}
+
+export function syncExerciseFeedback({ user, levelId, exercise, exerciseTitle, confidence, useful, comment }) {
+  return postToWebhook({
+    action: 'exercise_feedback',
+    user_name: user.name,
+    user_email: user.email,
+    user_role: user.role,
+    level: levelId,
+    exercise,
+    exercise_title: exerciseTitle,
+    confidence_rating: confidence,
+    useful,
+    comment: comment || null,
+    timestamp: new Date().toISOString(),
+  })
+}
+
+export function syncSignal({ user, signalType, levelId, exercise, exerciseTitle, message, location }) {
+  return postToWebhook({
+    action: 'signal',
+    user_name: user.name,
+    user_email: user.email,
+    user_role: user.role,
+    signal_type: signalType,
+    level: levelId || null,
+    exercise: exercise || null,
+    exercise_title: exerciseTitle || null,
+    message,
+    location: location || null,
+    timestamp: new Date().toISOString(),
+  })
+}
+
+export function syncLevelCompletion({ user, levelId, levelTitle, mcScore, totalMC }) {
+  return postToWebhook({
+    action: 'level_completed',
+    user_name: user.name,
+    user_email: user.email,
+    user_role: user.role,
+    level: levelId,
+    level_title: levelTitle,
+    mc_score: mcScore != null ? `${mcScore}/${totalMC}` : null,
     timestamp: new Date().toISOString(),
   })
 }

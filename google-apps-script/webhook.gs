@@ -28,6 +28,15 @@ function doPost(e) {
       case 'progress_update':
         handleProgressUpdate(data)
         break
+      case 'level_completed':
+        handleLevelCompletion(data)
+        break
+      case 'exercise_feedback':
+        handleExerciseFeedback(data)
+        break
+      case 'signal':
+        handleSignal(data)
+        break
       case 'certification':
         handleCertification(data)
         break
@@ -93,6 +102,63 @@ function handleProgressUpdate(data) {
   ])
 }
 
+// ─── Level Completion Handler ─────────────────────────────────────────────────
+function handleLevelCompletion(data) {
+  var sheet = getOrCreateSheet('Level Completions', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Level', 'Level Title', 'MC Score', 'Completed At'
+  ])
+
+  sheet.appendRow([
+    new Date(),
+    data.user_name || '',
+    data.user_email || '',
+    data.user_role || '',
+    data.level || '',
+    data.level_title || '',
+    data.mc_score || '',
+    data.timestamp || new Date().toISOString()
+  ])
+}
+
+// ─── Exercise Feedback Handler ────────────────────────────────────────────────
+function handleExerciseFeedback(data) {
+  var sheet = getOrCreateSheet('Feedback', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Level', 'Exercise',
+    'Exercise Title', 'Confidence (1-5)', 'Useful (Y/N)', 'Comment'
+  ])
+
+  sheet.appendRow([
+    data.timestamp || new Date().toISOString(),
+    data.user_name || '',
+    data.user_email || '',
+    data.user_role || '',
+    data.level || '',
+    data.exercise || '',
+    data.exercise_title || '',
+    data.confidence_rating || '',
+    data.useful === true ? 'Y' : data.useful === false ? 'N' : '',
+    data.comment || ''
+  ])
+}
+
+// ─── Signal Handler ───────────────────────────────────────────────────────────
+function handleSignal(data) {
+  var sheet = getOrCreateSheet('Signals', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Type', 'Location', 'Level', 'Message'
+  ])
+
+  sheet.appendRow([
+    data.timestamp || new Date().toISOString(),
+    data.user_name || '',
+    data.user_email || '',
+    data.user_role || '',
+    data.signal_type || '',
+    data.location || '',
+    data.level || '',
+    data.message || ''
+  ])
+}
+
 // ─── Certification Handler ────────────────────────────────────────────────────
 function handleCertification(data) {
   // Record as a special progress entry
@@ -142,6 +208,7 @@ function updateSummary() {
   var registrations = ss.getSheetByName('Registrations')
   var progress = ss.getSheetByName('Progress')
   var certifications = ss.getSheetByName('Certifications')
+  var levelCompletions = ss.getSheetByName('Level Completions')
 
   var totalRegistered = registrations ? Math.max(0, registrations.getLastRow() - 1) : 0
   var totalCertified = certifications ? Math.max(0, certifications.getLastRow() - 1) : 0
@@ -189,6 +256,47 @@ function updateSummary() {
     }
   }
 
+  // Per-user last level completed
+  stats.push(['', ''])
+  stats.push(['LAST MODULE COMPLETED PER USER', ''])
+
+  if (levelCompletions && levelCompletions.getLastRow() > 1) {
+    var lcData = levelCompletions.getRange(2, 1, levelCompletions.getLastRow() - 1, levelCompletions.getLastColumn()).getValues()
+    // Build map of email → { name, role, maxLevel, levelTitle, completedAt }
+    var userLastLevel = {}
+    lcData.forEach(function(row) {
+      // cols: Timestamp(0), Name(1), Email(2), Role(3), Level(4), LevelTitle(5), MCScore(6), CompletedAt(7)
+      var email = row[2]
+      var levelNum = parseInt(row[4])
+      if (!email || isNaN(levelNum)) return
+      if (!userLastLevel[email] || levelNum > userLastLevel[email].level) {
+        userLastLevel[email] = {
+          name: row[1],
+          role: row[3],
+          level: levelNum,
+          levelTitle: row[5],
+          completedAt: row[7]
+        }
+      }
+    })
+
+    var sortedUsers = Object.keys(userLastLevel).sort(function(a, b) {
+      return userLastLevel[b].level - userLastLevel[a].level
+    })
+
+    if (sortedUsers.length === 0) {
+      stats.push(['No level completions yet', ''])
+    } else {
+      sortedUsers.forEach(function(email) {
+        var u = userLastLevel[email]
+        var completedDate = u.completedAt ? new Date(u.completedAt).toLocaleDateString() : ''
+        stats.push([u.name + ' (' + u.role + ')', 'Level ' + u.level + ' — ' + u.levelTitle + (completedDate ? ' · ' + completedDate : '')])
+      })
+    }
+  } else {
+    stats.push(['No level completions yet', ''])
+  }
+
   // Role breakdown
   if (registrations && registrations.getLastRow() > 1) {
     var regData = registrations.getRange(2, 1, registrations.getLastRow() - 1, 4).getValues()
@@ -205,6 +313,87 @@ function updateSummary() {
     Object.keys(roleCounts).sort().forEach(function(role) {
       stats.push([role, roleCounts[role]])
     })
+  }
+
+  // ─── Feedback Analytics ───────────────────────────────────────────────────
+  var feedbackSheet = ss.getSheetByName('Feedback')
+  if (feedbackSheet && feedbackSheet.getLastRow() > 1) {
+    var fbData = feedbackSheet.getRange(2, 1, feedbackSheet.getLastRow() - 1, 10).getValues()
+
+    stats.push(['', ''])
+    stats.push(['FEEDBACK ANALYTICS', ''])
+
+    // Average confidence by level
+    stats.push(['Avg Confidence by Level', ''])
+    for (var lvl = 1; lvl <= 6; lvl++) {
+      var lvlConf = fbData
+        .filter(function(f) { return String(f[4]) === String(lvl) && f[7] !== '' })
+        .map(function(f) { return Number(f[7]) })
+        .filter(function(r) { return !isNaN(r) && r > 0 })
+      var avgConf = lvlConf.length > 0
+        ? (lvlConf.reduce(function(a, b) { return a + b }, 0) / lvlConf.length).toFixed(1) + ' (' + lvlConf.length + ' ratings)'
+        : 'N/A'
+      stats.push(['  Level ' + lvl, avgConf])
+    }
+
+    // % useful by level
+    stats.push(['', ''])
+    stats.push(['% Found Useful by Level', ''])
+    for (var lvl = 1; lvl <= 6; lvl++) {
+      var lvlFb = fbData.filter(function(f) { return String(f[4]) === String(lvl) && f[8] !== '' })
+      var usefulCt = lvlFb.filter(function(f) { return f[8] === 'Y' }).length
+      var pct = lvlFb.length > 0
+        ? Math.round((usefulCt / lvlFb.length) * 100) + '% (' + lvlFb.length + ' votes)'
+        : 'N/A'
+      stats.push(['  Level ' + lvl, pct])
+    }
+
+    // Bottom 5 exercises by confidence
+    var exerciseConf = {}
+    fbData.forEach(function(f) {
+      var exKey = 'L' + f[4] + ' ' + f[5]
+      if (f[7] !== '') {
+        if (!exerciseConf[exKey]) exerciseConf[exKey] = []
+        exerciseConf[exKey].push(Number(f[7]))
+      }
+    })
+    var exerciseAvgs = Object.keys(exerciseConf).map(function(k) {
+      var vals = exerciseConf[k]
+      return { ex: k, avg: vals.reduce(function(a,b){return a+b},0)/vals.length }
+    }).sort(function(a,b){ return a.avg - b.avg }).slice(0, 5)
+    if (exerciseAvgs.length > 0) {
+      stats.push(['', ''])
+      stats.push(['Lowest Confidence Exercises', ''])
+      exerciseAvgs.forEach(function(e) {
+        stats.push(['  ' + e.ex, e.avg.toFixed(1)])
+      })
+    }
+
+    // Recent comments (last 10)
+    var comments = fbData
+      .filter(function(f) { return f[9] && f[9].toString().trim() !== '' })
+      .slice(-10).reverse()
+    if (comments.length > 0) {
+      stats.push(['', ''])
+      stats.push(['Recent Comments', ''])
+      comments.forEach(function(c) {
+        stats.push([c[1] + ' · L' + c[4] + ' ' + c[5], c[9]])
+      })
+    }
+  }
+
+  // ─── Signals Summary ──────────────────────────────────────────────────────
+  var signalsSheet = ss.getSheetByName('Signals')
+  if (signalsSheet && signalsSheet.getLastRow() > 1) {
+    var sigData = signalsSheet.getRange(2, 1, signalsSheet.getLastRow() - 1, 8).getValues()
+    var bugCt = sigData.filter(function(s){ return s[4] === 'bug' }).length
+    var fbCt = sigData.filter(function(s){ return s[4] === 'feedback' }).length
+    var beerCt = sigData.filter(function(s){ return s[4] === 'beer' }).length
+    stats.push(['', ''])
+    stats.push(['SIGNALS RECEIVED', ''])
+    stats.push(['🐛 Bug Reports', bugCt])
+    stats.push(['💡 Feedback', fbCt])
+    stats.push(['🍺 Virtual Beers', beerCt])
   }
 
   if (stats.length > 0) {
@@ -249,6 +438,16 @@ function initializeSheets() {
   ])
   getOrCreateSheet('Certifications', [
     'Timestamp', 'Name', 'Email', 'Role', 'Completed At', 'Time Estimate'
+  ])
+  getOrCreateSheet('Level Completions', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Level', 'Level Title', 'MC Score', 'Completed At'
+  ])
+  getOrCreateSheet('Feedback', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Level', 'Exercise',
+    'Exercise Title', 'Confidence (1-5)', 'Useful (Y/N)', 'Comment'
+  ])
+  getOrCreateSheet('Signals', [
+    'Timestamp', 'Name', 'Email', 'Role', 'Type', 'Location', 'Level', 'Message'
   ])
   updateSummary()
 

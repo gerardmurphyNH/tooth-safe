@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCoachFeedback, generatePracticeExercise } from '../utils/api.js'
 import { completeExercise, getExerciseData, saveExerciseDraft, syncExerciseCompletion } from '../utils/progress.js'
+import ExerciseFeedback from './ExerciseFeedback.jsx'
 import { getTaskPrompt } from '../content/levels.js'
 import AICoach from './AICoach.jsx'
 
@@ -296,31 +297,9 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
               </div>
             )}
 
-            {/* Self-rating + Complete */}
+            {/* Complete button */}
             {!completed && (
-              <div className="mt-6 p-5 bg-gray-50 rounded-xl border border-gray-100">
-                <p className="font-header font-semibold text-beyond-dark text-sm mb-3">
-                  How confident do you feel after this exercise?
-                </p>
-                <div className="flex gap-2 mb-5">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <button
-                      key={rating}
-                      onClick={() => setSelfRating(rating)}
-                      className={`w-10 h-10 rounded-lg border-2 font-header font-bold text-sm transition-all duration-150 ${
-                        selfRating === rating
-                          ? 'border-beyond-teal bg-beyond-teal text-white'
-                          : 'border-gray-200 text-gray-400 hover:border-beyond-teal hover:text-beyond-teal'
-                      }`}
-                    >
-                      {rating}
-                    </button>
-                  ))}
-                  <span className="text-gray-400 text-xs font-body self-center ml-1">
-                    1 = Not yet · 5 = Got it
-                  </span>
-                </div>
-
+              <div className="mt-6">
                 <button onClick={handleComplete} className="btn-primary w-full">
                   Mark Complete ✓
                 </button>
@@ -330,7 +309,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
             {/* Completed state */}
             {completed && (
               <div className="mt-6 animate-fade-in">
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 mb-4">
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
                   <span className="text-2xl">✅</span>
                   <div>
                     <p className="font-header font-semibold text-green-800">Exercise complete!</p>
@@ -338,6 +317,10 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                   </div>
                 </div>
 
+                {/* Post-completion feedback bar */}
+                <ExerciseFeedback exercise={exercise} level={level} user={user} />
+
+                <div className="mt-4">
                 {!showBonus && (
                   <button
                     onClick={handleBonusRound}
@@ -354,6 +337,7 @@ export default function Exercise({ exercise, level, user, onComplete, onExercise
                     )}
                   </button>
                 )}
+                </div>
               </div>
             )}
 
@@ -780,6 +764,133 @@ function NewExerciseContent({ exercise, user }) {
   // Guide (Exercise 1.6 / 2.6 — setup guides)
   if (exercise.guide) {
     blocks.push(<GuideBlock key="guide" guide={exercise.guide} />)
+  }
+
+  // Translation patterns (EM Level 5 — 5E.1)
+  if (exercise.translationPatterns?.length) {
+    blocks.push(
+      <div key="translationPatterns" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Translation Patterns</p>
+        {exercise.translationPatterns.map((p, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{p.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{p.description}</p>
+            {p.example && (
+              <div className="bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed whitespace-pre-wrap">
+                {p.example}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Health signals (EM Level 5 — 5E.2)
+  if (exercise.healthSignals?.length) {
+    blocks.push(
+      <div key="healthSignals" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Health Signal Categories</p>
+        {exercise.healthSignals.map((s, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-2">{s.category}</div>
+            {s.signals?.length && (
+              <ul className="space-y-0.5 mb-2">
+                {s.signals.map((sig, j) => (
+                  <li key={j} className="text-xs font-body text-gray-600 flex items-start gap-1.5">
+                    <span className="text-beyond-teal shrink-0">·</span>{sig}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {s.whatItTells && (
+              <p className="text-gray-500 text-xs font-body mb-2">
+                <span className="font-semibold text-gray-600">What it tells you: </span>{s.whatItTells}
+              </p>
+            )}
+            {s.nexusTool && (
+              <div className="inline-block bg-beyond-teal/10 text-beyond-teal text-xs font-header font-semibold px-2 py-1 rounded">
+                Nexus: {s.nexusTool}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Shifts (EM Level 5 — 5E.3)
+  if (exercise.shifts?.length) {
+    blocks.push(
+      <div key="shifts" className="space-y-4">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">AI-Era Shifts</p>
+        {exercise.shifts.map((s, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-5">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-3">{s.area}</div>
+            <div className="grid grid-cols-1 gap-3 mb-3 sm:grid-cols-2">
+              <div className="bg-red-50 rounded-lg p-3">
+                <div className="text-xs font-header font-semibold text-red-600 mb-1">Old World</div>
+                <p className="text-xs font-body text-red-800 leading-relaxed">{s.oldWorld}</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3">
+                <div className="text-xs font-header font-semibold text-green-700 mb-1">New World</div>
+                <p className="text-xs font-body text-green-800 leading-relaxed">{s.newWorld}</p>
+              </div>
+            </div>
+            {s.leadershipQuestion && (
+              <p className="text-gray-600 text-xs font-body italic mb-3">
+                <span className="font-semibold not-italic text-gray-700">Leadership question: </span>{s.leadershipQuestion}
+              </p>
+            )}
+            {s.prompt && (
+              <div className="bg-gray-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-gray-100 leading-relaxed whitespace-pre-wrap">
+                {s.prompt}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Partnership patterns (EM Level 5 — 5E.4)
+  if (exercise.partnershipPatterns?.length) {
+    blocks.push(
+      <div key="partnershipPatterns" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Partnership Patterns</p>
+        {exercise.partnershipPatterns.map((p, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{p.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{p.description}</p>
+            {p.prompt && (
+              <div className="bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed whitespace-pre-wrap italic">
+                "{p.prompt}"
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Use cases (EM Level 5 — 5E.5)
+  if (exercise.useCases?.length) {
+    blocks.push(
+      <div key="useCases" className="space-y-3">
+        <p className="text-xs font-header font-bold text-gray-400 uppercase tracking-wider">Use Cases</p>
+        {exercise.useCases.map((u, i) => (
+          <div key={i} className="bg-white rounded-xl border border-gray-100 p-4">
+            <div className="font-header font-bold text-beyond-dark text-sm mb-1">{u.name}</div>
+            <p className="text-gray-500 text-xs font-body mb-2">{u.description}</p>
+            {u.prompt && (
+              <div className="bg-teal-50 rounded px-3 py-2 font-mono text-xs text-gray-700 border border-teal-100 leading-relaxed whitespace-pre-wrap italic">
+                "{u.prompt}"
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )
   }
 
   if (blocks.length === 0) return null

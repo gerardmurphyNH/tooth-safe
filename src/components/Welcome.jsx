@@ -247,6 +247,11 @@ export default function Welcome({ onRegister }) {
                         <option key={role} value={role} className="bg-beyond-dark text-white">{role}</option>
                       ))}
                     </optgroup>
+                    <optgroup label="── Engineering ──" className="bg-beyond-dark text-gray-400">
+                      {ROLE_OPTIONS.engineering.map(role => (
+                        <option key={role} value={role} className="bg-beyond-dark text-white">{role}</option>
+                      ))}
+                    </optgroup>
                     <optgroup label="── Product Design ──" className="bg-beyond-dark text-gray-400">
                       {ROLE_OPTIONS.design.map(role => (
                         <option key={role} value={role} className="bg-beyond-dark text-white">{role}</option>

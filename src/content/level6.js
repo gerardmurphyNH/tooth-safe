@@ -82,6 +82,13 @@ export const LEVEL6 = {
         reflection:
           "The biggest mindset shift: Claude Code turns Claude from a chat interface into a collaborator that can take action in your environment. What's one workflow you do weekly that involves creating or organizing files?",
       },
+      task: {
+        prompts: {
+          eng_manager: `For the "Read" task, point Claude Code at a recent post-mortem, technical design doc, or sprint retro document. Ask it to: "Read this and identify: (1) the action items that have clear owners, (2) the action items that are vague, and (3) any themes that appeared in previous retros but weren't resolved."
+
+For the "Process" task, create a template for your engineering investment proposals: sections for Business Context (the problem in customer/business terms), Technical Approach (the solution at architecture level, not implementation detail), Trade-offs Considered, Impact on Team Velocity, Impact on Reliability/Incidents, Dependencies, and Timeline. This becomes the standard format for your team's technical investment requests.`
+        }
+      },
       taskFields: [
         {
           id: 'install_status',
@@ -180,6 +187,15 @@ export const LEVEL6 = {
         ],
         reflection:
           "BMAD's power is in the structure, not the magic. By defining roles and processes upfront, you get consistent, reusable outputs instead of one-off answers. What's one document type you create repeatedly that BMAD could systematize?",
+      },
+      task: {
+        prompts: {
+          eng_manager: `After installation, explore BMAD from an engineering leadership perspective. See how it structures technical requirements and architecture decisions. Run one BMAD agent on a real technical initiative and compare the output to what your team would produce manually.
+
+The most valuable BMAD output for EMs is typically the requirements breakdown and the assumption mapping. It surfaces edge cases and dependencies that your engineers would eventually find during implementation - finding them earlier saves sprint cycles.
+
+Evaluate: would BMAD be useful for your engineering team's planning process? Could it help less experienced engineers write better technical design docs?`
+        }
       },
       taskFields: [
         {
@@ -284,6 +300,18 @@ export const LEVEL6 = {
           },
         ],
       },
+      task: {
+        prompts: {
+          eng_manager: `Use BMAD to generate documentation for a real technical initiative. This could be:
+- A technical design document for an architecture change
+- A comprehensive requirements doc that includes edge cases and integration points
+- An engineering investment proposal with technical and business framing
+
+As an EM, your critical review should focus on: Are the requirements realistic for your team's skill level? Are the dependencies complete? Does the architecture approach match your team's current capabilities? Where does the BMAD output assume a senior engineer that you may not have?
+
+After reviewing, ask Claude Code: "Compare this technical doc to the PM's one-pager for the same initiative. Are the technical requirements aligned with the product requirements? Flag any gaps."`
+        }
+      },
       taskFields: [
         {
           id: 'project_choice',
@@ -387,6 +415,19 @@ export const LEVEL6 = {
           },
         ],
       },
+      task: {
+        prompts: {
+          eng_manager: `Design an agentic workflow for something you do at least weekly. The best EM workflows automate the data gathering that makes you a better leader:
+
+- **Team Health Weekly:** Pull Jira sprint data + deployment metrics + support tickets for your area + Slack channel sentiment > Flag teams or areas that show stress signals (velocity dropping, incidents rising, support load increasing) > Draft a team health summary with specific follow-up items for your 1:1s
+
+- **Sprint Planning Data Pack:** Pull the current backlog + support ticket trends + recent experiment results + any customer escalations > Organize by priority (customer-impacting issues, committed roadmap work, tech debt, team requests) > Produce a structured input for sprint planning that your PM partner can also use
+
+- **Engineering Impact Report:** Pull PostHog metrics for features your team shipped in the last month + support ticket trends before/after + deployment data > Calculate the measurable impact of your team's work > Produce a summary you can share with leadership to demonstrate engineering value
+
+The key for EM workflows: they should produce artifacts that are useful for cross-functional partners, not just for you. An engineering impact report that your PM can include in a leadership update multiplies your team's visibility.`
+        }
+      },
       taskFields: [
         {
           id: 'chosen_workflow',
@@ -488,6 +529,20 @@ export const LEVEL6 = {
         buildPrompt:
           "Now use Claude Code to generate your AI OS document:\n\n\"Based on everything I've documented in the NexusYou course, create my personal AI Operating System document. It should include: (1) my current AI stack with ratings and use cases, (2) my top 5 reusable workflows with step-by-step instructions, (3) my prompt library with 10+ entries organized by category, (4) my principles for when to use/not use AI, and (5) my 30-day improvement plan. Format it as a well-structured Markdown file called ai-operating-system.md.\"",
       },
+      task: {
+        prompts: {
+          eng_manager: `Your AI Operating System should emphasize the workflows that make you a better engineering leader - not the technical skills that made you a good IC.
+
+Key sections for your EM Operating System:
+- **Translation tools:** Prompts and workflows for converting technical decisions into business language
+- **Team health monitoring:** How you use AI to synthesize signals about team effectiveness and morale
+- **Cross-functional partnership:** How you use AI to be a better partner to PMs and designers
+- **People management support:** 1:1 prep, feedback drafting, career development conversations
+- **Engineering investment advocacy:** How you build data-driven cases for technical investments
+
+The "What I'm Still Learning" section should address the biggest shift in engineering management: from "how do I use AI to build better software" to "how do I use AI to build a better engineering organization."`
+        }
+      },
       taskFields: [
         {
           id: 'stack_list',
@@ -567,6 +622,13 @@ export const LEVEL6 = {
           "What's the first thing you'll do differently on Monday morning?",
           "If you were redesigning this course, what would you add or remove?",
         ],
+      },
+      task: {
+        prompts: {
+          eng_manager: `In your reflection, include how AI has changed your engineering leadership practice. The EM outcome isn't just personal productivity - it's whether your team is more effective, your cross-functional partnerships are stronger, and your engineering investments are better justified.
+
+Ask Claude one more question: "I'm an engineering manager who used to be a hands-on engineer. How should AI change what I focus on as a leader? What should I do more of, what should I do less of, and what new things should I start doing that didn't make sense before AI?"`
+        }
       },
       taskFields: [
         {
