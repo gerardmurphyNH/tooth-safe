@@ -66,28 +66,27 @@ export default function Hero() {
 
           {/* Product image column */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative animate-float">
-              {/* Glow ring behind the product */}
+            <div className="relative w-full max-w-lg animate-float">
+              {/* Glow behind the product */}
               <div
-                className="absolute inset-0 rounded-full blur-2xl pointer-events-none glow-gold"
+                className="absolute inset-0 blur-3xl pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(201,160,54,0.2) 0%, transparent 70%)",
-                  transform: "scale(1.3)",
+                    "radial-gradient(ellipse, rgba(201,160,54,0.18) 0%, transparent 70%)",
+                  transform: "scale(1.15)",
                 }}
               />
 
-              {/* Product image */}
-              <div className="relative w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96">
-                <Image
-                  src="/images/toothsafe-product.png"
-                  alt="The ToothSafe — front and back of the circular keepsake disc, showing a tooth embossed on light blue silicone with a safe icon, and the coral back with fill-in fields"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                  priority
-                  sizes="(max-width: 768px) 288px, (max-width: 1024px) 320px, 384px"
-                />
-              </div>
+              {/* Product image — natural 966×418 ratio, fills the column */}
+              <Image
+                src="/images/toothsafe-product.png"
+                alt="The ToothSafe — front and back of the circular keepsake disc, showing a tooth embossed on light blue silicone with a safe icon, and the coral back with fill-in fields"
+                width={966}
+                height={418}
+                className="relative w-full h-auto object-contain drop-shadow-2xl"
+                priority
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 560px"
+              />
             </div>
           </div>
 
