@@ -79,7 +79,7 @@ export default function Hero() {
             {/* Product image — natural 966×418 ratio, fills the column */}
             <Image
               src="/images/toothsafe-product.png"
-              alt="The ToothSafe — front and back of the circular keepsake disc, showing a tooth embossed on light blue silicone with a safe icon, and the coral back with fill-in fields"
+              alt="The ToothSafe — front and back of the circular purple keepsake disc, showing a tooth with a safe icon on the front and a green label panel on the back"
               width={966}
               height={418}
               className="relative w-full h-auto drop-shadow-2xl"

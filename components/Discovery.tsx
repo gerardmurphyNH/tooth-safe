@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Discovery() {
   return (
     <section id="the-story" className="section-padding px-6 bg-midnight relative overflow-hidden">
@@ -38,6 +40,14 @@ export default function Discovery() {
 
           {/* Pull-quote / aside */}
           <div className="flex flex-col gap-6">
+            <Image
+              src="/images/toothsafe-drawing.png"
+              alt="Hand-drawn illustration of the ToothSafe — a purple circular disc with a tooth on the front, as depicted in the book"
+              width={600}
+              height={600}
+              className="w-full h-auto rounded-xl"
+            />
+
             <blockquote
               className="border-l-2 border-gold pl-6 py-2"
             >
