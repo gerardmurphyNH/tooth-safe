@@ -56,7 +56,7 @@ export default function WhyItMatters() {
         {/* Center statement */}
         <div className="mt-16 text-center">
           <p className="font-serif italic text-xl sm:text-2xl text-gold leading-relaxed max-w-2xl mx-auto">
-            &ldquo;Arlo found it. Now you can have one too.&rdquo;
+            &ldquo;CeCe made it. Arlo kept it. Now you can have one too.&rdquo;
           </p>
         </div>
       </div>

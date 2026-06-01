@@ -45,10 +45,9 @@ export default function StoryBridge() {
             </h2>
 
             <p className="text-cream-dim text-base lg:text-lg leading-relaxed max-w-lg">
-              ToothSafe didn&apos;t come from nowhere. It came from the same
-              place that Arlo stumbled into — a world older and stranger and
-              more wonderful than most people suspect. Visit the workshop to
-              learn where teeth really go.
+              ToothSafe didn&apos;t come from nowhere. It came from CeCe&apos;s
+              workshop — a place older and stranger and more wonderful than most
+              people suspect. Visit the workshop to learn where teeth really go.
             </p>
 
             <TrackedLink

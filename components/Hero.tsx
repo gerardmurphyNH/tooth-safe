@@ -29,7 +29,7 @@ export default function Hero() {
           <div className="flex flex-col gap-6">
             {/* Eyebrow label */}
             <p className="text-gold text-sm font-semibold tracking-[0.2em] uppercase">
-              A Discovery by Arlo
+              From CeCe&apos;s Workshop
             </p>
 
             {/* Headline */}
@@ -40,9 +40,8 @@ export default function Hero() {
 
             {/* Subheadline */}
             <p className="text-cream-dim text-lg leading-relaxed max-w-lg">
-              Arlo found something he wasn&apos;t supposed to find — a small, weathered
-              box, perfectly sized for a tooth. Made somewhere remarkable. Built
-              to last forever.
+              Arlo asked the Tooth Fairy a question. She took him to her
+              workshop — and let him keep one of her cleverest inventions.
             </p>
 
             {/* CTA block */}

@@ -17,24 +17,28 @@ export default function Discovery() {
         </p>
 
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-cream text-center mb-12 leading-snug">
-          How Arlo Found It
+          How Arlo Came to Have It
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
           {/* Story text */}
           <div className="flex flex-col gap-5 text-cream-dim leading-relaxed text-base lg:text-lg">
             <p>
-              It was tucked behind a loose stone in the old wall — the one at
-              the back of his grandfather&apos;s garden that nobody ever bothered
-              with anymore.
+              Arlo had questions. When he lost his first tooth, he wanted to
+              know what the Tooth Fairy actually did with it. So he left her
+              a note.
             </p>
             <p>
-              Small. Heavier than it looked. Carved from something he
-              couldn&apos;t quite name, with markings along the lid that
-              weren&apos;t quite a language and weren&apos;t quite decorations.
+              That night, CeCe appeared — goggles on, tools at her waist, and
+              no time for nonsense. She showed Arlo the truth: every lost tooth
+              holds something special, like bravery, kindness, patience, and
+              creativity. CeCe uses those qualities to quietly help keep the
+              world in balance.
             </p>
             <p>
-              Inside, a velvet hollow. Exactly the right size for a tooth.
+              In her workshop, Arlo noticed one of CeCe&apos;s cleverest
+              inventions: the ToothSafe. It was built to keep lost teeth safe,
+              easy to find, and ready for the Tooth Fairy&apos;s visit.
             </p>
           </div>
 
@@ -52,17 +56,17 @@ export default function Discovery() {
               className="border-l-2 border-gold pl-6 py-2"
             >
               <p className="font-serif italic text-xl lg:text-2xl text-cream leading-snug">
-                &ldquo;It wasn&apos;t lost. It was waiting.&rdquo;
+                &ldquo;Every lost tooth holds something special.&rdquo;
               </p>
               <footer className="mt-3 text-sm text-gold tracking-wide">
-                — Arlo, age 8
+                — CeCe, the Tooth Fairy
               </footer>
             </blockquote>
 
             <p className="text-cream-dim leading-relaxed">
-              Arlo didn&apos;t know where it came from. But he knew — the way
-              children know things before adults explain them away — that it had
-              been made with extraordinary care. For an extraordinary purpose.
+              CeCe let Arlo keep it. The next morning, he reached under his
+              pillow and found the ToothSafe waiting — with his thank-you
+              tucked safely inside.
             </p>
           </div>
         </div>
