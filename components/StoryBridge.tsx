@@ -1,4 +1,5 @@
 import TrackedLink from "./TrackedLink";
+import { FILM } from "@/lib/config";
 
 export default function StoryBridge() {
   return (
@@ -50,23 +51,42 @@ export default function StoryBridge() {
               people suspect. Visit the workshop to learn where teeth really go.
             </p>
 
-            <TrackedLink
-              href="https://wigglytoothworkshop.com/"
-              label="story_bridge_workshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                mt-2 inline-flex items-center gap-2
-                px-7 py-3 rounded-lg
-                border border-gold text-gold
-                hover:bg-gold hover:text-deep-blue
-                font-semibold text-sm tracking-wide
-                transition-all duration-200
-              "
-            >
-              Enter the Wiggly Tooth Workshop
-              <span aria-hidden="true">→</span>
-            </TrackedLink>
+            <div className="mt-2 flex flex-col sm:flex-row items-center gap-4">
+              <TrackedLink
+                href={FILM.watchPageUrl}
+                label="story_bridge_watch"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  inline-flex items-center gap-2
+                  px-7 py-3 rounded-lg
+                  bg-gold text-deep-blue hover:bg-gold-light
+                  font-semibold text-sm tracking-wide
+                  transition-all duration-200
+                "
+              >
+                Watch the Short Film
+                <span aria-hidden="true">→</span>
+              </TrackedLink>
+
+              <TrackedLink
+                href="https://wigglytoothworkshop.com/"
+                label="story_bridge_workshop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  inline-flex items-center gap-2
+                  px-7 py-3 rounded-lg
+                  border border-gold text-gold
+                  hover:bg-gold hover:text-deep-blue
+                  font-semibold text-sm tracking-wide
+                  transition-all duration-200
+                "
+              >
+                Enter the Workshop
+                <span aria-hidden="true">→</span>
+              </TrackedLink>
+            </div>
           </div>
         </div>
       </div>

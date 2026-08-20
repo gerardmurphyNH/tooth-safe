@@ -25,8 +25,9 @@ export default function CTASection() {
         </h2>
 
         <p className="text-cream-dim text-lg leading-relaxed">
-          ToothSafe will be available in limited quantities. Leave your email
-          and we&apos;ll reach out before anyone else hears.
+          ToothSafe will be released in limited quantities. Join the waitlist and
+          we&apos;ll email you before the release goes public — you&apos;ll get
+          first pick of the first batch.
         </p>
 
         <EmailForm
@@ -37,7 +38,8 @@ export default function CTASection() {
         />
 
         <p className="text-cream-muted text-xs">
-          ✦ No spam. A single note when the time comes.
+          ✦ One email when the first batch is ready. No spam, and you can
+          unsubscribe in a click.
         </p>
       </div>
     </section>

@@ -27,21 +27,30 @@ export default function Hero() {
 
           {/* Text column */}
           <div className="flex flex-col gap-6">
-            {/* Eyebrow label */}
-            <p className="text-gold text-sm font-semibold tracking-[0.2em] uppercase">
-              From CeCe&apos;s Workshop
-            </p>
+            {/* Eyebrow — doubles as the hook into the film section */}
+            <a
+              href="#the-film"
+              className="
+                text-gold hover:text-gold-light text-sm font-semibold
+                tracking-[0.2em] uppercase transition-colors duration-200
+                inline-flex items-center gap-2 self-start
+              "
+            >
+              <span aria-hidden="true">✦</span>
+              As Seen in the Short Film
+            </a>
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-cream leading-[1.1] glow-gold-text">
-              Some things are too important{" "}
+              A first lost tooth is too important{" "}
               <em className="not-italic text-gold">to lose.</em>
             </h1>
 
             {/* Subheadline */}
             <p className="text-cream-dim text-lg leading-relaxed max-w-lg">
-              Arlo asked the Tooth Fairy a question. She took him to her
-              workshop — and let him keep one of her cleverest inventions.
+              ToothSafe is a keepsake box for your child&apos;s first lost tooth
+              — built to last, and ready for the Tooth Fairy&apos;s visit. Arlo
+              got his from CeCe&apos;s workshop. Now you can have one too.
             </p>
 
             {/* CTA block */}
@@ -75,12 +84,12 @@ export default function Hero() {
               }}
             />
 
-            {/* Product image — natural 966×418 ratio, fills the column */}
+            {/* Product image — natural 1402×561 ratio, fills the column */}
             <Image
-              src="/images/toothsafe-product.png"
-              alt="The ToothSafe — front and back of the circular purple keepsake disc, showing a tooth with a safe icon on the front and a green label panel on the back"
-              width={966}
-              height={418}
+              src="/images/toothsafe-product.webp"
+              alt="ToothSafe keepsake box for a first lost tooth — front and back of the circular purple disc, showing a tooth with a safe icon on the front and a label panel on the back"
+              width={1402}
+              height={561}
               className="relative w-full h-auto drop-shadow-2xl"
               priority
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 560px"

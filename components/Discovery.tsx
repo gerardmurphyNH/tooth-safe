@@ -45,11 +45,13 @@ export default function Discovery() {
           {/* Pull-quote / aside */}
           <div className="flex flex-col gap-6">
             <Image
-              src="/images/toothsafe-drawing.png"
-              alt="Hand-drawn illustration of the ToothSafe — a purple circular disc with a tooth on the front, as depicted in the book"
-              width={600}
-              height={600}
+              src="/images/toothsafe-drawing.webp"
+              alt="Hand-drawn illustration of the ToothSafe tooth fairy box — a purple circular disc with a tooth on the front, as depicted in the book"
+              width={633}
+              height={468}
               className="w-full h-auto rounded-xl"
+              loading="lazy"
+              sizes="(max-width: 768px) 90vw, 480px"
             />
 
             <blockquote

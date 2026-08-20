@@ -3,14 +3,14 @@ const steps = [
     number: "01",
     title: "Place the Tooth Inside",
     description:
-      "The velvet-lined interior holds a single tooth — gently, perfectly, the way something precious deserves to be held.",
+      "Somewhere safe for a single tooth — held gently, the way something precious deserves to be held.",
     icon: "✦",
   },
   {
     number: "02",
-    title: "Close the Lid",
+    title: "Close It Up",
     description:
-      "The lid clicks shut with a satisfying weight. Whatever is inside is now safe. From loss, from time, from forgetting.",
+      "Closed, whatever is inside is safe. From loss, from time, from forgetting.",
     icon: "◆",
   },
   {

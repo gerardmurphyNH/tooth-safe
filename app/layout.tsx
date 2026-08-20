@@ -29,22 +29,21 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   // ── Core ─────────────────────────────────────────────────────────────────
   title: {
-    default: "ToothSafe — A Discovery by Arlo",
+    default: "ToothSafe — A Keepsake Box for a First Lost Tooth",
     template: "%s | ToothSafe",
   },
   description:
-    "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop, discovered by a boy named Arlo.",
+    "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit. From the world of the Wiggly Tooth Workshop. Join the waitlist.",
   keywords: [
-    "tooth fairy",
+    "tooth fairy box",
     "lost tooth keepsake",
-    "first tooth",
+    "first lost tooth",
+    "baby teeth keeper",
     "tooth fairy gift",
-    "child keepsake",
-    "tooth safe",
-    "baby teeth",
+    "child keepsake box",
+    "what to do with baby teeth",
     "toothsafe",
     "wiggly tooth workshop",
-    "Arlo",
   ],
 
   // ── Canonical & Indexing ─────────────────────────────────────────────────
@@ -69,15 +68,15 @@ export const metadata: Metadata = {
     type: "website",
     url: BASE_URL,
     siteName: "ToothSafe",
-    title: "ToothSafe — A Discovery by Arlo",
+    title: "ToothSafe — A Keepsake Box for a First Lost Tooth",
     description:
-      "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop, discovered by a boy named Arlo.",
+      "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit. From the world of the Wiggly Tooth Workshop.",
     images: [
       {
         url: "/images/og-image.png", // 1200×630 branded share image
         width: 1200,
         height: 630,
-        alt: "ToothSafe — the keepsake disc for a child's first lost tooth",
+        alt: "ToothSafe — the keepsake box for a child's first lost tooth",
       },
     ],
     locale: "en_US",
@@ -86,9 +85,9 @@ export const metadata: Metadata = {
   // ── Twitter / X ──────────────────────────────────────────────────────────
   twitter: {
     card: "summary_large_image",
-    title: "ToothSafe — A Discovery by Arlo",
+    title: "ToothSafe — A Keepsake Box for a First Lost Tooth",
     description:
-      "Some things are too important to lose. ToothSafe is a keepsake disc for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop.",
+      "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit.",
     images: ["/images/og-image.png"],
   },
 
