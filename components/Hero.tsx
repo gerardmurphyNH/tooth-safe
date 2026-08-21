@@ -42,21 +42,23 @@ export default function Hero() {
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-cream leading-[1.1] glow-gold-text">
-              A first lost tooth is too important{" "}
-              <em className="not-italic text-gold">to lose.</em>
+              Not a pillow. A tooth fairy box{" "}
+              <em className="not-italic text-gold">with a secret.</em>
             </h1>
 
             {/* Subheadline */}
             <p className="text-cream-dim text-lg leading-relaxed max-w-lg">
-              ToothSafe is a keepsake box for your child&apos;s first lost tooth
-              — built to last, and ready for the Tooth Fairy&apos;s visit. Arlo
-              got his from CeCe&apos;s workshop. Now you can have one too.
+              Spin the tooth-shaped lever and ToothSafe opens: one compartment
+              for the lost tooth, and a second, hidden one for what the Tooth
+              Fairy leaves behind. Arlo found his under his pillow — the morning
+              after CeCe showed him her workshop.
             </p>
 
             {/* CTA block */}
             <div className="flex flex-col gap-3 mt-2">
               <p className="text-cream-dim text-sm">
-                Be the first to know when ToothSafe is ready.
+                ToothSafe isn&apos;t made yet. Add your name and help us get it
+                built.
               </p>
               <EmailForm
                 placeholder="Your email address"
@@ -68,7 +70,8 @@ export default function Hero() {
 
             {/* Social proof nudge */}
             <p className="text-cream-muted text-xs">
-              ✦ No spam. Just a quiet note when it&apos;s time.
+              ✦ Free, no payment, no commitment. One email when there&apos;s
+              real news.
             </p>
           </div>
 

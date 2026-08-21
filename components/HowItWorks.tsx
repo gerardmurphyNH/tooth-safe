@@ -1,23 +1,23 @@
 const steps = [
   {
     number: "01",
-    title: "Place the Tooth Inside",
+    title: "Spin the Tooth",
     description:
-      "Somewhere safe for a single tooth — held gently, the way something precious deserves to be held.",
+      "A tooth-shaped lever sits on top. Your child turns it, and the first compartment opens — sized for one small tooth and nothing else.",
     icon: "✦",
   },
   {
     number: "02",
-    title: "Close It Up",
+    title: "Leave It Out at Bedtime",
     description:
-      "Closed, whatever is inside is safe. From loss, from time, from forgetting.",
+      "The tooth goes in. ToothSafe sits where the pillow used to — impossible to lose in the bedding, and easy for the Tooth Fairy to find.",
     icon: "◆",
   },
   {
     number: "03",
-    title: "Pass It On",
+    title: "Spin Again in the Morning",
     description:
-      "ToothSafe is built to last. Years from now, it can be opened again — and the moment will still be there, waiting.",
+      "Keep turning the lever and a second, hidden compartment appears. The tooth is gone. A coin or a folded dollar is waiting in its place.",
     icon: "◇",
   },
 ];
@@ -32,8 +32,12 @@ export default function HowItWorks() {
             The Object
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-cream leading-snug">
-            How ToothSafe Works
+            How the Tooth Fairy Box Works
           </h2>
+          <p className="mt-4 text-cream-dim text-base lg:text-lg leading-relaxed max-w-xl mx-auto">
+            About the size of a hockey puck, with a tooth-shaped lever on top
+            and two compartments hidden inside.
+          </p>
         </div>
 
         {/* Steps */}

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import TrackedLink from "./TrackedLink";
 
 export default function Nav() {
   return (
@@ -10,21 +9,18 @@ export default function Nav() {
           ToothSafe
         </Link>
 
-        {/* Workshop link */}
-        <TrackedLink
-          href="https://wigglytoothworkshop.com/"
-          label="nav_workshop"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Film link — on-page, so the visitor isn't sent off-site from the nav */}
+        <a
+          href="#the-film"
           className="
             text-sm text-cream-dim hover:text-gold
             transition-colors duration-200
             flex items-center gap-1.5
           "
         >
-          Visit the Workshop
+          Watch the Film
           <span aria-hidden="true" className="text-gold">→</span>
-        </TrackedLink>
+        </a>
       </div>
 
       {/* Subtle bottom border */}

@@ -37,8 +37,9 @@ export default function Discovery() {
             </p>
             <p>
               In her workshop, Arlo noticed one of CeCe&apos;s cleverest
-              inventions: the ToothSafe. It was built to keep lost teeth safe,
-              easy to find, and ready for the Tooth Fairy&apos;s visit.
+              inventions: the ToothSafe. A spin of the tooth on its lid opened
+              one compartment for a tooth — and a second spin opened another,
+              for whatever she left in return.
             </p>
           </div>
 
@@ -66,9 +67,9 @@ export default function Discovery() {
             </blockquote>
 
             <p className="text-cream-dim leading-relaxed">
-              CeCe let Arlo keep it. The next morning, he reached under his
-              pillow and found the ToothSafe waiting — with his thank-you
-              tucked safely inside.
+              The next morning, Arlo reached under his pillow and found the
+              ToothSafe waiting there. Which is how he knew the whole night
+              had been real.
             </p>
           </div>
         </div>

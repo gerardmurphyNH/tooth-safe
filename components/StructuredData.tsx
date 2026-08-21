@@ -22,7 +22,7 @@ export default function StructuredData() {
     name: "ToothSafe",
     url: "https://tooth-safe.com",
     description:
-      "ToothSafe is a keepsake box for a child's first lost tooth — a real artifact from the Tooth Fairy's workshop, discovered by a boy named Arlo.",
+      "ToothSafe is a tooth fairy box for a child's lost tooth — a spinning lever opens one compartment for the tooth and a hidden second one for the coin left behind.",
     publisher: {
       "@type": "Organization",
       name: "ToothSafe",
@@ -35,7 +35,7 @@ export default function StructuredData() {
     "@type": "Product",
     name: "ToothSafe",
     description:
-      "A keepsake box for a child's first lost tooth. Part of the Wiggly Tooth Workshop story universe.",
+      "A tooth fairy box for a child's lost tooth, roughly the size of a hockey puck. A tooth-shaped lever on the lid spins to open one compartment for the tooth, and spins further to reveal a hidden second compartment for a coin or folded bill — so the tooth left at bedtime is replaced by money in the morning. An alternative to a fabric tooth fairy pillow. Part of the Wiggly Tooth Workshop story universe, and featured in the animated short film.",
     brand: {
       "@type": "Brand",
       name: "ToothSafe",
@@ -71,7 +71,7 @@ export default function StructuredData() {
     url: "https://tooth-safe.com",
     logo: "https://tooth-safe.com/images/toothsafe-product.png",
     description:
-      "Maker of ToothSafe, the keepsake box for a child's first lost tooth.",
+      "Maker of ToothSafe, the tooth fairy box for a child's lost tooth.",
     email: "hello@tooth-safe.com",
     sameAs: ["https://wigglytoothworkshop.com"],
   };

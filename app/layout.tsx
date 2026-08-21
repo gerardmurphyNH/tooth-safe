@@ -29,18 +29,20 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   // ── Core ─────────────────────────────────────────────────────────────────
   title: {
-    default: "ToothSafe — A Keepsake Box for a First Lost Tooth",
+    default: "ToothSafe — The Tooth Fairy Box That Replaces the Pillow",
     template: "%s | ToothSafe",
   },
   description:
-    "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit. From the world of the Wiggly Tooth Workshop. Join the waitlist.",
+    "A tooth fairy box with a spinning lever: one compartment for the lost tooth, a hidden second one for the coin left behind. No pillow required. Join the waitlist.",
   keywords: [
+    "tooth fairy pillow",
+    "tooth fairy pillow alternative",
     "tooth fairy box",
-    "lost tooth keepsake",
+    "tooth fairy storage box",
+    "tooth fairy toy",
+    "tooth fairy money box",
+    "lost tooth holder",
     "first lost tooth",
-    "baby teeth keeper",
-    "tooth fairy gift",
-    "child keepsake box",
     "what to do with baby teeth",
     "toothsafe",
     "wiggly tooth workshop",
@@ -68,15 +70,15 @@ export const metadata: Metadata = {
     type: "website",
     url: BASE_URL,
     siteName: "ToothSafe",
-    title: "ToothSafe — A Keepsake Box for a First Lost Tooth",
+    title: "ToothSafe — The Tooth Fairy Box That Replaces the Pillow",
     description:
-      "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit. From the world of the Wiggly Tooth Workshop.",
+      "Spin the tooth-shaped lever: one compartment for the lost tooth, a hidden second one for the coin the Tooth Fairy leaves behind. As seen in the animated short film.",
     images: [
       {
         url: "/images/og-image.png", // 1200×630 branded share image
         width: 1200,
         height: 630,
-        alt: "ToothSafe — the keepsake box for a child's first lost tooth",
+        alt: "ToothSafe — the tooth fairy box with a spinning tooth-shaped lever",
       },
     ],
     locale: "en_US",
@@ -85,9 +87,9 @@ export const metadata: Metadata = {
   // ── Twitter / X ──────────────────────────────────────────────────────────
   twitter: {
     card: "summary_large_image",
-    title: "ToothSafe — A Keepsake Box for a First Lost Tooth",
+    title: "ToothSafe — The Tooth Fairy Box That Replaces the Pillow",
     description:
-      "A keepsake box for your child's first lost tooth — built to last, and ready for the Tooth Fairy's visit.",
+      "Spin the tooth-shaped lever: one compartment for the lost tooth, a hidden second one for the coin left behind.",
     images: ["/images/og-image.png"],
   },
 

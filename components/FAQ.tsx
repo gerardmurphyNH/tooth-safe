@@ -10,7 +10,19 @@ import { FILM } from "@/lib/config";
 export const faqs = [
   {
     q: "What do you do with a baby tooth after it falls out?",
-    a: "Most parents keep it. A first lost tooth is a one-time milestone, and a paper envelope in a drawer rarely survives the years. A keepsake made for the job keeps the tooth safe, findable, and easy to pass on years later — which is exactly what ToothSafe is for.",
+    a: "Most families keep it. A first lost tooth is a one-time milestone, and an envelope in a drawer rarely survives the years. A container made for the job keeps the tooth safe, findable, and easy to pass on later — which is what ToothSafe is for.",
+  },
+  {
+    q: "Is ToothSafe a tooth fairy pillow?",
+    a: "No — it is the alternative to one. A tooth fairy pillow is fabric with a pocket, and a tooth that small slips out into the bedding and disappears. ToothSafe is a solid case that closes and stays closed. It does the pillow's job without the risk of losing the tooth.",
+  },
+  {
+    q: "How does the ToothSafe work?",
+    a: "It is about the size of a hockey puck, with a tooth-shaped lever on the top. Spinning the lever opens the first compartment, sized for a single tooth. Keep spinning and a second, hidden compartment opens — where a coin or a folded dollar can go. The child leaves the tooth in at bedtime and finds the money in the morning.",
+  },
+  {
+    q: "Can I buy a ToothSafe yet?",
+    a: "Not yet. ToothSafe exists as a working prototype and as part of the film, but it has not been manufactured. Joining the waitlist costs nothing and commits you to nothing — it is how we show there is real demand, which is what it takes to get it made.",
   },
   {
     q: "Where can I watch the ToothSafe story?",
@@ -18,19 +30,11 @@ export const faqs = [
   },
   {
     q: "What is a tooth fairy box?",
-    a: "A tooth fairy box is a small container a child leaves out with a lost tooth, instead of tucking the tooth loose under a pillow. It makes the tooth easy for the Tooth Fairy to find, and it gives the family something to keep afterwards.",
-  },
-  {
-    q: "What makes ToothSafe different from a regular tooth fairy box?",
-    a: "ToothSafe comes from a story your child can watch. It is the keepsake CeCe the Tooth Fairy uses in her own workshop in The Tooth Fairy's Secret Workshop, and the one she let Arlo keep. Your child gets the object, the film, and the story behind it — not just a container.",
-  },
-  {
-    q: "When will ToothSafe be available?",
-    a: "The first batch is nearly ready and will be released in limited quantities. Join the waitlist and we will email you before the release goes public — no spam, one note when it is time.",
+    a: "A tooth fairy box is a small container a child leaves out with a lost tooth instead of tucking it loose under a pillow. It makes the tooth easy to find, gives the Tooth Fairy somewhere obvious to leave a coin, and leaves the family something to keep afterwards.",
   },
   {
     q: "What age is ToothSafe for?",
-    a: "Children typically lose their first tooth between ages four and seven, so ToothSafe is made with that moment in mind. It stays useful for every tooth after that, and it is meant to be kept long after the last one.",
+    a: "Children typically lose their first tooth between four and seven, so ToothSafe is designed with that age in mind — the lever is meant for small hands. It stays useful for every tooth after that, and it is built to be kept long after the last one.",
   },
 ];
 
@@ -46,7 +50,7 @@ export default function FAQ() {
             Questions
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-cream leading-snug">
-            Lost Teeth, Answered
+Tooth Fairy Questions, Answered
           </h2>
         </div>
 
