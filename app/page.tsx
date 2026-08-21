@@ -6,6 +6,7 @@ import WhyItMatters from "@/components/WhyItMatters";
 import StoryBridge from "@/components/StoryBridge";
 import FAQ from "@/components/FAQ";
 import FilmStills from "@/components/FilmStills";
+import Prototype from "@/components/Prototype";
 import VideoBlock from "@/components/VideoBlock";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -24,6 +25,9 @@ export default function Home() {
             argument for pressing play. */}
         <FilmStills />
         <HowItWorks />
+        {/* Mechanism explained, then the real object — this is the CTA's
+            evidence, so it sits on the way down to the form. */}
+        <Prototype />
         <WhyItMatters />
         <FAQ />
         {/* CTA sits before the workshop link so the signup ask comes

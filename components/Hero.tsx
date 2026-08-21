@@ -75,9 +75,9 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* Product image column */}
-          <div className="relative w-full animate-float">
-            {/* Glow behind the product */}
+          {/* Film stills column — the object in use beats a product shot */}
+          <div className="relative w-full flex flex-col gap-3">
+            {/* Glow behind the stack */}
             <div
               className="absolute inset-0 blur-3xl pointer-events-none"
               style={{
@@ -87,16 +87,50 @@ export default function Hero() {
               }}
             />
 
-            {/* Product image — natural 1402×561 ratio, fills the column */}
-            <Image
-              src="/images/toothsafe-product.webp"
-              alt="ToothSafe keepsake box for a first lost tooth — front and back of the circular purple disc, showing a tooth with a safe icon on the front and a label panel on the back"
-              width={1402}
-              height={561}
-              className="relative w-full h-auto drop-shadow-2xl"
-              priority
-              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 560px"
-            />
+            {/* Lead still — pairs directly with the "Not a pillow" headline */}
+            <div className="relative rounded-xl overflow-hidden border border-white/10 glow-gold">
+              <Image
+                src="/images/film/toothsafe-under-pillow.webp"
+                alt="A hand lifting a pillow to reveal the ToothSafe waiting underneath, where a tooth fairy pillow would usually sit"
+                width={1400}
+                height={788}
+                className="w-full h-auto"
+                priority
+                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 50vw, 560px"
+              />
+            </div>
+
+            {/* Two supporting frames. Both sources are ~1.77, same as the lead
+                still, so they need no cropping and their heights match. */}
+            <div className="relative grid grid-cols-2 gap-3">
+              <div className="rounded-lg overflow-hidden border border-white/10">
+                <Image
+                  src="/images/film/toothsafe-workshop-cece-and-arlo.webp"
+                  alt="CeCe the Tooth Fairy giving Arlo the ToothSafe in her workshop"
+                  width={1400}
+                  height={783}
+                  className="w-full h-auto"
+                  sizes="(max-width: 1024px) 45vw, 275px"
+                />
+              </div>
+              <div className="rounded-lg overflow-hidden border border-white/10">
+                <Image
+                  src="/images/film/toothsafe-open-with-dollar.webp"
+                  alt="The ToothSafe opened to show a folded dollar bill in the hidden second compartment"
+                  width={1400}
+                  height={799}
+                  className="w-full h-auto"
+                  sizes="(max-width: 1024px) 45vw, 275px"
+                />
+              </div>
+            </div>
+
+            <a
+              href="#the-film"
+              className="relative text-cream-muted hover:text-gold text-xs text-center transition-colors duration-200"
+            >
+              Frames from the short film — watch it →
+            </a>
           </div>
 
         </div>

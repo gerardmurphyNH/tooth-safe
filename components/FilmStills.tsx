@@ -27,19 +27,20 @@ const workshop: Still[] = [
     alt: "Arlo holding the ToothSafe tooth fairy box in the Tooth Fairy's workshop, a sparkle catching its lid",
     caption: "Arlo sees the ToothSafe for the first time.",
   },
-  {
-    src: "/images/film/toothsafe-workshop-cece-and-arlo.webp",
-    w: 1400,
-    h: 783,
-    alt: "CeCe the Tooth Fairy showing Arlo the ToothSafe in her workshop, tools hanging on the pegboard behind them",
-    caption: "CeCe built it herself. She explains what it is for.",
-  },
+  
   {
     src: "/images/film/toothsafe-workshop-arlo-surprised.webp",
     w: 1400,
     h: 970,
     alt: "Arlo looking surprised as he holds up the purple ToothSafe disc, roughly the size of a hockey puck",
     caption: "About the size of a hockey puck.",
+  },
+{
+    src: "/images/film/toothsafe-workshop-cece-and-arlo.webp",
+    w: 1400,
+    h: 783,
+    alt: "CeCe the Tooth Fairy showing Arlo the ToothSafe in her workshop, tools hanging on the pegboard behind them",
+    caption: "CeCe built it herself. She explains what it is for.",
   },
 ];
 
