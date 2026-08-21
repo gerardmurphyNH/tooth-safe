@@ -75,10 +75,10 @@ export const metadata: Metadata = {
       "Spin the tooth-shaped lever: one compartment for the lost tooth, a hidden second one for the coin the Tooth Fairy leaves behind. As seen in the animated short film.",
     images: [
       {
-        url: "/images/og-image.png", // 1200×630 branded share image
+        url: "/images/og-image.jpg", // 1200×630 — the pillow-lift frame from the film
         width: 1200,
         height: 630,
-        alt: "ToothSafe — the tooth fairy box with a spinning tooth-shaped lever",
+        alt: "A hand lifting a pillow to reveal the ToothSafe underneath — a still from the short film",
       },
     ],
     locale: "en_US",
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     title: "ToothSafe — The Tooth Fairy Box That Replaces the Pillow",
     description:
       "Spin the tooth-shaped lever: one compartment for the lost tooth, a hidden second one for the coin left behind.",
-    images: ["/images/og-image.png"],
+    images: ["/images/og-image.jpg"],
   },
 
   // ── Icons ─────────────────────────────────────────────────────────────────

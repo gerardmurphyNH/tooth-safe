@@ -1,76 +1,99 @@
 /**
  * submitLead — ToothSafe lead capture
  *
- * Uses the SAME Google Apps Script endpoint as wigglytoothworkshop.com.
- * No changes to the Apps Script are needed — the payload matches exactly:
- *   { email, firstName, virtue, timestamp }
+ * Posts to the same Google Apps Script endpoint as wigglytoothworkshop.com.
  *
- * The "virtue" field is used here as a source identifier ("toothsafe")
- * so you can filter signups by site in the shared Google Sheet.
+ * ── WIRE FORMAT: form fields, NOT a JSON body ────────────────────────────
+ * The Apps Script reads its input from `e.parameter`, i.e. form fields. It
+ * does not parse `e.postData.contents`. Posting a JSON body silently falls
+ * through to the doGet handler: the request returns HTTP 200 with the body
+ * "Tooth Fairy Workshop signup endpoint is running!" and NOTHING is written
+ * to the sheet.
  *
- * SETUP:
- * ─────────────────────────────────────────────────────────────────
- * 1. Copy the GOOGLE_SHEETS_ENDPOINT value from wigglytoothworkshop.com's
- *    src/lib/config.ts (or from the Vercel env vars on that project).
+ * That is exactly what this file used to do, and because it also used
+ * `mode: "no-cors"` the failure was invisible — the opaque response could
+ * not be inspected, so every signup reported success while writing nothing.
  *
- * 2. Add to tooth-safe/.env.local:
- *      NEXT_PUBLIC_GOOGLE_SHEETS_ENDPOINT=<your Apps Script URL>
+ * So: URLSearchParams (which sets the CORS-safelisted content type
+ * `application/x-www-form-urlencoded`, avoiding a preflight the Apps Script
+ * cannot answer), in normal cors mode, and we read the actual reply. The
+ * endpoint returns `{"result":"success"}` and sends
+ * `access-control-allow-origin: *`, so the response is readable.
  *
- * 3. That's it — no changes to the Apps Script needed.
- *
- * RECOMMENDED SHEET IMPROVEMENT (optional):
- * ─────────────────────────────────────────────────────────────────
- * Add a "source" column to your Google Sheet for clarity.
- * In your Apps Script doPost(), add:
- *   sheet.appendRow([data.email, data.firstName, data.virtue, data.timestamp, data.source]);
- * Then both sites can pass source: "toothsafe" / source: "workshop".
- * ─────────────────────────────────────────────────────────────────
+ * Verify a change here by watching for a real row in the sheet — a 200 is
+ * not evidence on its own, as the above shows.
  */
 
 import { GOOGLE_SHEETS_ENDPOINT, CONTACT_EMAIL, LEAD_SOURCE } from "./config";
 
-export interface LeadPayload {
-  email: string;
-  firstName?: string;
-  virtue: string;       // used as source identifier for ToothSafe
-  timestamp: string;
-}
+/** Give up rather than leave the button spinning forever. */
+const TIMEOUT_MS = 15000;
+
+const GENERIC_ERROR = `Something went wrong. Please try again or email ${CONTACT_EMAIL}.`;
 
 export async function submitLead(
   email: string,
   firstName = ""
 ): Promise<{ success: boolean; error?: string }> {
-  const payload: LeadPayload = {
+  const body = new URLSearchParams({
     email: email.trim().toLowerCase(),
     firstName: firstName.trim(),
-    virtue: LEAD_SOURCE,  // "toothsafe" — identifies this signup in the shared sheet
+    virtue: LEAD_SOURCE, // source identifier, so signups are filterable in the shared sheet
     timestamp: new Date().toISOString(),
-  };
+  });
 
-  // If endpoint not configured, log in dev and succeed silently
   if (GOOGLE_SHEETS_ENDPOINT === "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
-    console.log("[ToothSafe] Lead captured (endpoint not configured):", payload);
-    console.log(`[ToothSafe] Set NEXT_PUBLIC_GOOGLE_SHEETS_ENDPOINT in .env.local`);
+    console.log("[ToothSafe] Lead captured (endpoint not configured):", body.toString());
     console.log(`[ToothSafe] Or email ${CONTACT_EMAIL} to join manually.`);
     return { success: true };
   }
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
   try {
-    // Apps Script requires no-cors mode — response will be opaque (that's expected)
-    await fetch(GOOGLE_SHEETS_ENDPOINT, {
+    const res = await fetch(GOOGLE_SHEETS_ENDPOINT, {
       method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body, // sets application/x-www-form-urlencoded — do not add a JSON header
+      signal: controller.signal,
     });
 
-    // no-cors always returns opaque response — we assume success if no exception
-    return { success: true };
+    if (!res.ok) {
+      console.error("[ToothSafe] Lead endpoint returned", res.status);
+      return { success: false, error: GENERIC_ERROR };
+    }
+
+    const text = await res.text();
+
+    // The doGet fallback means the write did not happen — treat it as failure.
+    if (text.includes("endpoint is running")) {
+      console.error(
+        "[ToothSafe] Endpoint fell through to doGet — the row was NOT written.",
+        text
+      );
+      return { success: false, error: GENERIC_ERROR };
+    }
+
+    try {
+      const data = JSON.parse(text);
+      if (data?.result === "success") return { success: true };
+      console.error("[ToothSafe] Endpoint reported failure:", data);
+      return { success: false, error: GENERIC_ERROR };
+    } catch {
+      // Not JSON. Anything other than the doGet fallback is unexpected.
+      console.error("[ToothSafe] Unexpected endpoint response:", text.slice(0, 200));
+      return { success: false, error: GENERIC_ERROR };
+    }
   } catch (err) {
+    const aborted = err instanceof Error && err.name === "AbortError";
     console.error("[ToothSafe] Lead submission error:", err);
     return {
       success: false,
-      error: `Something went wrong. Please try again or email ${CONTACT_EMAIL}.`,
+      error: aborted
+        ? `That took too long. Please try again or email ${CONTACT_EMAIL}.`
+        : GENERIC_ERROR,
     };
+  } finally {
+    clearTimeout(timer);
   }
 }
