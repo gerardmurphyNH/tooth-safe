@@ -57,8 +57,8 @@ export default function Hero() {
             {/* CTA block */}
             <div className="flex flex-col gap-3 mt-2">
               <p className="text-cream-dim text-sm">
-                ToothSafe isn&apos;t made yet. Add your name and help us get it
-                built.
+                The prototype works. Add your name and help us get it into
+                production.
               </p>
               <EmailForm
                 placeholder="Your email address"

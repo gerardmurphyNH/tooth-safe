@@ -5,6 +5,7 @@ import HowItWorks from "@/components/HowItWorks";
 import WhyItMatters from "@/components/WhyItMatters";
 import StoryBridge from "@/components/StoryBridge";
 import FAQ from "@/components/FAQ";
+import FilmStills from "@/components/FilmStills";
 import VideoBlock from "@/components/VideoBlock";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -19,6 +20,9 @@ export default function Home() {
         {/* Film sits right after the story it belongs to, while attention is
             still high — driving views is a primary goal, not an afterthought. */}
         <VideoBlock />
+        {/* Stills sit under the player: proof the object is real, and the
+            argument for pressing play. */}
+        <FilmStills />
         <HowItWorks />
         <WhyItMatters />
         <FAQ />

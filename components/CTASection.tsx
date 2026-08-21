@@ -17,18 +17,19 @@ export default function CTASection() {
         <span className="text-gold text-2xl">✦</span>
 
         <p className="text-gold text-sm font-semibold tracking-[0.2em] uppercase">
-          Not Made Yet
+Prototype Stage
         </p>
 
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-cream leading-snug">
-          Help us get the ToothSafe made.
+Help us get the ToothSafe into production.
         </h2>
 
         <p className="text-cream-dim text-lg leading-relaxed">
-          Right now ToothSafe is a prototype and a film. Getting it properly
-          made takes showing that families actually want one — so every name on
-          this list is the argument. No payment, no commitment: just add yours
-          and we&apos;ll tell you when it becomes real.
+          The ToothSafe exists — it has been designed, built and tested, and
+          you can watch it in the film. What it isn&apos;t yet is production
+          ready, and getting there takes showing that families actually want
+          one. Every name on this list is that argument. No payment, no
+          commitment.
         </p>
 
         <EmailForm

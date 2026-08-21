@@ -22,7 +22,7 @@ export const faqs = [
   },
   {
     q: "Can I buy a ToothSafe yet?",
-    a: "Not yet. ToothSafe exists as a working prototype and as part of the film, but it has not been manufactured. Joining the waitlist costs nothing and commits you to nothing — it is how we show there is real demand, which is what it takes to get it made.",
+    a: "Not yet. The prototype is real — built, tested, and featured in the film — but it is not production ready, and manufacturing a run takes knowing people want it. Joining the waitlist costs nothing and commits you to nothing. It is how we make the case for putting ToothSafe into production.",
   },
   {
     q: "Where can I watch the ToothSafe story?",
